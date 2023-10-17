@@ -7,7 +7,7 @@
 #include "Bits.h"
 
 
-const char* sTest = "bool main(bool a) { return !a; }";
+const char* sTest = "bool main(bool a,bool b) { return a&b; }";
 
 
 
@@ -23,23 +23,27 @@ std::string bits_to_string(const std::vector<Bit>& bits) {
 
 
 
+
 int main()
 {
 	Circuit main_circuit;
 	// compile the circuit
 
 	// declare inputs
-	main_circuit.set_inputs(1);
+	main_circuit.set_inputs(2);
 
 
 	std::vector<Connection*> current_input = main_circuit.getInputs();
 
 	// declare gates
-	Gate_NOT* gate_1 = new Gate_NOT();
+	//Gate_NOT* gate_1 = new Gate_NOT();
+	Gate_AND* gate_1 = new Gate_AND();
 	// IN
-	std::array<Connection*,1> input_1 = { current_input[0] };
+	//std::array<Connection*,1> input_1 = { current_input[0] };
+	std::array<Connection*,2> input_2 = { current_input[0], current_input[1] };
 	// OUT = NOT IN
-	std::array<Connection*, 1> bits_result = gate_1->add_to_circuit( main_circuit, input_1);
+	//std::array<Connection*, 1> bits_result = gate_1->add_to_circuit( main_circuit, input_1);
+	std::array<Connection*, 1> bits_result = gate_1->add_to_circuit( main_circuit, input_2);
 
 	// "return" opcode
 	// tells the connexions they are the output of the circuit
@@ -50,6 +54,7 @@ int main()
 	std::cout << "Runnig...\n";
 	// set the inputs
 	CInputs test_input;
+	test_input.add_bit(true);
 	test_input.add_bit(true);
 	//test_input.add_bit(false);
 	std::vector<Bit> test_result = main_circuit.run(test_input);
