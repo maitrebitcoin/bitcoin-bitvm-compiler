@@ -45,6 +45,8 @@ public:
 
 	// run the circuit
 	std::vector<Bit> run(const CInputs& inputs) const;
+	// reset the circuit gate before a new run
+	void reset(void) const;
 
 protected:
 	// get all garbes that have calculated inputes

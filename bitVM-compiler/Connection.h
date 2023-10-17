@@ -33,5 +33,10 @@ public:
 		bit_value = new Bit();
 		bit_value->set_value(b);
 	}
+	// rest the value of the bit for a new run
+	void reset(void) {
+		delete bit_value;
+		bit_value = nullptr;
+	}
 
 };

@@ -20,7 +20,49 @@ std::string bits_to_string(const std::vector<Bit>& bits) {
 	return s;
 }
 
+// test the circuit
+//<input_01> : ex : "01"
+void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_result) //, const std::vector<Bit>& expected_result)
+{
+	// test the circuit
+	std::cout << "Input : " << inputs;
 
+	// set the inputs
+	CInputs test_input;
+	while (*inputs)
+	{
+		if (*inputs == '1')
+			test_input.add_bit(true);
+		else
+			test_input.add_bit(false);
+		inputs++;
+	}
+
+	// run
+	circuit.reset();
+	std::vector<Bit> test_result = circuit.run(test_input);
+
+	// check outputs
+	int i = 0;
+	while (expected_result[i])
+	{
+		bool expected_bit_i = (expected_result[i] == '1');
+		if (expected_bit_i != test_result[i])
+		{
+			// FAILED
+			std::cout << " - FAILED ***\n";
+			return;
+
+		}
+		i++;
+	}
+
+
+	// output result
+	std::cout << " - PASSED : ";
+	std::string s = bits_to_string(test_result);
+	std::cout << s << "\n";
+}
 
 
 
@@ -51,19 +93,11 @@ int main()
 	main_circuit.add_output(bits_return);
 
 	// test the circuit
-	std::cout << "Runnig...\n";
-	// set the inputs
-	CInputs test_input;
-	test_input.add_bit(true);
-	test_input.add_bit(true);
-	//test_input.add_bit(false);
-	std::vector<Bit> test_result = main_circuit.run(test_input);
-	std::string s = bits_to_string(test_result);
-	std::cout << "\n";
-	std::cout << s;
+	_test_circuit(main_circuit, "00","0");
+	_test_circuit(main_circuit, "01","1");
+	_test_circuit(main_circuit, "10","1");
+	_test_circuit(main_circuit, "11","1");
 
-	// done
-	std::cout << "\n\n...Done";
 
 }
 

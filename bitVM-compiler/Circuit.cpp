@@ -97,4 +97,17 @@ std::vector<Bit> Circuit::run(const CInputs& in_values) const {
 	} // while (true)
 
 }
+// reset the circuit gate before a new run
+void Circuit::reset(void) const
+{
+	for (Gate* gate : gates) {
+		gate->is_computed = false;
+	}
+	for (Connection* connection_i : connections) {
+		connection_i->reset();
+	}
+	for (Connection* connection_i : inputs){
+		connection_i->reset();
+	}
+}
 
