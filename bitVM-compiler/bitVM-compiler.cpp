@@ -7,7 +7,7 @@
 #include "Bits.h"
 
 
-const char* sTest = "bool main(bool a,bool b) { return a&b; }";
+const char* sTest = "bool main(bool a,bool b) { return a|b; }";
 
 
 
@@ -37,7 +37,7 @@ int main()
 
 	// declare gates
 	//Gate_NOT* gate_1 = new Gate_NOT();
-	Gate_AND* gate_1 = new Gate_AND();
+	Gate_OR* gate_1 = new Gate_OR();
 	// IN
 	//std::array<Connection*,1> input_1 = { current_input[0] };
 	std::array<Connection*,2> input_2 = { current_input[0], current_input[1] };
