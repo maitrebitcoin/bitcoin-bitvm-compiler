@@ -106,9 +106,14 @@ class Gate_NOT : public T_CompositeeGate<1, 1>
 {
 public:
 	// compute the output of the NOT gate
-	//virtual void compute(void) override;
-	// add a gate into the circuir
 	virtual std::array<Connection*, 1> add_to_circuit(Circuit& circuit, std::array<Connection*, 1>& _inputs) override;
+};
+// r = a & b
+class Gate_AND : public T_CompositeeGate<2, 1>
+{
+public:
+	// compute the output of the AND gate
+	virtual std::array<Connection*, 1> add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs) override;
 };
 
 
