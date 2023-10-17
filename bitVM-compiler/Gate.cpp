@@ -37,3 +37,19 @@ std::array<Connection*, 1> Gate_AND::add_to_circuit(Circuit& circuit, std::array
 	std::array<Connection*, 2> output_gate2 = { output_gate1[0], output_gate1[0] };
 	return _nand_not->add_to_circuit(circuit, output_gate2);
 };
+
+// compute the output of the OR gate
+std::array<Connection*, 1> Gate_OR::add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs)
+{
+	// implemented with r = not(a) nand not(b)
+	Gate_NAND* _nand_a = new Gate_NAND();
+	Gate_NAND* _nand_b = new Gate_NAND();
+	Gate_NAND* _nand_r = new Gate_NAND();
+	std::array<Connection*, 2> inputs_a = { _inputs[0], _inputs[0] };
+	std::array<Connection*, 2> inputs_b = { _inputs[1], _inputs[1] };
+	std::array<Connection*, 1> not_a = _nand_a->add_to_circuit(circuit, inputs_a);
+	std::array<Connection*, 1> not_b = _nand_b->add_to_circuit(circuit, inputs_b);
+	std::array<Connection*, 2> not_ab = { not_a[0], not_b[0] };
+	return _nand_r->add_to_circuit(circuit, not_ab);
+
+}
