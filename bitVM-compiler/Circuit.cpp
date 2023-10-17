@@ -72,7 +72,7 @@ std::vector<Bit> Circuit::run(const CInputs& in_values) const {
 		// run the gates
 		for (Gate* gate : gate_to_run) {
 			gate->compute();
-			gate->is_computed = true;
+			assert(gate->is_computed);
 		}
 		// do we have a result ?
 		// =all the needed outpus bits are calculated

@@ -9,6 +9,7 @@
 void Gate_NAND::compute(void) {
 	// compute the output of the NAND gate
 	output[0]->set_value( !(input[0]->get_value() & input[1]->get_value()));
+	is_computed = true;
 }
 // add the gate into the circuir
 std::array<Connection*, 1> Gate_NAND::add_gate(Circuit& circuit, std::array<Connection*, 2>& _input)  {

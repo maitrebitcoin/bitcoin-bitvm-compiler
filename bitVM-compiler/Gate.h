@@ -6,7 +6,7 @@
 #include "Connection.h"
 class Circuit;
 
-// represents a simple gate in the circuit
+// represents a gate in the circuit
 class Gate {
 public:
 	// did the gates used for computation ?
@@ -14,13 +14,13 @@ public:
 public:
 	// compute the output of the gate
 	virtual void compute(void) = 0;
+
 	// check if all the inputs of the gate are calculated
 	virtual bool all_inputs_calculated(void) const = 0;
 	// get the outputs of the gate
 	virtual std::vector<Connection*> get_outputs(void) const = 0;
-
-
 };
+
 
 
 // tamplate that represents a gate with N inputs and M outputs
@@ -74,21 +74,29 @@ protected:
 // template that represents a basic gate that can be implemented in the circuit
 template <int N, int M>
 class T_BasiceGate : public T_NMGate<N,M> {
+protected:
+	// did the gates used for computation ?
+	//bool is_computed = false;
 public:
 
 };
+
 // template that represents a complexe gate, implemented with other T_ImplementableGate and T_ComplexeGate
 template <int N, int M>
-class T_CompositeeGate : public T_NMGate<N, M> {
-public:
+class T_CompositeeGate : public T_NMGate < N, M> {
+
+private:
+	// method non available for a composite gate
+
 	// compute the output of the gate
 	virtual void compute(void) override { assert(false); }
-
+	// check if all the inputs of the gate are calculated
+	virtual bool all_inputs_calculated(void) const override { assert(false); return false; }
 	
 };
 
 
-class Gate_NAND : public T_BasiceGate<2, 1>
+class Gate_NAND : public T_BasiceGate < 2, 1 >
 {
 
 public:
