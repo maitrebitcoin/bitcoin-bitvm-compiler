@@ -12,16 +12,16 @@ void Gate_NAND::compute(void) {
 	is_computed = true;
 }
 // add the gate into the circuir
-std::array<Connection*, 1> Gate_NAND::add_gate(Circuit& circuit, std::array<Connection*, 2>& _input)  {
+std::array<Connection*, 1> Gate_NAND::add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _input)  {
 	circuit.add_gate(this);
 	set_inputs(_input);
 	return this->output;
 }
 
 // add a NOT gate into the circuir
-std::array<Connection*,1> Gate_NOT::add_gate(Circuit& circuit, std::array<Connection*, 1>& _inputs)  {
+std::array<Connection*,1> Gate_NOT::add_to_circuit(Circuit& circuit, std::array<Connection*, 1>& _inputs)  {
 	// implemented with a nand gate
 	Gate_NAND* _nand = new Gate_NAND();
 	std::array<Connection*, 2> inputs2 = { _inputs[0], _inputs[0] };
-	return _nand->add_gate(circuit, inputs2);
+	return _nand->add_to_circuit(circuit, inputs2);
 };

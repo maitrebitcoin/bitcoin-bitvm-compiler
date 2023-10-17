@@ -39,7 +39,7 @@ int main()
 	// IN
 	std::array<Connection*,1> input_1 = { current_input[0] };
 	// OUT = NOT IN
-	std::array<Connection*, 1> bits_result = gate_1->add_gate( main_circuit, input_1);
+	std::array<Connection*, 1> bits_result = gate_1->add_to_circuit( main_circuit, input_1);
 
 	// "return" opcode
 	// tells the connexions they are the output of the circuit

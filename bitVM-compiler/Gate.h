@@ -60,7 +60,7 @@ public:
 	// to bez implemented by the derived class :
 	
 	// add a gate into the circuir
-	virtual std::array<Connection*, M> add_gate(Circuit& circuit, std::array<Connection*, N>& _input) = 0;
+	virtual std::array<Connection*, M> add_to_circuit(Circuit& circuit, std::array<Connection*, N>& _input) = 0;
 
 protected:
 	// init out connexions
@@ -83,19 +83,14 @@ public:
 
 // template that represents a complexe gate, implemented with other T_ImplementableGate and T_ComplexeGate
 template <int N, int M>
-class T_CompositeeGate : public T_NMGate < N, M> {
+class T_CompositeeGate { // : public T_NMGate < N, M> {
+public:
+	// add a gate into the circuir
+	virtual std::array<Connection*, M> add_to_circuit(Circuit& circuit, std::array<Connection*, N>& _input) = 0;
 
-private:
-	// method non available for a composite gate
-
-	// compute the output of the gate
-	virtual void compute(void) override { assert(false); }
-	// check if all the inputs of the gate are calculated
-	virtual bool all_inputs_calculated(void) const override { assert(false); return false; }
-	
 };
 
-
+// r = nand(a,b)
 class Gate_NAND : public T_BasiceGate < 2, 1 >
 {
 
@@ -103,16 +98,17 @@ public:
 	// compute the output of the NAND gate
 	virtual void compute(void) override;
 	// add the gate into the circuir
-	virtual std::array<Connection*, 1> add_gate(Circuit& circuit, std::array<Connection*, 2>& _input) override;
+	virtual std::array<Connection*, 1> add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _input) override;
 };
 
+// r = !a
 class Gate_NOT : public T_CompositeeGate<1, 1>
 {
 public:
 	// compute the output of the NOT gate
 	//virtual void compute(void) override;
 	// add a gate into the circuir
-	virtual std::array<Connection*, 1> add_gate(Circuit& circuit, std::array<Connection*, 1>& _inputs) override;
+	virtual std::array<Connection*, 1> add_to_circuit(Circuit& circuit, std::array<Connection*, 1>& _inputs) override;
 };
 
 
