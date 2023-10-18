@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="bitVM-compiler.cpp" />
     <ClCompile Include="Circuit.cpp" />
+    <ClCompile Include="Connection.cpp" />
     <ClCompile Include="Gate.cpp" />
   </ItemGroup>
   <ItemGroup>

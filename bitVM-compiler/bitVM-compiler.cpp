@@ -74,7 +74,6 @@ int main()
 	// declare inputs
 	main_circuit.set_inputs(2);
 
-
 	std::vector<Connection*> current_input = main_circuit.getInputs();
 
 	// declare gates

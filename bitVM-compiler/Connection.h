@@ -21,22 +21,12 @@ private:
 	Bit* bit_value = nullptr;
 
 public:
-	bool is_calculated(void) const { return bit_value != nullptr; }
+	bool is_calculated(void) const;
 	// get the value of the bit
-	bool get_value(void) const {
-		assert(bit_value != nullptr);
-		return *bit_value;
-	}
+	bool get_value(void) const;
 	// set the value of the bit
-	void set_value(bool b) {
-		assert(bit_value == nullptr);
-		bit_value = new Bit();
-		bit_value->set_value(b);
-	}
+	void set_value(bool b);
 	// rest the value of the bit for a new run
-	void reset(void) {
-		delete bit_value;
-		bit_value = nullptr;
-	}
+	void reset(void);
 
 };
