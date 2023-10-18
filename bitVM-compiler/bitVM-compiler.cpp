@@ -2,12 +2,14 @@
 //
 
 #include <iostream>
+#include <sstream>
 #include "Circuit.h"
 #include "Gate.h"
 #include "Bits.h"
+#include "Compiler.h"
 
 
-const char* sTest = "bool main(bool a,bool b) { return a|b; }";
+
 
 
 
@@ -65,11 +67,23 @@ void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_re
 }
 
 
+const char* sTest = "bool main(bool a,bool b) { return a|b; }";
 
 int main()
 {
 	Circuit main_circuit;
 	// compile the circuit
+
+
+	Compiler compiler;
+	Compiler::Error error;
+	std::istringstream input(sTest);
+	if (!compiler.compile(input, error)) {
+
+		std::cout << "Compilation failed.\n";
+		std::cout << error.message << "\n";
+		return 1;
+	}
 
 	// declare inputs
 	main_circuit.set_inputs(2);
