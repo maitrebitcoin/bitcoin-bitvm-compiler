@@ -203,10 +203,13 @@ CToken Compiler::_get_next_token(std::string& code_in_out) {
 			std::smatch regex_match;
 			if (std::regex_search(code_in_out , regex_match, regex_i)) {
 				std::string match_string = regex_match[0];
-				// remove the token from the string
-				code_in_out.erase(0, match_string.size() );
-				// return the token
-				return CToken(definition.token_type, match_string);
+				// check if the string start with the matched part in the regexp 
+				if (match_string.size()>0 && code_in_out.compare(0, match_string.size(), match_string) == 0) {
+					// remove the token from the string
+					code_in_out.erase(0, match_string.size());
+					// return the token
+					return CToken(definition.token_type, match_string);
+				}
 			}
 		}
 	} // for each token definition
