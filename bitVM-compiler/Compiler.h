@@ -5,13 +5,18 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include "BtcContract.h"
 
 using TokenType = int;
+
+
 //using TokenValue = std::string;
 union TokenValue {
-	std::string *string_value;
-	class Type* type_value;
-	class FunctionParameter* function_paramter_value;
+
+	std::string*		 string_value;
+	Type*				 type_value;
+	Function::Parameter* function_paramter_value;
+	Function*			 function_value;
 };
 
 class CToken {
