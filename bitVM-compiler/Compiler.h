@@ -1,5 +1,5 @@
 #pragma once
-
+// Compiler.h
 // Compiler class definition
 
 #include <string>
@@ -8,8 +8,12 @@
 #include <map>
 #include "BtcContract.h"
 
-using TokenType = int;
-static const TokenType INVALID_TOKEN  = - 1;
+using TokenId = int; // <255 1 char token ex ':', >255 = user defined token
+using RuleId  = int; // over 1000
+using TokenOrRuleId = int; // TokenId ou TokenId, depending on the value 
+static const TokenId INVALID_TOKEN  = - 1;
+static bool is_token(TokenOrRuleId id) { return id < 1000; }
+static bool is_rule(TokenOrRuleId id) { return id >= 1000; }
 
 // types for the node during parsign
 union TokenValue {
@@ -22,7 +26,7 @@ union TokenValue {
 };
 // what a token is for the lexer part of the compiler
 struct TokenDefinition {
-	TokenType   token_type;
+	TokenId	    token_type;
 	const char* token_value;
 	const char* regex;
 };
@@ -31,10 +35,10 @@ struct TokenDefinition {
 class CToken {
 public:
 	// type of the token. ex '=' or TOKEN_TYPE_BOOL
-	TokenType type;
+	TokenId	    type;
 	// value of the token. ex "bool"
 	std::string value_buffer; // point value if type if a "string_value"
-	TokenValue value;
+	TokenValue  value;
 public:
 	// constructors
 	CToken(int t) : type(t) {}
@@ -50,7 +54,7 @@ struct RuleDefinition {
 	// rule to produce
 	RuleType rule_id;
 	// conditions to produce the rules
-	std::vector<TokenType> tokens;
+	std::vector<TokenOrRuleId> tokens;
 	// callback function if the rule is matched
 	std::function<void (TokenValue& result, std::vector<TokenValue> values)> action;
 };
@@ -59,8 +63,11 @@ public:
 	bool is_root	 = false;
 	bool is_terminal = false;
 	// LR(1) parsing :
+	// left basic possible tokens.  
+	std::vector<TokenId> left_token_possible;
 	// right conditions to produce the rules.  empty  = all is valid
-	std::vector<TokenType> right_token_conditions;
+	std::vector<TokenId> right_token_conditions;
+	
 
 public:
 	// constructor
@@ -68,6 +75,18 @@ public:
 		rule_id = definition.rule_id;
 		tokens  = definition.tokens;
 		action  = definition.action;
+	}
+	// add left basic possible tokens if not already present
+	void add_unique_left_token_possible(TokenId token_id) {
+		if (std::find(left_token_possible.begin(), left_token_possible.end(), token_id) == left_token_possible.end()) {
+			left_token_possible.push_back(token_id);
+		}
+	}
+	// add right conditions to produce the rules if not already present
+	void add_unique_right_token_conditions(TokenId token_id) {
+		if (std::find(right_token_conditions.begin(), right_token_conditions.end(), token_id) == right_token_conditions.end()) {
+			right_token_conditions.push_back(token_id);
+		}
 	}
 };
 
@@ -122,7 +141,7 @@ protected:
 	// grammar of the compiler 
 	std::vector <GrammarRule> grammar_rules;
 	// find rules from its id
-	std::map< TokenType, std::vector<GrammarRule*>> rules_map;
+	std::map<RuleId, std::vector<GrammarRule*>> rules_map;
 
 	// tokenss waiting to be processed by the compiler
 	std::vector<CToken> token_stack;
@@ -135,7 +154,7 @@ protected:
 	// init the grammar
 	void _init_grammar(void);
 	// initgrammar : right conditions (récursive)
-	void _init_grammar_right_conditions(TokenType token, TokenType right_token_required);
+	void _init_grammar_right_conditions(RuleId rule_id, TokenId right_token_required);
 
 	// compile 1 line of code
 	enum class Result {
@@ -150,6 +169,13 @@ protected:
 	GrammarRule* _find_matching_rule_from_stack(void);
 	// call a rule and remove the token from the stack
 	void _execute_rule(GrammarRule& rule);
+	// visit all prpdiction rules form id
+	void _visit_prediction_rules(RuleId rule_id, std::function<void(GrammarRule* production_rule) > fn)	{
+		for (auto& rule : rules_map[rule_id]) {
+			fn(rule);
+		}
+	}
+
 };
 
 

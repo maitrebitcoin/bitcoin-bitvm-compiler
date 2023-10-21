@@ -70,45 +70,83 @@ void Compiler::_init_grammar(void)
 	// 1sr rule is the start rule
 	grammar_rules[0].is_root = true;
 
-	// init terminals and R conditions
-	for (GrammarRule& a_rule : grammar_rules)
-	{
+	// init terminal flag
+	for (GrammarRule& a_rule : grammar_rules) {
 		// if only 1 token
-		if (a_rule.tokens.size() == 1) {
+		// ex : " RULE_TYPE , { TOKEN_TYPE_BOOL } 
+		if (a_rule.tokens.size() == 1 && is_token(a_rule.tokens[0])) {
 			// if a a terminal leaf
 			a_rule.is_terminal = true;
 			continue;
 		}
-		// init right_token_conditions
-		for (int i = 0; i < a_rule.tokens.size() - 1; i++) {
+	}
+
+	// init Left token possible
+	// from last rule to first
+	for (int i = (int)grammar_rules.size()-1; i >= 0;i--) {
+		GrammarRule& rule = grammar_rules[i];
+		// if the 1st rule si a basic token
+		TokenOrRuleId first_token = rule.tokens[0];
+		if (is_token(first_token) && !rule.is_terminal ) {
+			// left token possible is the 1st token
+			rule.add_unique_left_token_possible(first_token);
+		}
+		if (is_rule(first_token)) {
+			// add the left possible tokens are all the left possible tokens of the first_token rule
+			_visit_prediction_rules(first_token, [&](GrammarRule* first_token_rule) {
+				// add the left possible tokens of first_token_rule
+				for (TokenId token_id : first_token_rule->left_token_possible)
+					rule.add_unique_left_token_possible(token_id);
+			});
+		}
+	}
+
+	// init R conditions
+	for (GrammarRule& rule : grammar_rules) {
+		//for de first R tokens
+		for (int i = 0; i < rule.tokens.size() - 1; i++) {
 			//  token & next token
 			// ex :  RULE_TYPE, TOKEN_IDENTIFIER
-			TokenType token_i	  = a_rule.tokens[i ];
-			TokenType right_token = a_rule.tokens[i + 1];
+			TokenOrRuleId token_or_rule_i	   = rule.tokens[i ];
+			TokenOrRuleId token_or_rule_next   = rule.tokens[i + 1];
 			// if token i is another rule
-			_init_grammar_right_conditions(token_i, right_token);
+			if (is_rule(token_or_rule_i))
+				_init_grammar_right_conditions(token_or_rule_i, token_or_rule_next);
+	
 		}
 	}
 
 
 }
 // init right conditions (récursive)
-void Compiler::_init_grammar_right_conditions(TokenType token, TokenType right_token_required){
+void Compiler::_init_grammar_right_conditions(RuleId rule_id, TokenOrRuleId right_required){
 
-	//  only if token is another rule
-	if (rules_map.count(token) == 0)
-		return;
-	for (GrammarRule* sub_rule_i : rules_map[token])
-	{
-		// if <right_token_required> is not alredy present
-		std::vector<TokenType>& R_conditions= sub_rule_i->right_token_conditions;
-		bool is_already_present = std::find(R_conditions.begin(), R_conditions.end(), right_token_required) != R_conditions.end();
-		if (!is_already_present)
-			sub_rule_i->right_token_conditions.push_back(right_token_required);
-		// récursive for the rightmost rule
-		_init_grammar_right_conditions(sub_rule_i->tokens.back(), right_token_required);
-	}
+	// for all rules that can produce <rule_id>
+	_visit_prediction_rules(rule_id, [&](GrammarRule* rule) {
+		// if right_required is a token
+		if (is_token(right_required)) {
+			// add 1 token if non present
+			rule->add_unique_right_token_conditions(right_required);
+		}
+		else {
+			//  right_required is a rule
+			assert(is_rule(right_required));
+			// add its right conditions to <child_rule>
+			_visit_prediction_rules(right_required, [&](GrammarRule* child_rule) {
+				for (TokenId left_tok_id : child_rule->left_token_possible)
+					rule->add_unique_right_token_conditions(left_tok_id);
+				});
+		}
+		// recursive call if the last token is a rule
+		TokenOrRuleId token_last = rule->tokens.back();
+		if (is_rule(token_last))
+			_init_grammar_right_conditions(token_last, right_required);
+
+	});//
+
+
 }
+
 
 
 // test if a rule is matching the current stack
@@ -135,12 +173,13 @@ bool Compiler::is_rule_matching_stack(GrammarRule& rule)  {
 	// Read one token after the rule
 	CToken next_token = lexer.get_next_token( CLexer::ReadOption::keep );
 	// chekc if if match the post condition
-	for (TokenType right_token : rule.right_token_conditions) {
+	for (TokenId right_token : rule.right_token_conditions) {
 		if (right_token == next_token.type)
 			return true; // one R condition is matching
 	}
 	// no R condition is matching
 	return false;
+
 
 }	
 

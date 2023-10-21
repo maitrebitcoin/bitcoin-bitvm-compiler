@@ -55,6 +55,20 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		{ RULE_1_PARAMETER_DECL , { RULE_TYPE, TOKEN_IDENTIFIER } ,
 			[this](TokenValue& result, std::vector<TokenValue> param) { result.function_paramter_value = new Function::Parameter(*param[0].type_value, *param[1].string_value);  }
 		},
+		// ex { a++; return a; }
+		{ RULE_CODEBLOC , { '{', RULE_N_STATEMENTS, '}'} ,
+			nullptr,
+		},
+		// ex { return a; }
+		{ RULE_N_STATEMENTS , {RULE_N_STATEMENTS, RULE_1_STATEMENT } ,
+			nullptr,
+		},
+		{ RULE_N_STATEMENTS , {RULE_1_STATEMENT } ,
+			nullptr,
+		},
+		{ RULE_1_STATEMENT , {RULE_INSTRUCITON_RETURN, TOKEN_IDENTIFIER, ';' } ,
+			nullptr,
+		},
 		// ex : bool
 		{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,
 			[this](TokenValue& result, std::vector<TokenValue> param) { result.type_value = new Type(Type::Native::bit);  }
