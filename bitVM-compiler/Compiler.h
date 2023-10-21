@@ -37,16 +37,12 @@ public:
 	// type of the token. ex '=' or TOKEN_TYPE_BOOL
 	TokenId	    type;
 	// value of the token. ex "bool"
-	std::string value_buffer; // point value if type if a "string_value"
+	std::string str_value; // source string in the code
 	TokenValue  value;
 public:
 	// constructors
-	CToken(int t) : type(t) {}
-	CToken(int t, std::string v) : type(t)
-	{
-		value_buffer = v;
-		value.string_value = &value_buffer;
-	}
+	CToken(int t);
+	CToken(int t, std::string v);
 
 };
 enum RuleType;

@@ -243,6 +243,19 @@ bool CLexer::read_line(void) {
 	return true;
 }
 
+// construct an empty token
+CToken::CToken(int t) 
+	: type(t) {
+	value.string_value = nullptr;
+}
+
+// contruct a new string token
+CToken::CToken(int t, std::string v) 
+	: type(t) {
+	str_value = v;
+	value.string_value = BitVM_C_Grammar.get_new_string(v.c_str());// & value_buffer;
+}
+
 
 // get 1 token from the line
 CToken CLexer::get_next_token(ReadOption option) {
@@ -321,6 +334,7 @@ Compiler::Result Compiler::_compile_line(void) {
 		if (token.type == 0)
 			return Result::nextLine; // End of line, read next line
 		if (token.type == INVALID_TOKEN)
+
 			return Result::syntaxError;
 		// add to stack	
 		token_stack.push_back(token);

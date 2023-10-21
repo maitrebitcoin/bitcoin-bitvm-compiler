@@ -39,5 +39,11 @@ int Function::size_in_bit_output(void) const {
 	return definition.return_type.size_in_bit();
 }
 
-
+// Definition constructor
+Function::Definition::Definition(Type type, std::string function_name)
+	: return_type(type)
+	, name(function_name)
+{
+	assert(function_name.size() > 0);
+}
 

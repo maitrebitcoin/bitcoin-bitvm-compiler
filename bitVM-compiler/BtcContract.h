@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+
 // type of a variable or function. 
 //ex : "bool"
 class Type {
@@ -85,7 +86,7 @@ public:
 		// parameters of the function
 		std::vector<Parameter> parameters;
 		// constructor
-		Definition(Type t, std::string n) : return_type(t), name(n) {}
+		Definition(Type t, std::string n);
 	};
 
 protected:
@@ -101,6 +102,8 @@ public:
 	int size_in_bit_output(void) const;
 
 };
+
+
 
 
 // logical representation of de contract 

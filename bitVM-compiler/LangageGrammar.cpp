@@ -73,7 +73,7 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,
 			[this](TokenValue& result, std::vector<TokenValue> param) { result.type_value = new Type(Type::Native::bit);  }
 		},
-		//{ RULE_TYPE , { TOKEN_TYPE_BYTE } , nullptr  },
+
 	};
 	int nb_grammar_rules = sizeof(rules_definition) / sizeof(rules_definition[0]);
 	return std::vector<RuleDefinition>(rules_definition, rules_definition+nb_grammar_rules);
