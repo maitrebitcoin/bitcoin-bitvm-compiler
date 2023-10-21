@@ -347,12 +347,12 @@ Compiler::Result Compiler::_compile_line(void) {
 			// right reduce : call the rule, remove the token from the stack and push the result
 			_execute_rule(*rule);
 			// right reduce until the no more match
-			if (rule->is_terminal)
+			if (rule->is_root)
 				break;
 			rule = _find_matching_rule_from_stack();
 		}
 		// if found the finale rule
-		if (rule && rule->is_terminal)
+		if (rule && rule->is_root)
 		{
 			// check if the stack is empty
 			if (token_stack.size()>1)

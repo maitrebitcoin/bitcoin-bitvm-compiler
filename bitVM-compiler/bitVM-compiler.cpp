@@ -85,6 +85,7 @@ int main()
 		std::cout << error.message << "\n";
 		return 1;
 	}
+	std::cout << "Compilation success.\n";
 
 	// declare inputs
 	main_circuit.set_inputs(2);
