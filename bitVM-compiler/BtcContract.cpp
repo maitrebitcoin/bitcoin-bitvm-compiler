@@ -29,14 +29,14 @@ int Function::size_in_bit_input(void) const
 {
 	// addd the size of each parameter
 	int nb_bit = 0;
-	for (Parameter param_i : parameters)
+	for (Parameter param_i : definition.parameters)
 		nb_bit += param_i.type.size_in_bit();
 	return nb_bit;
 }
 // return the number of bits needed to store the return value
 int Function::size_in_bit_output(void) const {
 	// size of the return type
-	return return_type.size_in_bit();
+	return definition.return_type.size_in_bit();
 }
 
 

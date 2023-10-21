@@ -1,11 +1,14 @@
 // implémentation of the compiler
 
 #include "Compiler.h"
+#include "LangageGrammar.h"
 #include <sstream>
 #include <vector>
 #include <assert.h>
 #include <regex>
 #include <functional>
+
+LangageGrammar BitVM_C_Grammar;
 
 // constructor
 Compiler::Compiler(void) {
@@ -48,73 +51,14 @@ bool Compiler::compile(std::istream& source_code_stream, Error& error_out)
 }
 
 
-struct TokenDefinition {
-	TokenType   token_type;
-	const char* token_value;
-	const char* regex;
-};
-
-// init token definition (lexer)
-#define TOKEN_TYPE_BOOL  257
-#define TOKEN_TYPE_BYTE  258
-#define TOKEN_IDENTIFIER 258
-#define TOKEN_NUMBER	 259
-TokenDefinition token_definition[] =
-{
-	{ TOKEN_TYPE_BOOL,  "bool"},
-	{ TOKEN_TYPE_BYTE,  "byte"},
-	{ TOKEN_IDENTIFIER, nullptr, "[a-zA-a_][a-zA-a0-9_]*"},
-	{ TOKEN_NUMBER,		nullptr, "[0-9]*"},
-};
-
-// init grammar
-enum RuleType {
-	RULE_FUNCTION				= 1000,
-	RULE_TYPE,							// ex : bool
-	RULE_N_PARAMETERS_DECL,				// ex : (bool a, byte b)		
-	RULE_1_PARAMETER_DECL,				// ex : { return a+b; }
-	RULE_CODEBLOC,
-	RULE_N_STATEMENTS,
-	RULE_1_STATEMENT,
-	RULE_OPERATION,
-	RULE_INSTRUCITON_RETURN,
-};
-/*
-#define RULE_FUNCTION			 1000
-#define RULE_TYPE				 1001  // ex : bool
-#define RULE_N_PARAMETERS_DECL	 1002  // ex : (bool a, byte b)
-#define RULE_1_PARAMETER_DECL	 1003  // ex : bool a 
-#define RULE_CODEBLOC			 1004  // ex : { return a+b; }
-#define RULE_N_STATEMENTS		 1005
-#define RULE_1_STATEMENT		 1006
-#define RULE_OPERATION			 1007
-#define RULE_INSTRUCITON_RETURN	 1100
-*/
 
 void Compiler::_init_grammar(void) 
 {
-	RuleDefinition rules_definition[] =
-	{
-		// ex : bool fct_name(byte a, byte b) { return a+b; }
-		{ RULE_FUNCTION, { RULE_TYPE, TOKEN_IDENTIFIER, '(', RULE_N_PARAMETERS_DECL ,')', RULE_CODEBLOC }, nullptr },
-		// ex : (bool a, byte b)
 
-		{ RULE_N_PARAMETERS_DECL , { RULE_N_PARAMETERS_DECL, ',', RULE_1_PARAMETER_DECL } , nullptr },
-		{ RULE_N_PARAMETERS_DECL , { RULE_1_PARAMETER_DECL }  , nullptr  },
-		// ex : bool a 
-		{ RULE_1_PARAMETER_DECL , { RULE_TYPE, TOKEN_IDENTIFIER } ,   
-			[this](TokenValue& result, std::vector<TokenValue> param) { result.function_paramter_value = new Function::Parameter(*param[0].type_value, *param[1].string_value);  }
-		},
-		// ex : bool
-		{ RULE_TYPE , { TOKEN_TYPE_BOOL } , 
-			[this](TokenValue& result, std::vector<TokenValue> param) { result.type_value = new Type(Type::Native::bit);  }
-		},
-		//{ RULE_TYPE , { TOKEN_TYPE_BYTE } , nullptr  },
-	};
-	int nb_rules = sizeof(rules_definition) / sizeof(rules_definition[0]);
 
 	// init the grammar array
-	for (int i = 0; i < nb_rules; i++) {
+	auto rules_definition = BitVM_C_Grammar.get_grammar_definition();
+	for (int i = 0; i < rules_definition.size() ; i++) {
 		GrammarRule grammar_rule_i(rules_definition[i]);
 		grammar_rules.push_back(grammar_rule_i);
 	}
@@ -123,11 +67,10 @@ void Compiler::_init_grammar(void)
 		rules_map[rule.rule_id].push_back( & rule );
 	}
 
-
 	// 1sr rule is the start rule
 	grammar_rules[0].is_root = true;
 
-	// init the token array
+	// init terminals and R conditions
 	for (GrammarRule& a_rule : grammar_rules)
 	{
 		// if only 1 token
@@ -236,6 +179,12 @@ void Compiler::_execute_rule(GrammarRule& rule) {
 
 }
 
+// lexer constructor
+CLexer::CLexer(void) {
+	auto [definitions, len] = BitVM_C_Grammar.get_token_definition();
+	token_definition.assign(definitions, definitions + len);
+}
+
 // Init lexer
 void CLexer::init(std::istream& source) {
 	source_code = &source;
@@ -308,6 +257,8 @@ CToken CLexer::get_next_token(ReadOption option) {
 			}
 		}
 	} // for each token definition
+
+	//TODO : return INVALID_TOKEN if the token is not in the grammar
 
 	// send the first char as a token
 	char c = code_in_out[0];

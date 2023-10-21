@@ -11,14 +11,22 @@
 using TokenType = int;
 static const TokenType INVALID_TOKEN  = - 1;
 
-//using TokenValue = std::string;
+// types for the node during parsign
 union TokenValue {
 
-	std::string*		 string_value;
-	Type*				 type_value;
-	Function::Parameter* function_paramter_value;
-	Function*			 function_value;
+	std::string*		  string_value;
+	Type*				  type_value;
+	Function::Parameter*  function_paramter_value;
+	Function::Definition* function_definition_value;
+	Function*			  function_value;
 };
+// what a token is for the lexer part of the compiler
+struct TokenDefinition {
+	TokenType   token_type;
+	const char* token_value;
+	const char* regex;
+};
+
 
 class CToken {
 public:
@@ -65,6 +73,8 @@ public:
 
 class CLexer {
 protected:
+	// tokens definition
+	std::vector<TokenDefinition> token_definition;
 	// all source code
 	std::istream* source_code=nullptr;
 	// current line code
@@ -72,6 +82,8 @@ protected:
 	// what remains to be read in current line
 	std::string remaining_ligne;
 public:
+	// constructor
+	CLexer(void);
 	// Init
 	void init(std::istream& source);
 

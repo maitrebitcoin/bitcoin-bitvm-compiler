@@ -76,13 +76,23 @@ public:
 		// constructor
 		Parameter(Type t, std::string n) : type(t), name(n) {}
 	};
-protected:
-	// name of the function
-	std::string name;
-	// return type of the function
-	Type return_type;
+	// Definition of the function
+	struct Definition {
+		// name of the function
+		std::string name;
+		// return type of the function
+		Type return_type;
+		// parameters of the function
+		std::vector<Parameter> parameters;
+		// constructor
+		Definition(Type t, std::string n) : return_type(t), name(n) {}
+	};
 
-	std::vector<Parameter> parameters;
+protected:
+	// definiton of the function
+	Definition definition;
+	// body of the function
+	std::vector<StatementBase*> body;
 
 public:
 	// return the number of bits needed for the input parameters
