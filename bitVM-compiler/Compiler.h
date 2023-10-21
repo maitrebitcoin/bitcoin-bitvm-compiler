@@ -18,11 +18,12 @@ static bool is_rule(TokenOrRuleId id) { return id >= 1000; }
 // types for the node during parsign
 union TokenValue {
 
-	std::string*		  string_value;
-	Type*				  type_value;
-	Function::Parameter*  function_paramter_value;
-	Function::Definition* function_definition_value;
-	Function*			  function_value;
+	std::string*		    string_value;
+	Type*				    type_value;
+	Function::Parameter*    function_paramter_value;
+	Function::AllParameter* function_all_paramters_value;
+	Function::Definition*   function_definition_value;
+	Function*			    function_value;
 };
 // what a token is for the lexer part of the compiler
 struct TokenDefinition {
@@ -48,7 +49,7 @@ public:
 enum RuleType;
 struct RuleDefinition {
 	// rule to produce
-	RuleType rule_id;
+	RuleId rule_id;
 	// conditions to produce the rules
 	std::vector<TokenOrRuleId> tokens;
 	// callback function if the rule is matched

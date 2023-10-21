@@ -201,11 +201,14 @@ void Compiler::_execute_rule(GrammarRule& rule) {
 	assert(stack_top >= 0);
 	// get values form the stack
 	std::vector<TokenValue> values;
+	std::string all_str_value;
 	for (int i = 0; i < rule_size; i++) {
 		values.push_back(token_stack[stack_top + i].value);
+		all_str_value += token_stack[stack_top + i].str_value + ' ';
 	}
 	// call the rule to set token_result.value 
 	CToken token_result(rule.rule_id);
+	token_result.str_value = all_str_value;
 	if (rule.action != nullptr)
 		rule.action(token_result.value, values);
 
@@ -253,7 +256,7 @@ CToken::CToken(int t)
 CToken::CToken(int t, std::string v) 
 	: type(t) {
 	str_value = v;
-	value.string_value = BitVM_C_Grammar.get_new_string(v.c_str());// & value_buffer;
+	value.string_value = BitVM_C_Grammar.new_string(v.c_str());// & value_buffer;
 }
 
 
@@ -341,9 +344,11 @@ Compiler::Result Compiler::_compile_line(void) {
 		// check if we have a matching rule
 		GrammarRule* rule = _find_matching_rule_from_stack();
 		while (rule != nullptr) {
-			// call the rule, remove the token from the stack and push the result
+			// right reduce : call the rule, remove the token from the stack and push the result
 			_execute_rule(*rule);
-			// do it utile the no more match
+			// right reduce until the no more match
+			if (rule->is_terminal)
+				break;
 			rule = _find_matching_rule_from_stack();
 		}
 		// if found the finale rule

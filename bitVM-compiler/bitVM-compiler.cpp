@@ -67,7 +67,8 @@ void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_re
 }
 
 
-const char* sTest = "bool main(bool a,bool b) { return a|b; }";
+//const char* sTest = "bool main(bool a,bool b) { return a|b; }";
+const char* sTest = "bool main(bool a,bool b) { return a; }";
 
 int main()
 {

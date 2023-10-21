@@ -70,13 +70,27 @@ protected:
 // represents a function, ex : bool main(bool a, bool b) { return a & b; }
 class Function {
 public:
-	// parameters of the function
+	// 1 parameters of the function
 	struct Parameter {
 		Type type;
 		std::string name;
 		// constructor
 		Parameter(Type t, std::string n) : type(t), name(n) {}
 	};
+	// all the parameters of the function
+	struct AllParameter {
+		std::vector<Parameter> parameters;
+		// constructor : init with 1 parameter
+		AllParameter(Parameter& p0) {
+			parameters.push_back(p0); 
+		}
+		// add 1 parameter
+		void add(Parameter& p) {
+			parameters.push_back(p);
+		}
+	};
+
+
 	// Definition of the function
 	struct Definition {
 		// name of the function
@@ -86,7 +100,7 @@ public:
 		// parameters of the function
 		std::vector<Parameter> parameters;
 		// constructor
-		Definition(Type t, std::string n);
+		Definition(Type t, std::string n, Function::AllParameter* all_params);
 	};
 
 protected:

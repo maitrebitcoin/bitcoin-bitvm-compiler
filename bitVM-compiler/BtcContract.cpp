@@ -39,11 +39,14 @@ int Function::size_in_bit_output(void) const {
 	return definition.return_type.size_in_bit();
 }
 
-// Definition constructor
-Function::Definition::Definition(Type type, std::string function_name)
+// Function Definition constructor
+Function::Definition::Definition(Type type, std::string function_name, Function::AllParameter* all_params)
 	: return_type(type)
 	, name(function_name)
 {
 	assert(function_name.size() > 0);
+	// copy the parameters
+	for (Parameter param_i : all_params->parameters)
+		parameters.push_back(param_i);
 }
 
