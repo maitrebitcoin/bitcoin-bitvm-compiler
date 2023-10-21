@@ -23,8 +23,7 @@ bool Compiler::compile(std::istream& source_code_stream, Error& error_out)
 	lexer.init(source_code_stream);
 
 	// read the source code
-	int current_line_number = 0;
-	while (lexer.read_line()) {
+	while (lexer.read_next_line()) {
 		// compile 1 line
 		Result result =	_compile_line();
 		switch (result)
@@ -35,18 +34,17 @@ bool Compiler::compile(std::istream& source_code_stream, Error& error_out)
 		case Result::syntaxError:
 			// compilation failed
 			error_out.message     = "syntax error : " + lexer.get_source_code_current_line(); 
-			error_out.line_number = current_line_number;
+			error_out.line_number = lexer.get_current_line_number();
 			return false;
 		case Result::endOfCode:
 			// compilation success
 			return true;
 		}
 		// next line
-		current_line_number++;
 	}
 	// compilation failed
 	error_out.message = "syntax error : unexpected end of code";
-	error_out.line_number = current_line_number;
+	error_out.line_number = lexer.get_current_line_number();
 	return false;
 }
 
@@ -230,20 +228,49 @@ CLexer::CLexer(void) {
 // Init lexer
 void CLexer::init(std::istream& source) {
 	source_code = &source;
+	// read al sources lines
+	char line_raw[max_line_size];
+	while (source_code->getline(line_raw, max_line_size))
+		source_code_lines.push_back(line_raw);
+	// start at line 0
+	current_line_number = -1;
+
 }
 
 // read one line of code
-bool CLexer::read_line(void) {
-	static const int max_line_size = 1024;
-	char line_raw[max_line_size];
-	int cureent_line_number = 0;
-	if (!source_code->getline(line_raw, max_line_size))
-		return false;
-	std::string line(line_raw);
+bool CLexer::read_next_line(void) {
+	// no more lines ?
+	if (current_line_number+1 >= source_code_lines.size())
+		return false; // end of file
+	current_line_number++;
+	// set the current line in working buffer
+	std::string line = source_code_lines[current_line_number];
 	source_code_current_line = line;
 	remaining_ligne          = line;
 	// ok
 	return true;
+}
+// is a line empty = no token
+bool CLexer::_is_line_empty(std::string line) const {
+	// remove white space and comments
+	_remove_white_space_and_comments(line);
+	if (line.size() == 0)
+		return true;
+	// not empty
+	return false;
+}
+
+// get the next first next non exmpty ligne
+std::string CLexer::_get_next_non_empty_line(void) {
+	int next_line_number = current_line_number+1;
+	while (next_line_number < source_code_lines.size()) {
+		const std::string& next_line = source_code_lines[next_line_number];
+		// if the line is not empty
+		if (!_is_line_empty(next_line))
+			return next_line;
+	}
+	// no more lines
+	return "";
 }
 
 // construct an empty token
@@ -259,6 +286,16 @@ CToken::CToken(int t, std::string v)
 	value.string_value = BitVM_C_Grammar.new_string(v.c_str());// & value_buffer;
 }
 
+// remove spaces, tabs and comments
+void CLexer::_remove_white_space_and_comments(std::string& code_in_out) const {
+	// remove white space and tab at the begining
+	while (code_in_out[0] == ' ' || code_in_out[0] == '\t')
+		code_in_out.erase(0, 1);
+	// if start with commen mark e: //xxx
+	if ( code_in_out[0] == '/' && code_in_out[1] == '/')
+		code_in_out = "";
+
+}
 
 // get 1 token from the line
 CToken CLexer::get_next_token(ReadOption option) {
@@ -268,12 +305,16 @@ CToken CLexer::get_next_token(ReadOption option) {
 	if (option == ReadOption::keep) {
 		// work on a copy
 		temp = remaining_ligne;
+		// if the remaining line is empty, read a new line
+		if (_is_line_empty(remaining_ligne))
+		{
+			temp = _get_next_non_empty_line();
+		}
 		code_in_out = temp;
 	}
 
-	// ignore white space and tab
-	while (code_in_out[0] == ' ' || code_in_out[0] == '\t')
-		code_in_out.erase(0, 1);
+	// ignore white space, tab and comments
+	_remove_white_space_and_comments(code_in_out);
 
 	// if the string is empty, return an empty token
 	if (code_in_out.size() == 0)
@@ -337,7 +378,6 @@ Compiler::Result Compiler::_compile_line(void) {
 		if (token.type == 0)
 			return Result::nextLine; // End of line, read next line
 		if (token.type == INVALID_TOKEN)
-
 			return Result::syntaxError;
 		// add to stack	
 		token_stack.push_back(token);

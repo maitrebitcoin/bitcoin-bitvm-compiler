@@ -89,10 +89,15 @@ public:
 
 class CLexer {
 protected:
+	static const int max_line_size = 1000;
 	// tokens definition
 	std::vector<TokenDefinition> token_definition;
 	// all source code
 	std::istream* source_code=nullptr;
+	// all source split in lines
+	std::vector<std::string> source_code_lines;
+	// current line number
+	int current_line_number = 0;
 	// current line code
 	std::string source_code_current_line;
 	// what remains to be read in current line
@@ -102,9 +107,10 @@ public:
 	CLexer(void);
 	// Init
 	void init(std::istream& source);
-
 	// read one line of code
-	bool read_line(void);
+	bool read_next_line(void);
+	// get the current line number
+	int get_current_line_number(void) const { return current_line_number; }
 	// is the line empty ?
 	bool is_current_line_empty(void) const { return source_code_current_line.size() == 0; }
 	// get 1 token from code
@@ -115,6 +121,14 @@ public:
 	CToken get_next_token(ReadOption option);
 	// get le this of code (for error messages)
 	std::string get_source_code_current_line(void) const { return source_code_current_line; }
+
+protected:
+	// get the next first next non exmpty ligne
+	std::string _get_next_non_empty_line(void);
+	// is a line empty = no token
+	bool _is_line_empty(std::string line) const;
+	// remove spaces, tabs and comments
+	void _remove_white_space_and_comments(std::string& code_in_out) const;
 };
 
 class Compiler
