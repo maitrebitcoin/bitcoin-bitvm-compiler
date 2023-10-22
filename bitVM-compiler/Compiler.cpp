@@ -160,9 +160,9 @@ bool Compiler::is_rule_matching_stack(GrammarRule& rule)  {
 			return false;
 	}
 	// terminal rule
-	if (rule.is_terminal )
-		// matching ok
-		return true;
+//	if (rule.is_terminal )
+//		// matching ok
+//		return true;
 	// no post condition .
 	if (rule.right_token_conditions.size()==0)
 		// matching ok
@@ -402,4 +402,8 @@ Compiler::Result Compiler::_compile_line(void) {
 		}
 	}
 
+}
+// get the program afer compilation
+Program& Compiler::get_programm(void) {
+	return *token_stack[0].value.program_value;
 }

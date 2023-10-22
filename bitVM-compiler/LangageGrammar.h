@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <assert.h>
 #include "Program.h"
 
 struct TokenDefinition;
@@ -25,6 +26,12 @@ protected:
 	std::vector<Variable*> variables;
 	// litterals
 	std::vector<Literal*> literals;
+	// functions
+	std::vector<Function*> functions;
+	// code blocks
+	std::vector<CodeBloc*> code_blocs;
+	// program
+	Program* program = nullptr;
 
 public:
 	// destuctor
@@ -81,6 +88,25 @@ public:
 		literals.push_back(new_literal);
 		return new_literal;
 	}
+	// get a new function
+	Function* new_function(Function::Definition* def, CodeBloc* body) {
+		Function* new_function = new Function(def, body);
+		functions.push_back(new_function);
+		return new_function;
+	}
+	// get a new code block
+	CodeBloc* new_code_bloc(void* p) {
+		CodeBloc* new_code_block = new CodeBloc(p);
+		code_blocs.push_back(new_code_block);
+		return new_code_block;
+	}
+	// get a new program
+	Program* new_program(void) {
+		Program* new_program = new Program();
+		assert(program== nullptr);
+		program = new_program;
+		return new_program;
+	}
 
 	// free all 
 	void free_all(void) {
@@ -107,6 +133,12 @@ public:
 		}
 		for (Literal* l : literals) {
 			delete l;
+		}
+		for (Function* f : functions) {
+			delete f;
+		}
+		for (CodeBloc* c : code_blocs) {
+			delete c;
 		}
 	}
 };

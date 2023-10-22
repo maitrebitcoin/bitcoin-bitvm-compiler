@@ -27,7 +27,8 @@ union TokenValue {
 	BinaryOperation*	    binairy_operation_value;
 	Literal*			    literal_value;
 	Variable*			    variable_value;
-
+	Program*				program_value;
+	CodeBloc*				code_block_value;
 };
 // what a token is for the lexer part of the compiler
 struct TokenDefinition {
@@ -165,6 +166,9 @@ public:
 	Compiler(void);
 	// compile a memory stream
 	bool compile(std::istream& source_code, Error& error_out);
+	// get the program afer compilation
+	Program& get_programm(void);
+
 protected:
 	// init the grammar
 	void _init_grammar(void);

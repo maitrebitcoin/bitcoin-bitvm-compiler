@@ -72,9 +72,6 @@ const char* sTest = "bool main(bool a,  bool b) { \n return a; \n}";
 
 int main()
 {
-	Circuit main_circuit;
-	// compile the circuit
-
 
 	Compiler compiler;
 	Compiler::Error error;
@@ -86,6 +83,13 @@ int main()
 		return 1;
 	}
 	std::cout << "Compilation success.\n";
+	// get the program logic
+	Program& program = compiler.get_programm();
+
+	// compile the circuit
+	Circuit main_circuit;
+	program.build_circuit(main_circuit);
+
 
 	// declare inputs
 	main_circuit.set_inputs(2);

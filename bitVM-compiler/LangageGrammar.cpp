@@ -21,17 +21,19 @@ TokenDefinition token_definition[] =
 };
 // grammar elements
 enum E_RuleId {
-	RULE_FUNCTION = 1000,
-	RULE_FUNCTION_DEFINTION, // ex : bool f(byte a, byte b) 
-	RULE_TYPE,							// ex : bool
-	RULE_N_PARAMETERS_DECL,				// ex : (bool a, byte b)		
-	RULE_1_PARAMETER_DECL,				// ex : { return a+b; }
-	RULE_CODEBLOC,
-	RULE_N_STATEMENTS,
-	RULE_1_STATEMENT,
-	RULE_OPERATION,
-	RULE_INSTRUCITON_RETURN,
-	RULE_LITTERAL,
+	RULE_FUNCTION			= 1000,
+	RULE_FUNCTION_DEFINTION,// 1001 ex : bool f(byte a, byte b) 
+	RULE_TYPE,				// 1002 ex : bool
+	RULE_N_PARAMETERS_DECL,	// 1003 ex : (bool a, byte b)		
+	RULE_1_PARAMETER_DECL,	// 1004 ex : bool b
+	RULE_CODEBLOC,			// 1005 ex : { return a+b; }
+	RULE_N_STATEMENTS,		// 1006 ex : a++;b++;return a+b;	
+	RULE_1_STATEMENT,		// 1007 ex : a++
+	RULE_OPERATION,			// 1008 ex : a&b
+	RULE_INSTRUCITON_RETURN,// 1009 ex : return a+b
+	RULE_LITTERAL,			// 1010 ex : 123
+	RULE_VARIABLE,			// 1011 ex : a
+	RULE_PROGRAM			 = 1999, //  the whole program
 };
 // get the token definition
 std::pair<TokenDefinition*, int> LangageGrammar::get_token_definition(void) {
@@ -43,8 +45,18 @@ std::pair<TokenDefinition*, int> LangageGrammar::get_token_definition(void) {
 std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 	RuleDefinition rules_definition[] =
 	{
+		{ RULE_PROGRAM, { RULE_FUNCTION }, 
+			[this](TokenValue& result, std::vector<TokenValue> p) { 
+				result.program_value = new_program(); 
+				result.program_value->add_function(p[0].function_value);
+			}
+		},
+
 		// ex : bool fct_name(byte a, byte b) { return a+b; }
-		{ RULE_FUNCTION, { RULE_FUNCTION_DEFINTION, RULE_CODEBLOC }, nullptr },
+		{ RULE_FUNCTION, { RULE_FUNCTION_DEFINTION, RULE_CODEBLOC },
+			[this](TokenValue& result, std::vector<TokenValue> p) {
+				result.function_value = new_function(p[0].function_definition_value, p[1].code_block_value ); }
+		},
 		// ex : bool fct_name(bool a, byte b)
 		{ RULE_FUNCTION_DEFINTION, { RULE_TYPE, TOKEN_IDENTIFIER, '(', RULE_N_PARAMETERS_DECL ,')'},
 			[this](TokenValue& result, std::vector<TokenValue> p) {
@@ -65,9 +77,9 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		},
 		// ex { a++; return a; }
 		{ RULE_CODEBLOC , { '{', RULE_N_STATEMENTS, '}'} ,
-			nullptr,
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.code_block_value = new_code_bloc(nullptr); }
 		},
-		// ex { return a; }
+		// ex a++; return a;
 		{ RULE_N_STATEMENTS , {RULE_N_STATEMENTS, RULE_1_STATEMENT } ,
 			nullptr,
 		},
@@ -75,8 +87,12 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 			nullptr,
 		},
 		// ex: return a;
-		{ RULE_1_STATEMENT , {TOKEN_RETURN, TOKEN_IDENTIFIER, ';' } ,
+		{ RULE_1_STATEMENT , {TOKEN_RETURN, RULE_VARIABLE, ';' } ,
 			nullptr,
+		},
+		// ex: a
+		{ RULE_VARIABLE , { TOKEN_IDENTIFIER } ,
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.variable_value = new_variable( *p[0].string_value);  }
 		},
 		// ex: 123
 		{ RULE_LITTERAL , { TOKEN_NUMBER } ,

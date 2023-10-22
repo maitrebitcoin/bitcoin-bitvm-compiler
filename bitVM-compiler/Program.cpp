@@ -55,6 +55,44 @@ BinaryOperation::BinaryOperation(Operator op, Operand* left, Operand* right)
 	: operation(op), left_operand(left), right_operand(right) {
 	//	TODO
 	// build the expression for debug purposes
+}
+
+// function constructor
+Function::Function(Definition* def, CodeBloc* fn_body)
+	: definition(*def) 
+	, body(fn_body) {
+}
 
 
+// add a function to the program
+void Program::add_function(Function* f) {
+	// si the function name is not already used
+	if (find_function_by_name(f->get_name()))
+	{
+		throw "Function name already used";
+	}
+	// add the functions vector
+	functions.push_back(f);
+}
+// get a function by name
+Function* Program::find_function_by_name(std::string name) const  {
+	for (Function* f : functions)
+	{
+		if (f->get_name() == name)
+			return f;
+	}
+	return nullptr;
+}
+// get main function
+Function* Program::main_function(void) const {
+	return find_function_by_name("main");
+}
+
+// build a circuit that represents the program
+void Program::build_circuit(class Circuit& circuit_out) {
+	// get main function
+	Function* fn_main = main_function();
+	if (fn_main==nullptr)
+		throw "No main function";
+	// TODO build the circuit
 }

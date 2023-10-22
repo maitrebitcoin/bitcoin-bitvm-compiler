@@ -115,6 +115,14 @@ protected:
 
 };
 
+class CodeBloc {
+	// code statements
+	std::vector<StatementBase*> body;
+public:
+	// constructor
+	CodeBloc(void* p) {}
+};
+
 
 // represents a function, ex : bool main(bool a, bool b) { return a & b; }
 class Function {
@@ -138,8 +146,6 @@ public:
 			parameters.push_back(p);
 		}
 	};
-
-
 	// Definition of the function
 	struct Definition {
 		// name of the function
@@ -156,9 +162,14 @@ protected:
 	// definiton of the function
 	Definition definition;
 	// body of the function
-	std::vector<StatementBase*> body;
+	CodeBloc *body;
 
 public:
+	// constructor
+	Function(Definition* def, CodeBloc* body);
+
+	// get the name of the function
+	std::string get_name(void) const { return definition.name; }
 	// return the number of bits needed for the input parameters
 	int size_in_bit_input(void) const;
 	// return the number of bits needed to store the return value
@@ -170,7 +181,19 @@ public:
 
 
 // logical representation of de contract 
-class BitContract {
+class Program {
+	// body of the function
+	std::vector<Function*> functions;
+public:
 
+	// add a function to the program
+	void add_function(Function* f) ;
+	// get a function by name
+	Function* find_function_by_name( std::string name ) const;
+	// get main function
+	Function* main_function(void) const;
+
+	// build a circuit that represents the program
+	void build_circuit(class Circuit &circuit_out);
 };
 
