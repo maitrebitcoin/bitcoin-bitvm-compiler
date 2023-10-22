@@ -17,8 +17,14 @@ protected:
 	std::vector<Function::Parameter*> function_parameters;
 	// all function parameters
 	std::vector<Function::AllParameter*> function_all_parameters;
-	// finction definitions
+	// function definitions
 	std::vector<Function::Definition*> function_definitions;
+	// binairy operations
+	std::vector<BinaryOperation*> binary_operations;
+	// variables
+	std::vector<Variable*> variables;
+	// litterals
+	std::vector<Literal*> literals;
 
 public:
 	// destuctor
@@ -56,6 +62,25 @@ public:
 		function_all_parameters.push_back(new_all_parameters);
 		return new_all_parameters;
 	}
+	// get a new binairy operation
+	BinaryOperation* new_binairy_operation(BinaryOperation::Operator op, Operand* left, Operand* right)
+	{
+		BinaryOperation* new_operation = new BinaryOperation(op,left,right);
+		binary_operations.push_back(new_operation);
+		return new_operation;
+	}
+	// get a new variable
+	Variable* new_variable( std::string name) {
+		Variable* new_variable = new Variable( name);
+		variables.push_back(new_variable);
+		return new_variable;
+	}
+	// get a new litteral
+	Literal* new_literal(Type type, std::string name) {
+		Literal* new_literal = new Literal(type, name);
+		literals.push_back(new_literal);
+		return new_literal;
+	}
 
 	// free all 
 	void free_all(void) {
@@ -70,6 +95,18 @@ public:
 		}
 		for (Function::AllParameter* p : function_all_parameters) {
 			delete p;
+		}
+		for (Function::Definition* d : function_definitions) {
+			delete d;
+		}
+		for (BinaryOperation* o : binary_operations) {
+			delete o;
+		}
+		for (Variable* v : variables) {
+			delete v;
+		}
+		for (Literal* l : literals) {
+			delete l;
 		}
 	}
 };

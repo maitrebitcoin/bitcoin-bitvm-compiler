@@ -18,7 +18,6 @@ TokenDefinition token_definition[] =
 	{ TOKEN_RETURN,		 "return"},
 	{ TOKEN_IDENTIFIER, nullptr, "[a-zA-a_][a-zA-a0-9_]*"},
 	{ TOKEN_NUMBER,		nullptr, "[0-9]*"},
-	{ TOKEN_NUMBER,		nullptr, "[0-9]*"},
 };
 // grammar elements
 enum E_RuleId {
@@ -32,6 +31,7 @@ enum E_RuleId {
 	RULE_1_STATEMENT,
 	RULE_OPERATION,
 	RULE_INSTRUCITON_RETURN,
+	RULE_LITTERAL,
 };
 // get the token definition
 std::pair<TokenDefinition*, int> LangageGrammar::get_token_definition(void) {
@@ -78,13 +78,18 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		{ RULE_1_STATEMENT , {TOKEN_RETURN, TOKEN_IDENTIFIER, ';' } ,
 			nullptr,
 		},
+		// ex: 123
+		{ RULE_LITTERAL , { TOKEN_NUMBER } ,
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.literal_value = new_literal(Type::Native::int8, *p[0].string_value);  }
+		},
+
 		// bool
 		{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,
-			[this](TokenValue& result, std::vector<TokenValue> param) { result.type_value = new_Type(Type::Native::bit);  }
+			[this](TokenValue& result, std::vector<TokenValue> ) { result.type_value = new_Type(Type::Native::bit);  }
 		},
 		// byte
 		{ RULE_TYPE , { TOKEN_TYPE_BYTE } ,
-			[this](TokenValue& result, std::vector<TokenValue> param) { result.type_value = new_Type(Type::Native::int8);  }
+			[this](TokenValue& result, std::vector<TokenValue> ) { result.type_value = new_Type(Type::Native::int8);  }
 		},
 	};
 	int nb_grammar_rules = sizeof(rules_definition) / sizeof(rules_definition[0]);

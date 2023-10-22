@@ -22,33 +22,82 @@ protected:
 	Native native_type = Native::undefined;
 public:
 	// constructor
+	Type(void) {}
 	Type(Native t) : native_type(t) {}
+	Type(const Type& source ) : native_type(source.native_type) {}
 
 	// return the size in bits of the type
 	int size_in_bit(void) const;
 
 };
 
+// opéran din a expression. "a" or 123
+class Operand {
 
-class Operand;
-// Math expression. ex :"a+2"
+};
+// ex: 123
+class Literal : public Operand {
+public:
+	// type of the literal
+	Type type;
+	// value of the literal
+	std::string value;
+public:
+	// constructor
+	Literal(Type t, std::string v) : type(t), value(v) {}
+};
+class Variable : public Operand {
+public:
+	// type of the variable
+	Type type;
+	// name of the variable
+	std::string name;
+public:
+	// constructor
+	Variable(std::string n) : type(Type::Native::undefined), name(n) {}
+};
+
+class BinaryOperation;
 class Expression {
 protected:
 	// type of the result
 	Type result_type;
-	// opération
-	enum class Operation {
+public:
+
+};
+
+// Simple expression, ex : "a" or "123"
+class SimpleExpression : public Expression {
+protected:
+	// if the expression a variable or littéral
+	Operand* operand = nullptr;
+public:
+	// ex : a
+	SimpleExpression(Operand* op) : operand(op) {}
+};
+
+// Math expression. ex :"a+2"
+class BinaryOperation : public Expression {
+public:
+	// type of the result
+	Type result_type;
+	// opération : & + - * / % | & ^ 
+	//  types
+	enum class Operator {
 		op_and,
 		op_or,
-		op_not,
 	};
-	Operation operation;
+	Operator operation;
 	// left operand
 	Operand* left_operand;
 	// right operand
 	Operand* right_operand;
-	// expression as  string for debug purposes
-	std::string expression_for_debug;
+	// expression as string for debug purposes
+	//std::string expression_for_debug;
+public:
+	// constructor
+	BinaryOperation(Operator op, Operand* left, Operand* right);
+
 };
 
 

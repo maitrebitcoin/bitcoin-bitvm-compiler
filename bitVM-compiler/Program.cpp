@@ -50,3 +50,11 @@ Function::Definition::Definition(Type type, std::string function_name, Function:
 		parameters.push_back(param_i);
 }
 
+// constructor for BinaryOperation
+BinaryOperation::BinaryOperation(Operator op, Operand* left, Operand* right)
+	: operation(op), left_operand(left), right_operand(right) {
+	//	TODO
+	// build the expression for debug purposes
+
+
+}
