@@ -24,13 +24,13 @@ union TokenValue {
 	Function::AllParameter* function_all_paramters_value;
 	Function::Definition*   function_definition_value;
 	Function*			    function_value;
-	BinaryOperation*	    binairy_operation_value;
-	Literal*			    literal_value;
-	Variable*			    variable_value;
+	Expression*				expresison_value;
+//	BinaryOperation*	    binary_operation_value;
+//	Literal*			    literal_value;
+//	Variable*			    variable_value;
 	Program*				program_value;
 	CodeBloc*				code_block_value;
 	Statement*				statement_value;
-	Expression*				expresison_value;
 };
 // what a token is for the lexer part of the compiler
 struct TokenDefinition {

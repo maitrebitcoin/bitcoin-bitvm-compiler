@@ -67,5 +67,8 @@
     <None Include="sample\hello_word.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_and.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
 </Project>

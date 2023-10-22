@@ -72,7 +72,7 @@ public:
 		return new_all_parameters;
 	}
 	// get a new binairy operation
-	BinaryOperation* new_binairy_operation(BinaryOperation::Operator op, Operand* left, Operand* right)
+	BinaryOperation* new_binary_operation(BinaryOperation::Operator op, Expression* left, Expression* right)
 	{
 		BinaryOperation* new_operation = new BinaryOperation(op,left,right);
 		binary_operations.push_back(new_operation);

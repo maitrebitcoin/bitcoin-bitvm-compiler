@@ -31,8 +31,10 @@ enum E_RuleId {
 	RULE_1_STATEMENT,		// 1007 ex : a++
 	RULE_OPERATION,			// 1008 ex : a&b
 	RULE_INSTRUCITON_RETURN,// 1009 ex : return a+b
+	RULE_EXPRESSION,		// 1010 ex : 123 our a or a+b
 	RULE_LITTERAL,			// 1010 ex : 123
 	RULE_VARIABLE,			// 1011 ex : a
+	RULE_OPERATOR_AND,		// 1012 ex : a&b
 	RULE_PROGRAM			 = 1999, //  the whole program
 };
 // get the token definition
@@ -94,17 +96,29 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		// ex: return a;
 		{ RULE_1_STATEMENT , {TOKEN_RETURN, RULE_VARIABLE, ';' } ,
 			[this](TokenValue& result, std::vector<TokenValue> p) { 
-				Expression* exp = new SimpleExpression(p[1].variable_value); // temp
-				result.statement_value = new_retun_statement(exp);  
+				result.statement_value = new_retun_statement(p[1].expresison_value );
 			}
 		},
+		{ RULE_EXPRESSION , {RULE_VARIABLE} ,
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }
+		},
+		{ RULE_EXPRESSION , {RULE_LITTERAL } ,
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }
+		},
+	
+		{ RULE_OPERATOR_AND , {RULE_EXPRESSION, '&', RULE_EXPRESSION } ,
+			[this](TokenValue& result, std::vector<TokenValue> p) {
+				result.expresison_value = new_binary_operation( BinaryOperation::Operator::op_and, p[0].expresison_value, p[2].expresison_value);
+			}
+		},
+
 		// ex: a
 		{ RULE_VARIABLE , { TOKEN_IDENTIFIER } ,
-			[this](TokenValue& result, std::vector<TokenValue> p) { result.variable_value = new_variable( *p[0].string_value);  }
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = new_variable( *p[0].string_value);  }
 		},
 		// ex: 123
 		{ RULE_LITTERAL , { TOKEN_NUMBER } ,
-			[this](TokenValue& result, std::vector<TokenValue> p) { result.literal_value = new_literal(Type::Native::int8, *p[0].string_value);  }
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = new_literal(Type::Native::int8, *p[0].string_value);  }
 		},
 		// bool
 		{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,

@@ -1,0 +1,5 @@
+// test the & operator
+bool main(bool a,bool b) 
+{
+	return a&b; 
+}

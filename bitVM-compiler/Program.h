@@ -39,17 +39,19 @@ public:
 
 };
 
-// opéran din a expression. "a" or 123
-class Operand {
-public:
-	// init types
-	virtual void init(CodeBloc* parent_bloc) = 0;
-	// get Operand type
-	virtual const Type& get_type(void) = 0;
+// opérandd expression. "a" ,123, or a+b
+class Expression {
+protected:
 
+public:
+	// init
+	virtual void init(CodeBloc* parent_bloc) = 0;
+	// get expression type
+	virtual const Type& get_type(void) = 0;
 };
+
 // ex: 123
-class Literal : public Operand {
+class Literal : public Expression {
 public:
 	// type of the literal
 	Type type;
@@ -63,7 +65,7 @@ public:
 	// get Operand type
 	const Type& get_type(void) { return  type; }
 };
-class Variable : public Operand {
+class Variable : public Expression {
 public:
 	// type of the variable
 	Type var_type;
@@ -76,35 +78,6 @@ public:
 	virtual void init(CodeBloc* parent_bloc) override;
 	// get Operand type
 	const Type& get_type(void) { assert(var_type.is_defined()); return var_type; }
-
-};
-
-class BinaryOperation;
-class Expression {
-protected:
-	// type of the result
-	Type result_type;
-public:
-	// init
-	virtual void init(CodeBloc* parent_bloc) = 0;
-	// get expression type
-	virtual const Type& get_type(void) = 0;
-};
-
-// Simple expression, ex : "a" or "123"
-class SimpleExpression : public Expression {
-protected:
-	// if the expression a variable or littéral
-	Operand* operand = nullptr;
-public:
-	// ex : a
-	SimpleExpression(Operand* op) : operand(op) {}
-	SimpleExpression(Variable* v) : operand(v) {}
-	SimpleExpression(Literal* l) : operand(l) {}
-	// init
-	virtual void init(CodeBloc* parent_bloc) override { operand->init(parent_bloc); }
-	// get expression type
-	virtual const Type& get_type(void) override { return operand->get_type(); }
 
 };
 
@@ -121,14 +94,14 @@ public:
 	};
 	Operator operation;
 	// left operand
-	Operand* left_operand;
+	Expression* left_operand;
 	// right operand
-	Operand* right_operand;
+	Expression* right_operand;
 	// expression as string for debug purposes
 	//std::string expression_for_debug;
 public:
 	// constructor
-	BinaryOperation(Operator op, Operand* left, Operand* right);
+	BinaryOperation(Operator op, Expression* left, Expression* right);
 	// init
 	virtual void init(CodeBloc* parent_bloc) override;
 	// get expression type

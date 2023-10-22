@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="sample\hello_word.bvc" />
+    <None Include="sample\test_and.bvc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
