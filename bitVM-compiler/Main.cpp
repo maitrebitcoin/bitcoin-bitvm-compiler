@@ -104,6 +104,7 @@ int main(int argc, char* argv[])
 	}
 	std::cout << "Compilation success.\n";
 	// get the compiled program 
+
 	Program& program = compiler.get_programm();
 
 	// compile the circuit
@@ -111,30 +112,10 @@ int main(int argc, char* argv[])
 	program.build_circuit(main_circuit);
 
 
-	// declare inputs
-	main_circuit.set_inputs(2);
-
-	std::vector<Connection*> current_input = main_circuit.getInputs();
-
-	// declare gates
-	//Gate_NOT* gate_1 = new Gate_NOT();
-	Gate_OR* gate_1 = new Gate_OR();
-	// IN
-	//std::array<Connection*,1> input_1 = { current_input[0] };
-	std::array<Connection*,2> input_2 = { current_input[0], current_input[1] };
-	// OUT = NOT IN
-	//std::array<Connection*, 1> bits_result = gate_1->add_to_circuit( main_circuit, input_1);
-	std::array<Connection*, 1> bits_result = gate_1->add_to_circuit( main_circuit, input_2);
-
-	// "return" opcode
-	// tells the connexions they are the output of the circuit
-	std::vector<Connection*> bits_return({ bits_result[0] });
-	main_circuit.add_output(bits_return);
-
 	// test the circuit
 	_test_circuit(main_circuit, "00","0");
-	_test_circuit(main_circuit, "01","1");
-	_test_circuit(main_circuit, "10","1");
+	_test_circuit(main_circuit, "01","0");
+	_test_circuit(main_circuit, "10","0");
 	_test_circuit(main_circuit, "11","1");
 
 

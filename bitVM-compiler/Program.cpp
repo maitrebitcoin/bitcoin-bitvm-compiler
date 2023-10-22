@@ -3,6 +3,7 @@
 #include "Program.h"
 #include <assert.h>
 #include "Error.h"
+#include "Circuit.h"
 
 // return the size in bits of a type
 int Type::size_in_bit(void) const
@@ -111,7 +112,7 @@ void Statement_Return::init(CodeBloc* parent_bloc) {
 	// intialize the expression
 	expression->init(parent_bloc);
 	// get return type
-	Type returned_type = expression->get_type();
+	Type returned_type = get_type();
 
 	// check the return type
 	Function* parent_function= parent_bloc->get_parent_function();
@@ -153,6 +154,13 @@ const Type* CodeBloc::find_variable_by_name(std::string var_name) const {
 	// not found
 	return nullptr;
 }
+// get the return statement of the bloc
+Statement_Return* CodeBloc::get_return_statement(void) const {
+	// always last in bloc
+	Statement* last_statement = statements.back();
+	return dynamic_cast<Statement_Return*>(last_statement);
+}
+
 // find a parameter by name
 const Type* Function::find_parameter_by_name(std::string name) const {
 	for (const Parameter& param_i : definition.parameters)
@@ -174,9 +182,79 @@ void Program::init_and_check_program_tree(void) {
 	// OK
 }
 
+class BuildContext {
+public:
+	Circuit& circuit; // the circuit to build
+	std::vector<Connection*> inputs;  // input bits 
+	std::vector<Connection*> outputs; // output bits 
+};
+
+// build the circuit for the binairy expression
+void BinaryOperation::build_circuit(BuildContext& ctx) {
+
+//TEST
+	assert(ctx.inputs.size() == 2);
+	//Gate_NOT* gate_1 = new Gate_NOT();
+	Gate_AND* gate_1 = new Gate_AND();
+	// IN
+	std::array<Connection*, 2> input_2_bit = { ctx.inputs[0], ctx.inputs[1] };
+	// OUT = A AND B
+	std::array<Connection*, 1> bits_result = gate_1->add_to_circuit(ctx.circuit, input_2_bit);
+
+	ctx.outputs.assign(bits_result.begin(), bits_result.end());
+}
+
+// build the circuit for the  expression
+void Variable::build_circuit(BuildContext& ctx) {
+	assert(false); // TODO
+}
+void Literal::build_circuit(BuildContext& ctx) {
+	assert(false); // TODO
+}
+
+// build the circuit for the return statement
+void Statement_Return::build_circuit( BuildContext& ctx) {
+	
+	// build the expression
+	expression->build_circuit(ctx);
+	int nb_bit_out = (int)ctx.outputs.size();
+	assert(nb_bit_out == get_type().size_in_bit());
+	// connect the output of the expression to the output of the circuit
+	ctx.circuit.add_output(ctx.outputs);
+}
+
+// build a circuit that represents the fuidl
+void Function::build_circuit(class Circuit& circuit) {
+	// declare inputs
+	int nb_bits_in = size_in_bit_input();
+	circuit.set_inputs(nb_bits_in);
+	// get input
+	std::vector<Connection*> current_input = circuit.getInputs();
+	
+	// create context
+	BuildContext ctx{ circuit };
+	ctx.inputs = current_input;
+
+	//TODO
+//	for (Statement statement : body->statements)
+	{
+		//statement.build_circuit(circuit);
+	}
+	// return statement
+	Statement_Return* return_statement =  body->get_return_statement();
+	return_statement->build_circuit(ctx);
+
+}
+
+
 // build a circuit that represents the program
-void Program::build_circuit(class Circuit& circuit_out) {
+void Program::build_circuit(class Circuit& circuit_to_build) {
 
+	// getk main function
+	Function& fn_main = *main_function();
 
-	// TODO build the circuit
+	// build the circuit for the main function
+	fn_main.build_circuit(circuit_to_build);
+	
+
 }

@@ -7,6 +7,8 @@
 
 class Function;
 class CodeBloc;
+class BuildContext;
+
 // type of a variable or function. 
 //ex : "bool"
 class Type {
@@ -48,6 +50,8 @@ public:
 	virtual void init(CodeBloc* parent_bloc) = 0;
 	// get expression type
 	virtual const Type& get_type(void) = 0;
+	// build the circuit for the expression
+	virtual void build_circuit(BuildContext& ctx) = 0;
 };
 
 // ex: 123
@@ -63,7 +67,10 @@ public:
 	// init
 	virtual void init(CodeBloc* parent_bloc) override {}
 	// get Operand type
-	const Type& get_type(void) { return  type; }
+	virtual const Type& get_type(void) override  { return  type; }
+	// build the circuit for the  expression
+	virtual void build_circuit(BuildContext& ctx) override;
+
 };
 class Variable : public Expression {
 public:
@@ -78,7 +85,8 @@ public:
 	virtual void init(CodeBloc* parent_bloc) override;
 	// get Operand type
 	const Type& get_type(void) { assert(var_type.is_defined()); return var_type; }
-
+	// build the circuit for the  expression
+	virtual void build_circuit(BuildContext& ctx) override;
 };
 
 // Math expression. ex :"a+2"
@@ -106,8 +114,11 @@ public:
 	virtual void init(CodeBloc* parent_bloc) override;
 	// get expression type
 	virtual const Type& get_type(void) override { return result_type;}
-
+	
+	// build the circuit for the binairy expression
+	void build_circuit(BuildContext& ctx);
 };
+
 
 
 // base class for a statement. 
@@ -131,8 +142,11 @@ public:
 	virtual void init(CodeBloc* parent) override;
 
 	virtual bool is_return(void) const { return true; }
+	// get return type
+	const Type& get_type(void) const { return expression->get_type(); }
 
-
+	// build the circuit for the return statelebt
+	void build_circuit(BuildContext& ctx );
 };
 
 class CodeBloc {
@@ -151,6 +165,9 @@ public:
 	Function* get_parent_function(void) { return parent_function; }
 	// find a variable by name
 	const Type* find_variable_by_name(std::string name) const;
+	// get the return statement of the bloc
+	Statement_Return* get_return_statement(void) const;
+
 };
 
 
@@ -209,6 +226,8 @@ public:
 	int size_in_bit_output(void) const;
 	// find a parameter by name
 	const Type* find_parameter_by_name(std::string name) const;
+	// build a circuit that represents the fuidl
+	void build_circuit(class Circuit& circuit);
 
 };
 
