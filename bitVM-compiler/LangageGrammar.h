@@ -104,9 +104,10 @@ public:
 		return new_code_block;
 	}
 	// get a new statement
-	Statement* new_retun_statement(Expression& expr) {
+	Statement* new_retun_statement(Expression* expr) {
 		Statement_Return* new_return_statement = new Statement_Return(expr);
 		statements.push_back(new_return_statement);
+		assert(new_return_statement->is_return());
 		return new_return_statement;
 	}
 

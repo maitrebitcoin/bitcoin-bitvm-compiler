@@ -87,12 +87,91 @@ Function* Program::find_function_by_name(std::string name) const  {
 Function* Program::main_function(void) const {
 	return find_function_by_name("main");
 }
+// init a function
+void Function::init(void) {
+	body->init(this);
+}
+// init a bloc
+void CodeBloc::init(Function* parent) {
+	// init parent function
+	parent_function = parent;
+	// init statemtents
+	for (Statement* statement_i : statements)
+		statement_i->init(this);
+	// check statements :
+	if (statements.size() == 0)
+		throw "Empty function";
+	// last statement must be a return
+	Statement* last_statement = statements.back();
+	if (!last_statement->is_return())
+		throw "Last statement must be a return";
+}
+// init a return statmenet
+void Statement_Return::init(CodeBloc* parent_bloc) {
+	// intialize the expression
+	expression->init(parent_bloc);
+	// get return type
+	Type returned_type = expression->get_type();
+
+	// check the return type
+	Function* parent_function= parent_bloc->get_parent_function();
+	if (!returned_type.is_same_type( parent_function->get_return_type() ))
+		throw "Return type mismatch";
+}
+// init
+void BinaryOperation::init(CodeBloc* parent_bloc) {
+	left_operand->init(parent_bloc);
+	right_operand->init(parent_bloc);
+}
+
+// opérand Variable init
+void Variable::init(CodeBloc* parent_bloc)
+{
+	// get the variable type by namae
+	const Type* variable_type = parent_bloc->find_variable_by_name(var_name);
+	if (variable_type == nullptr)
+		throw "Variable not found";
+	// set the type
+	assert(variable_type->is_defined());
+	var_type = *variable_type;
+}
+// find a variable by name
+const Type* CodeBloc::find_variable_by_name(std::string var_name) const {
+	// is it a fiunction parameter ?
+	auto function_param = parent_function->find_parameter_by_name(var_name);
+	if (function_param != nullptr)
+		return function_param;
+
+	// is it a local variable ?
+	//TODO
+
+	// not found
+	return nullptr;
+}
+// find a parameter by name
+const Type* Function::find_parameter_by_name(std::string name) const {
+	for (const Parameter& param_i : definition.parameters)
+	{
+		if (param_i.name == name)
+			return &param_i.type;
+	}
+	return nullptr;
+}
+
+// init program tree, phase 2 of compilation
+void Program::init_and_check_program_tree(void) {
+	// init  check  functions
+	for (Function* f : functions)
+		f->init();
+	// check main function
+	if (main_function() == nullptr)
+		throw "No main function";
+	// OK
+}
 
 // build a circuit that represents the program
 void Program::build_circuit(class Circuit& circuit_out) {
-	// get main function
-	Function* fn_main = main_function();
-	if (fn_main==nullptr)
-		throw "No main function";
+
+
 	// TODO build the circuit
 }

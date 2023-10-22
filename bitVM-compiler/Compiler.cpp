@@ -15,9 +15,29 @@ Compiler::Compiler(void) {
 	_init_grammar();
 }
 
-
 // compile a memory stream
 bool Compiler::compile(std::istream& source_code_stream, Error& error_out)
+{
+	// 1s pass : build the tree
+	if (!_compile_build_tree(source_code_stream, error_out))
+		return false;
+	// 2nd pass : init tree and type
+	Program& program = get_programm();
+	try {
+		program.init_and_check_program_tree();
+	}
+	catch (std::string err) {
+		error_out.message = err;
+		return false;
+	}
+	// compilation ok
+	return true;
+	
+
+}
+
+// 1s phase : compile a memory stream
+bool Compiler::_compile_build_tree(std::istream& source_code_stream, Error& error_out)
 {
 	// init the lexer
 	lexer.init(source_code_stream);

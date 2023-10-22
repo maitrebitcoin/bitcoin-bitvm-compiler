@@ -77,7 +77,7 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		},
 		// ex { a++; return a; }
 		{ RULE_CODEBLOC , { '{', RULE_N_STATEMENTS, '}'} ,
-			[this](TokenValue& result, std::vector<TokenValue> p) { result.code_block_value = p[0].code_block_value; }
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.code_block_value = p[1].code_block_value; }
 		},
 		// ex a++; return a;
 		{ RULE_N_STATEMENTS , {RULE_N_STATEMENTS, RULE_1_STATEMENT } ,
@@ -95,7 +95,7 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		{ RULE_1_STATEMENT , {TOKEN_RETURN, RULE_VARIABLE, ';' } ,
 			[this](TokenValue& result, std::vector<TokenValue> p) { 
 				Expression* exp = new SimpleExpression(p[1].variable_value); // temp
-				result.statement_value = new_retun_statement(*exp);  
+				result.statement_value = new_retun_statement(exp);  
 			}
 		},
 		// ex: a

@@ -176,7 +176,8 @@ protected:
 	void _init_grammar(void);
 	// initgrammar : right conditions (récursive)
 	void _init_grammar_right_conditions(RuleId rule_id, TokenId right_token_required);
-
+	// 1s phase : compile a memory stream
+	bool _compile_build_tree(std::istream& source_code_stream, Error& error_out);
 	// compile 1 line of code
 	enum class Result {
 		nextLine,

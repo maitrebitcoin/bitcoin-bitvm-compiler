@@ -3,8 +3,10 @@
 
 #include <string>
 #include <vector>
+#include <assert.h>	
 
-
+class Function;
+class CodeBloc;
 // type of a variable or function. 
 //ex : "bool"
 class Type {
@@ -28,11 +30,22 @@ public:
 
 	// return the size in bits of the type
 	int size_in_bit(void) const;
+	// type is defineds ?
+	bool is_defined(void) const { return native_type != Native::undefined; }
+	// compare
+	bool is_same_type(const Type& other) const {
+		return native_type == other.native_type;
+	}
 
 };
 
 // opéran din a expression. "a" or 123
 class Operand {
+public:
+	// init types
+	virtual void init(CodeBloc* parent_bloc) = 0;
+	// get Operand type
+	virtual const Type& get_type(void) = 0;
 
 };
 // ex: 123
@@ -45,16 +58,25 @@ public:
 public:
 	// constructor
 	Literal(Type t, std::string v) : type(t), value(v) {}
+	// init
+	virtual void init(CodeBloc* parent_bloc) override {}
+	// get Operand type
+	const Type& get_type(void) { return  type; }
 };
 class Variable : public Operand {
 public:
 	// type of the variable
-	Type type;
+	Type var_type;
 	// name of the variable
-	std::string name;
+	std::string var_name;
 public:
 	// constructor
-	Variable(std::string n) : type(Type::Native::undefined), name(n) {}
+	Variable(std::string n) : var_type(Type::Native::undefined), var_name(n) {}
+	// init
+	virtual void init(CodeBloc* parent_bloc) override;
+	// get Operand type
+	const Type& get_type(void) { assert(var_type.is_defined()); return var_type; }
+
 };
 
 class BinaryOperation;
@@ -63,7 +85,10 @@ protected:
 	// type of the result
 	Type result_type;
 public:
-
+	// init
+	virtual void init(CodeBloc* parent_bloc) = 0;
+	// get expression type
+	virtual const Type& get_type(void) = 0;
 };
 
 // Simple expression, ex : "a" or "123"
@@ -76,6 +101,11 @@ public:
 	SimpleExpression(Operand* op) : operand(op) {}
 	SimpleExpression(Variable* v) : operand(v) {}
 	SimpleExpression(Literal* l) : operand(l) {}
+	// init
+	virtual void init(CodeBloc* parent_bloc) override { operand->init(parent_bloc); }
+	// get expression type
+	virtual const Type& get_type(void) override { return operand->get_type(); }
+
 };
 
 // Math expression. ex :"a+2"
@@ -99,6 +129,10 @@ public:
 public:
 	// constructor
 	BinaryOperation(Operator op, Operand* left, Operand* right);
+	// init
+	virtual void init(CodeBloc* parent_bloc) override;
+	// get expression type
+	virtual const Type& get_type(void) override { return result_type;}
 
 };
 
@@ -106,28 +140,44 @@ public:
 // base class for a statement. 
 // ex "v=a+2" or "return a+2;"
 class Statement {
-protected:
+public:
+	// init a statmenet
+	virtual void init(CodeBloc* parent) {}
 
+	virtual bool is_return(void) const { return false; }
 };
 // "return" statement
 class Statement_Return : public Statement {
 protected:
 	// expression to return
-	Expression expression;
+	Expression *expression;
 public:
 	// constructor
-	Statement_Return(Expression& e) : expression(e) {}
+	Statement_Return(Expression* e) : expression(e) {}
+	// init a statmenet
+	virtual void init(CodeBloc* parent) override;
+
+	virtual bool is_return(void) const { return true; }
+
 
 };
 
 class CodeBloc {
+protected:
 	// code statements
-	std::vector<Statement*> body;
+	std::vector<Statement*> statements;
+	Function* parent_function = nullptr;
 public:
 	// constructor
-	CodeBloc(Statement *first_statement) { body.push_back(first_statement);  }
+	CodeBloc(Statement *first_statement) { statements.push_back(first_statement);  }
 	// add a statement
-	void add_statement(Statement* s) { body.push_back(s); }
+	void add_statement(Statement* s) { statements.push_back(s); }
+	// init a bloc
+	void init(Function* parent_function);
+	// get the parent function
+	Function* get_parent_function(void) { return parent_function; }
+	// find a variable by name
+	const Type* find_variable_by_name(std::string name) const;
 };
 
 
@@ -174,13 +224,18 @@ protected:
 public:
 	// constructor
 	Function(Definition* def, CodeBloc* body);
-
+	// init a function
+	void init(void);
 	// get the name of the function
 	std::string get_name(void) const { return definition.name; }
+	// get the return type of the function
+	const Type &get_return_type(void) const { return definition.return_type; }
 	// return the number of bits needed for the input parameters
 	int size_in_bit_input(void) const;
 	// return the number of bits needed to store the return value
 	int size_in_bit_output(void) const;
+	// find a parameter by name
+	const Type* find_parameter_by_name(std::string name) const;
 
 };
 
@@ -192,13 +247,14 @@ class Program {
 	// body of the function
 	std::vector<Function*> functions;
 public:
-
 	// add a function to the program
 	void add_function(Function* f) ;
 	// get a function by name
 	Function* find_function_by_name( std::string name ) const;
 	// get main function
 	Function* main_function(void) const;
+	// init program tree, phase 2 of compilation
+	void init_and_check_program_tree(void);
 
 	// build a circuit that represents the program
 	void build_circuit(class Circuit &circuit_out);
