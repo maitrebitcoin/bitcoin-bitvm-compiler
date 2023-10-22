@@ -2,7 +2,7 @@
 
 #include "Program.h"
 #include <assert.h>
-
+#include "Error.h"
 
 // return the size in bits of a type
 int Type::size_in_bit(void) const
@@ -69,7 +69,7 @@ void Program::add_function(Function* f) {
 	// si the function name is not already used
 	if (find_function_by_name(f->get_name()))
 	{
-		throw "Function name already used";
+		throw Error("Function name already used");
 	}
 	// add the functions vector
 	functions.push_back(f);
@@ -100,11 +100,11 @@ void CodeBloc::init(Function* parent) {
 		statement_i->init(this);
 	// check statements :
 	if (statements.size() == 0)
-		throw "Empty function";
+		throw Error("Empty function");
 	// last statement must be a return
 	Statement* last_statement = statements.back();
 	if (!last_statement->is_return())
-		throw "Last statement must be a return";
+		throw Error("Last statement must be a return");
 }
 // init a return statmenet
 void Statement_Return::init(CodeBloc* parent_bloc) {
@@ -116,7 +116,7 @@ void Statement_Return::init(CodeBloc* parent_bloc) {
 	// check the return type
 	Function* parent_function= parent_bloc->get_parent_function();
 	if (!returned_type.is_same_type( parent_function->get_return_type() ))
-		throw "Return type mismatch";
+		throw Error("Return type mismatch");
 }
 // init
 void BinaryOperation::init(CodeBloc* parent_bloc) {
@@ -130,7 +130,7 @@ void Variable::init(CodeBloc* parent_bloc)
 	// get the variable type by namae
 	const Type* variable_type = parent_bloc->find_variable_by_name(var_name);
 	if (variable_type == nullptr)
-		throw "Variable not found";
+		throw Error("Variable not found", var_name.c_str());
 	// set the type
 	assert(variable_type->is_defined());
 	var_type = *variable_type;
@@ -165,7 +165,7 @@ void Program::init_and_check_program_tree(void) {
 		f->init();
 	// check main function
 	if (main_function() == nullptr)
-		throw "No main function";
+		throw Error("No main function");
 	// OK
 }
 

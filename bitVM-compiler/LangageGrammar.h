@@ -20,20 +20,16 @@ protected:
 	std::vector<Function::AllParameter*> function_all_parameters;
 	// function definitions
 	std::vector<Function::Definition*> function_definitions;
-	// binairy operations
-	std::vector<BinaryOperation*> binary_operations;
-	// variables
-	std::vector<Variable*> variables;
-	// litterals
-	std::vector<Literal*> literals;
-	// functions
-	std::vector<Function*> functions;
+	// binairy operations, variables & litterals
+	std::vector<Expression*> expressions;
 	// code blocks
 	std::vector<CodeBloc*> code_blocs;
 	// statements
 	std::vector<Statement*> statements;
 	// program
 	Program* program = nullptr;
+	// fuctions
+	std::vector<Function*> functions;
 
 public:
 	// destuctor
@@ -75,19 +71,19 @@ public:
 	BinaryOperation* new_binary_operation(BinaryOperation::Operator op, Expression* left, Expression* right)
 	{
 		BinaryOperation* new_operation = new BinaryOperation(op,left,right);
-		binary_operations.push_back(new_operation);
+		expressions.push_back(new_operation);
 		return new_operation;
 	}
 	// get a new variable
 	Variable* new_variable( std::string name) {
 		Variable* new_variable = new Variable( name);
-		variables.push_back(new_variable);
+		expressions.push_back(new_variable);
 		return new_variable;
 	}
 	// get a new litteral
 	Literal* new_literal(Type type, std::string name) {
 		Literal* new_literal = new Literal(type, name);
-		literals.push_back(new_literal);
+		expressions.push_back(new_literal);
 		return new_literal;
 	}
 	// get a new function
@@ -136,14 +132,8 @@ public:
 		for (Function::Definition* d : function_definitions) {
 			delete d;
 		}
-		for (BinaryOperation* o : binary_operations) {
-			delete o;
-		}
-		for (Variable* v : variables) {
-			delete v;
-		}
-		for (Literal* l : literals) {
-			delete l;
+		for (auto* ptr : expressions) {
+			delete ptr;
 		}
 		for (Function* f : functions) {
 			delete f;

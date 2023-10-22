@@ -7,6 +7,7 @@
 #include <functional>
 #include <map>
 #include "Program.h"
+#include "Error.h"
 
 using TokenId = int; // <255 1 char token ex ':', >255 = user defined token
 using RuleId  = int; // over 1000
@@ -25,9 +26,6 @@ union TokenValue {
 	Function::Definition*   function_definition_value;
 	Function*			    function_value;
 	Expression*				expresison_value;
-//	BinaryOperation*	    binary_operation_value;
-//	Literal*			    literal_value;
-//	Variable*			    variable_value;
 	Program*				program_value;
 	CodeBloc*				code_block_value;
 	Statement*				statement_value;
@@ -143,18 +141,6 @@ protected:
 
 class Compiler
 {
-public:
-	class Error {
-	public:
-		// line number
-		int line_number = 0;
-		// error message
-		std::string message;
-	public:
-		// constructor
-		Error(void) {}
-		Error(const char* mess) : message(mess) {}
-	};
 protected:
 	// token lexer : get tokens from the code
 	CLexer lexer;
@@ -178,7 +164,18 @@ protected:
 	// init the grammar
 	void _init_grammar(void);
 	// initgrammar : right conditions (récursive)
-	void _init_grammar_right_conditions(RuleId rule_id, TokenId right_token_required);
+	struct RuleAndRToken {
+		RuleId	rule_id;
+		TokenId right_token_required;
+		bool operator ==(const RuleAndRToken& other) const {
+			return rule_id == other.rule_id && right_token_required == other.right_token_required;
+		}
+		bool operator <(const RuleAndRToken& other) const {
+			return rule_id < other.rule_id || (rule_id == other.rule_id && right_token_required < other.right_token_required);
+		}
+	};
+	using MapVisited = std::map<RuleAndRToken, bool>;
+	void _init_grammar_right_conditions(RuleId rule_id, TokenId right_token_required, MapVisited & visited);
 	// 1s phase : compile a memory stream
 	bool _compile_build_tree(std::istream& source_code_stream, Error& error_out);
 	// compile 1 line of code

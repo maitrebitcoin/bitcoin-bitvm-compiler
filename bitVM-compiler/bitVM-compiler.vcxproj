@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bits.h" />
+    <ClInclude Include="Error.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="Circuit.h" />
     <ClInclude Include="Compiler.h" />

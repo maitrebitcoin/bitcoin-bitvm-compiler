@@ -26,8 +26,8 @@ bool Compiler::compile(std::istream& source_code_stream, Error& error_out)
 	try {
 		program.init_and_check_program_tree();
 	}
-	catch (std::string err) {
-		error_out.message = err;
+	catch (Error &err) {
+		error_out = err;
 		return false;
 	}
 	// compilation ok
@@ -129,7 +129,10 @@ void Compiler::_init_grammar(void)
 			TokenOrRuleId token_or_rule_next   = rule.tokens[i + 1];
 			// if token i is another rule
 			if (is_rule(token_or_rule_i))
-				_init_grammar_right_conditions(token_or_rule_i, token_or_rule_next);
+			{
+				MapVisited visited;
+				_init_grammar_right_conditions(token_or_rule_i, token_or_rule_next, visited);
+			}
 	
 		}
 	}
@@ -137,7 +140,14 @@ void Compiler::_init_grammar(void)
 
 }
 // init right conditions (récursive)
-void Compiler::_init_grammar_right_conditions(RuleId rule_id, TokenOrRuleId right_required){
+void Compiler::_init_grammar_right_conditions(RuleId rule_id, TokenOrRuleId right_required, MapVisited& visited) {
+
+	// if the rule has already been visited
+	RuleAndRToken rule_and_r_token{ rule_id, right_required };
+	if (visited[rule_and_r_token]) {
+		return;
+	}
+	visited[rule_and_r_token]= true;
 
 	// for all rules that can produce <rule_id>
 	_visit_prediction_rules(rule_id, [&](GrammarRule* rule) {
@@ -158,7 +168,7 @@ void Compiler::_init_grammar_right_conditions(RuleId rule_id, TokenOrRuleId righ
 		// recursive call if the last token is a rule
 		TokenOrRuleId token_last = rule->tokens.back();
 		if (is_rule(token_last))
-			_init_grammar_right_conditions(token_last, right_required);
+			_init_grammar_right_conditions(token_last, right_required, visited);
 
 	});//
 
@@ -179,10 +189,6 @@ bool Compiler::is_rule_matching_stack(GrammarRule& rule)  {
 		if (rule.tokens[i] != token_stack[stack_top+i].type)
 			return false;
 	}
-	// terminal rule
-//	if (rule.is_terminal )
-//		// matching ok
-//		return true;
 	// no post condition .
 	if (rule.right_token_conditions.size()==0)
 		// matching ok

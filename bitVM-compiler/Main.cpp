@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
 	}
 	// compile the source file
 	Compiler compiler;
-	Compiler::Error error;
+	Error error;
 	//std::istringstream input(sTest);
 	if (!compiler.compile(source_file, error)) {
 

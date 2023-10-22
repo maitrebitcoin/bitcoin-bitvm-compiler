@@ -32,9 +32,9 @@ enum E_RuleId {
 	RULE_OPERATION,			// 1008 ex : a&b
 	RULE_INSTRUCITON_RETURN,// 1009 ex : return a+b
 	RULE_EXPRESSION,		// 1010 ex : 123 our a or a+b
-	RULE_LITTERAL,			// 1010 ex : 123
-	RULE_VARIABLE,			// 1011 ex : a
-	RULE_OPERATOR_AND,		// 1012 ex : a&b
+	RULE_LITTERAL,			// 1011 ex : 123
+	RULE_VARIABLE,			// 1012 ex : a
+	RULE_OPERATOR_AND,		// 1013 ex : a&b
 	RULE_PROGRAM			 = 1999, //  the whole program
 };
 // get the token definition
@@ -94,18 +94,16 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 			}
 		},
 		// ex: return a;
-		{ RULE_1_STATEMENT , {TOKEN_RETURN, RULE_VARIABLE, ';' } ,
+		{ RULE_1_STATEMENT , {TOKEN_RETURN, RULE_EXPRESSION, ';' } ,
 			[this](TokenValue& result, std::vector<TokenValue> p) { 
 				result.statement_value = new_retun_statement(p[1].expresison_value );
 			}
 		},
-		{ RULE_EXPRESSION , {RULE_VARIABLE} ,
-			[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }
-		},
-		{ RULE_EXPRESSION , {RULE_LITTERAL } ,
-			[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }
-		},
-	
+		// all expressions : a,123,a&b,a-1+b
+		{ RULE_EXPRESSION , {RULE_VARIABLE} ,		[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
+		{ RULE_EXPRESSION , {RULE_LITTERAL } ,		[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
+		{ RULE_EXPRESSION , {RULE_OPERATOR_AND } ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
+		//a&b
 		{ RULE_OPERATOR_AND , {RULE_EXPRESSION, '&', RULE_EXPRESSION } ,
 			[this](TokenValue& result, std::vector<TokenValue> p) {
 				result.expresison_value = new_binary_operation( BinaryOperation::Operator::op_and, p[0].expresison_value, p[2].expresison_value);
