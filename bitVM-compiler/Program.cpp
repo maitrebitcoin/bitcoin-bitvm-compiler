@@ -122,6 +122,11 @@ void Statement_Return::init(CodeBloc* parent_bloc) {
 void BinaryOperation::init(CodeBloc* parent_bloc) {
 	left_operand->init(parent_bloc);
 	right_operand->init(parent_bloc);
+	// left and right operand must have the same type
+	if (!left_operand->get_type().is_same_type(right_operand->get_type()))
+		throw Error("Type mismatch");
+	result_type = left_operand->get_type();
+
 }
 
 // opérand Variable init
