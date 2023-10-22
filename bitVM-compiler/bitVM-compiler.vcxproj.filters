@@ -64,7 +64,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="samples\hello_word.bvc">
+    <None Include="sample\hello_word.bvc">
       <Filter>sample</Filter>
     </None>
   </ItemGroup>

@@ -1,4 +1,4 @@
-// most simple program 
+// most simple program : return the 1 bit input
 bool main(bool a) 
 {
 	return a; 

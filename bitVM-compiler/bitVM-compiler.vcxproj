@@ -146,7 +146,7 @@
     <ClInclude Include="LangageGrammar.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="samples\hello_word.bvc" />
+    <None Include="sample\hello_word.bvc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
