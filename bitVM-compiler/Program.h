@@ -74,6 +74,8 @@ protected:
 public:
 	// ex : a
 	SimpleExpression(Operand* op) : operand(op) {}
+	SimpleExpression(Variable* v) : operand(v) {}
+	SimpleExpression(Literal* l) : operand(l) {}
 };
 
 // Math expression. ex :"a+2"
@@ -103,24 +105,29 @@ public:
 
 // base class for a statement. 
 // ex "v=a+2" or "return a+2;"
-class StatementBase {
+class Statement {
 protected:
 
 };
 // "return" statement
-class Statement_Return : public StatementBase {
+class Statement_Return : public Statement {
 protected:
 	// expression to return
 	Expression expression;
+public:
+	// constructor
+	Statement_Return(Expression& e) : expression(e) {}
 
 };
 
 class CodeBloc {
 	// code statements
-	std::vector<StatementBase*> body;
+	std::vector<Statement*> body;
 public:
 	// constructor
-	CodeBloc(void* p) {}
+	CodeBloc(Statement *first_statement) { body.push_back(first_statement);  }
+	// add a statement
+	void add_statement(Statement* s) { body.push_back(s); }
 };
 
 

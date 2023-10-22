@@ -30,6 +30,8 @@ protected:
 	std::vector<Function*> functions;
 	// code blocks
 	std::vector<CodeBloc*> code_blocs;
+	// statements
+	std::vector<Statement*> statements;
 	// program
 	Program* program = nullptr;
 
@@ -40,7 +42,7 @@ public:
 	}
 
 	// get a new string
-	std::string* new_string(const char *c_string) {
+	std::string*	new_string(const char *c_string) {
 		std::string* new_string = new std::string(c_string);
 		strings.push_back(new_string);
 		return new_string;
@@ -95,11 +97,19 @@ public:
 		return new_function;
 	}
 	// get a new code block
-	CodeBloc* new_code_bloc(void* p) {
-		CodeBloc* new_code_block = new CodeBloc(p);
+	CodeBloc* new_code_bloc(Statement* fisrt_s) {
+		assert(fisrt_s!=nullptr);
+		CodeBloc* new_code_block = new CodeBloc(fisrt_s);
 		code_blocs.push_back(new_code_block);
 		return new_code_block;
 	}
+	// get a new statement
+	Statement* new_retun_statement(Expression& expr) {
+		Statement_Return* new_return_statement = new Statement_Return(expr);
+		statements.push_back(new_return_statement);
+		return new_return_statement;
+	}
+
 	// get a new program
 	Program* new_program(void) {
 		Program* new_program = new Program();
@@ -139,6 +149,9 @@ public:
 		}
 		for (CodeBloc* c : code_blocs) {
 			delete c;
+		}
+		for (Statement* s : statements) {
+			delete s;
 		}
 	}
 };

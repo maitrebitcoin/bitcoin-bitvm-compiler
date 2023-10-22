@@ -77,18 +77,26 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		},
 		// ex { a++; return a; }
 		{ RULE_CODEBLOC , { '{', RULE_N_STATEMENTS, '}'} ,
-			[this](TokenValue& result, std::vector<TokenValue> p) { result.code_block_value = new_code_bloc(nullptr); }
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.code_block_value = p[0].code_block_value; }
 		},
 		// ex a++; return a;
 		{ RULE_N_STATEMENTS , {RULE_N_STATEMENTS, RULE_1_STATEMENT } ,
-			nullptr,
+			[this](TokenValue& result, std::vector<TokenValue> p) {
+				result.code_block_value = p[0].code_block_value;
+				result.code_block_value->add_statement((p[1].statement_value));
+			}
 		},
 		{ RULE_N_STATEMENTS , {RULE_1_STATEMENT } ,
-			nullptr,
+			[this](TokenValue& result, std::vector<TokenValue> p) {
+				result.code_block_value = new_code_bloc(p[0].statement_value);
+			}
 		},
 		// ex: return a;
 		{ RULE_1_STATEMENT , {TOKEN_RETURN, RULE_VARIABLE, ';' } ,
-			nullptr,
+			[this](TokenValue& result, std::vector<TokenValue> p) { 
+				Expression* exp = new SimpleExpression(p[1].variable_value); // temp
+				result.statement_value = new_retun_statement(*exp);  
+			}
 		},
 		// ex: a
 		{ RULE_VARIABLE , { TOKEN_IDENTIFIER } ,
@@ -98,7 +106,6 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		{ RULE_LITTERAL , { TOKEN_NUMBER } ,
 			[this](TokenValue& result, std::vector<TokenValue> p) { result.literal_value = new_literal(Type::Native::int8, *p[0].string_value);  }
 		},
-
 		// bool
 		{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,
 			[this](TokenValue& result, std::vector<TokenValue> ) { result.type_value = new_Type(Type::Native::bit);  }

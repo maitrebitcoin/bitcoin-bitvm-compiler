@@ -83,7 +83,7 @@ int main()
 		return 1;
 	}
 	std::cout << "Compilation success.\n";
-	// get the program logic
+	// get the compiled program 
 	Program& program = compiler.get_programm();
 
 	// compile the circuit

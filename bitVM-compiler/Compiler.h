@@ -29,6 +29,8 @@ union TokenValue {
 	Variable*			    variable_value;
 	Program*				program_value;
 	CodeBloc*				code_block_value;
+	Statement*				statement_value;
+	Expression*				expresison_value;
 };
 // what a token is for the lexer part of the compiler
 struct TokenDefinition {
