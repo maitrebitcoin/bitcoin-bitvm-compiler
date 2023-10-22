@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "Circuit.h"
 #include "Gate.h"
 #include "Bits.h"
@@ -70,13 +71,32 @@ void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_re
 //const char* sTest = "bool main(bool a,bool b) { return a|b; }";
 const char* sTest = "bool main(bool a,  bool b) { \n return a; \n}";
 
-int main()
+int main(int argc, char* argv[])
 {
+	// echo the command line
+	std::copy(argv, argv + argc, std::ostream_iterator<char*>(std::cout, "\n"));
 
+	// need help ?
+	if (   argc<2 
+		|| strcmp(argv[1], "-help")==0) {
+		std::cout << "Usage : bitVM-compiler <source_file_name>\n";
+		return 1;
+	}
+
+	// get file name from command line : 1s argument
+	const char* file_name = argv[1];
+
+	// open the file
+	std::ifstream source_file(file_name);
+	if (!source_file) {
+		std::cout << "Cannot open file " << file_name << "\n";
+		return 1;
+	}
+	// compile the source file
 	Compiler compiler;
 	Compiler::Error error;
-	std::istringstream input(sTest);
-	if (!compiler.compile(input, error)) {
+	//std::istringstream input(sTest);
+	if (!compiler.compile(source_file, error)) {
 
 		std::cout << "Compilation failed.\n";
 		std::cout << error.message << "\n";

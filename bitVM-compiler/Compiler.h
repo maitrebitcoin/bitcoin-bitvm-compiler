@@ -132,10 +132,13 @@ public:
 protected:
 	// get the next first next non exmpty ligne
 	std::string _get_next_non_empty_line(void);
+	// get 1 token from a string <code_in_out>
+	CToken _get_next_token_from_line(std::string& code_in_out, ReadOption option) const;
 	// is a line empty = no token
 	bool _is_line_empty(std::string line) const;
 	// remove spaces, tabs and comments
 	void _remove_white_space_and_comments(std::string& code_in_out) const;
+
 };
 
 class Compiler

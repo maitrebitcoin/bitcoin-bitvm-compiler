@@ -1,0 +1,5 @@
+// most simple program 
+bool main(bool a) 
+{
+	return a; 
+}

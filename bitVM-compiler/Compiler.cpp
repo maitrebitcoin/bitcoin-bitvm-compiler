@@ -319,19 +319,23 @@ void CLexer::_remove_white_space_and_comments(std::string& code_in_out) const {
 
 // get 1 token from the line
 CToken CLexer::get_next_token(ReadOption option) {
-	// working string
-	std::string &code_in_out = remaining_ligne;
-	std::string temp;	
+	
 	if (option == ReadOption::keep) {
 		// work on a copy
-		temp = remaining_ligne;
+		std::string  local_copy = remaining_ligne;
 		// if the remaining line is empty, read a new line
 		if (_is_line_empty(remaining_ligne))
 		{
-			temp = _get_next_non_empty_line();
+			local_copy = _get_next_non_empty_line();
 		}
-		code_in_out = temp;
+		return _get_next_token_from_line(local_copy, ReadOption::remove);
+		
 	}
+	return _get_next_token_from_line(remaining_ligne, ReadOption::remove);
+}
+
+// get 1 token from a string <code_in_out>
+CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption option) const {
 
 	// ignore white space, tab and comments
 	_remove_white_space_and_comments(code_in_out);
