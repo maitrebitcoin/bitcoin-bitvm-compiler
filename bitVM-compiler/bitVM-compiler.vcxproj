@@ -128,8 +128,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bitVM-compiler.cpp" />
-    <ClCompile Include="BtcContract.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Program.cpp" />
     <ClCompile Include="Circuit.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="Connection.cpp" />
@@ -138,7 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bits.h" />
-    <ClInclude Include="BtcContract.h" />
+    <ClInclude Include="Program.h" />
     <ClInclude Include="Circuit.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="Connection.h" />

@@ -6,7 +6,7 @@
 #include <vector>
 #include <functional>
 #include <map>
-#include "BtcContract.h"
+#include "Program.h"
 
 using TokenId = int; // <255 1 char token ex ':', >255 = user defined token
 using RuleId  = int; // over 1000

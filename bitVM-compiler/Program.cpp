@@ -1,6 +1,6 @@
 // Implentation of the BtcContract class and its sub-classes
 
-#include "BtcContract.h"
+#include "Program.h"
 #include <assert.h>
 
 

@@ -15,7 +15,7 @@ TokenDefinition token_definition[] =
 {
 	{ TOKEN_TYPE_BOOL,  "bool"},
 	{ TOKEN_TYPE_BYTE,  "byte"},
-	{ TOKEN_RETURN,		"return"},
+	{ TOKEN_RETURN,		 "return"},
 	{ TOKEN_IDENTIFIER, nullptr, "[a-zA-a_][a-zA-a0-9_]*"},
 	{ TOKEN_NUMBER,		nullptr, "[0-9]*"},
 	{ TOKEN_NUMBER,		nullptr, "[0-9]*"},
