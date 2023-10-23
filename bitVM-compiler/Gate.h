@@ -123,5 +123,12 @@ public:
 	// compute the output of the OR gate
 	virtual std::array<Connection*, 1> add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs) override;
 };
+// r = a ^ b
+class Gate_XOR : public BinaryGate
+{
+public:
+	// compute the output of the OR gate
+	virtual std::array<Connection*, 1> add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs) override;
+};
 
 

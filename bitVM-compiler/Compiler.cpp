@@ -368,7 +368,7 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 			assert(definition.regex != nullptr);
 			//  check if the string start with the token with definition.regex
 			std::string regex_definition = definition.regex;
-			std::regex regex_i(regex_definition);
+			std::regex regex_i(regex_definition, std::regex::ECMAScript);
 			std::smatch regex_match;
 			if (std::regex_search(code_in_out, regex_match, regex_i)) {
 				std::string match_string = regex_match[0];

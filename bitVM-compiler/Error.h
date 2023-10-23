@@ -11,5 +11,5 @@ public:
 	// constructor
 	Error(void) {}
 	Error(const char* mess) : message(mess) {}
-	Error(const char* mess, const char* more_info) : message(mess) { message += ' ' + more_info; }
+	Error(const char* mess, std::string more_info) : message(mess) { message += ' ' + more_info; }
 };

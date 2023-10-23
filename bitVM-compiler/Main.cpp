@@ -116,9 +116,9 @@ int main(int argc, char* argv[])
 
 	// test the circuit
 	_test_circuit(main_circuit, "00","0");
-	_test_circuit(main_circuit, "01","0");
-	_test_circuit(main_circuit, "10","0");
-	_test_circuit(main_circuit, "11","1");
+	_test_circuit(main_circuit, "01","1");
+	_test_circuit(main_circuit, "10","1");
+	_test_circuit(main_circuit, "11","0");
 
 
 

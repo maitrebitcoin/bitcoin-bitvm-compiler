@@ -26,13 +26,11 @@ std::array<Connection*,1> Gate_NOT::add_to_circuit(Circuit& circuit, std::array<
 	return _nand->add_to_circuit(circuit, inputs2);
 };
 
-
 // compute the output of the AND gate
 std::array<Connection*, 1> Gate_AND::add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs) {
 	// implemented with a nand + not
 	Gate_NAND* _nand	 = new Gate_NAND();
 	Gate_NAND* _nand_not = new Gate_NAND();
-//	std::array<Connection*, 2> inputs12 = { _inputs[0], _inputs[1] };
 	std::array<Connection*, 1> output_gate1 =  _nand->add_to_circuit(circuit, _inputs);
 	std::array<Connection*, 2> output_gate2 = { output_gate1[0], output_gate1[0] };
 	return _nand_not->add_to_circuit(circuit, output_gate2);
@@ -53,3 +51,29 @@ std::array<Connection*, 1> Gate_OR::add_to_circuit(Circuit& circuit, std::array<
 	return _nand_r->add_to_circuit(circuit, not_ab);
 
 }
+
+// compute the output of the XOR gate
+std::array<Connection*, 1> Gate_XOR::add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs)
+{
+	// implemented with 4 nand gates
+	Gate_NAND* _nand_1 = new Gate_NAND();
+	Gate_NAND* _nand_2 = new Gate_NAND();
+	Gate_NAND* _nand_3 = new Gate_NAND();
+	Gate_NAND* _nand_4 = new Gate_NAND();
+	// nand(a, b)
+	std::array<Connection*, 2> inputs_1 = { _inputs[0], _inputs[1] };
+	std::array<Connection*, 1> nand_ab = _nand_1->add_to_circuit(circuit, inputs_1);
+	// nand(a, nand(a, b))
+	std::array<Connection*, 2> inputs_2 = { _inputs[0], nand_ab[0] };
+	std::array<Connection*, 1> nand_a_nand_ab = _nand_2->add_to_circuit(circuit, inputs_2);
+	// nand(b, nand(a, b))
+	std::array<Connection*, 2> inputs_3 = { _inputs[1], nand_ab[0] };
+	std::array<Connection*, 1> nand_b_nand_ab = _nand_2->add_to_circuit(circuit, inputs_3);
+	// result
+	std::array<Connection*, 2> inputs_4 = { nand_a_nand_ab[0], nand_b_nand_ab[0] };
+	std::array<Connection*, 1> xor_ab = _nand_2->add_to_circuit(circuit, inputs_4);
+
+	return  xor_ab;
+
+}
+

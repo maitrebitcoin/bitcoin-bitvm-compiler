@@ -94,11 +94,12 @@ class BinaryOperation : public Expression {
 public:
 	// type of the result
 	Type result_type;
-	// opération : & + - * / % | & ^ 
+	// opération : | & ^ + - *  
 	//  types
 	enum class Operator {
 		op_and,
 		op_or,
+		op_xor,
 	};
 	Operator operation;
 	// left operand

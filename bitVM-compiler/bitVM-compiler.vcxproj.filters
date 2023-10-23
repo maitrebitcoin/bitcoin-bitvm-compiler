@@ -76,5 +76,8 @@
     <None Include="sample\test_or.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_xor.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
 </Project>

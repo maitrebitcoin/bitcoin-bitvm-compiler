@@ -136,7 +136,7 @@ void Variable::init(CodeBloc* parent_bloc)
 	// get the variable type by namae
 	const Type* variable_type = parent_bloc->find_variable_by_name(var_name);
 	if (variable_type == nullptr)
-		throw Error("Variable not found", var_name.c_str());
+		throw Error("Variable not found", var_name);
 	// set the type
 	assert(variable_type->is_defined());
 	var_type = *variable_type;
@@ -220,10 +220,10 @@ std::vector<Connection*> Variable::build_circuit(BuildContext& ctx) {
 	// get the variable type by name
 	VarBuild* var= ctx.variables.find_by_name(var_name);
 	if (var== nullptr)
-		throw Error("Unknonwn variable : ", var_name.c_str());
+		throw Error("Unknonwn variable : ", var_name);
 	// if var not set
 	if (var->bits.size() == 0)
-		throw Error("Uninitialized variable : ", var_name.c_str());
+		throw Error("Uninitialized variable : ", var_name);
 
 	// set outputs to get the value of the variable
 	return var->bits;
@@ -251,6 +251,9 @@ std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {
 		break;
 	case Operator::op_or:
 		gate = new Gate_OR();
+		break;
+	case Operator::op_xor:
+		gate = new Gate_XOR();
 		break;
 	default:
 		assert(false);
