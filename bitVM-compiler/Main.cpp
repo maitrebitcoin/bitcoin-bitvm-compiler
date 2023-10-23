@@ -1,5 +1,11 @@
-// bitVM-compiler.cpp : Ce fichier contient la fonction 'main'. L'exécution du programme commence et se termine à cet endroit.
-//
+// Creator: MaitreBitcoin
+// Creation date: 23/10/2023
+// Main.cpp : This file contains the 'main' function. Program execution begins and ends there.
+
+// Usage :
+//   bitVM-compiler <source_file_name>
+
+// compilee a program compatible with bitVM
 
 #include <iostream>
 #include <sstream>
@@ -8,10 +14,6 @@
 #include "Gate.h"
 #include "Bits.h"
 #include "Compiler.h"
-
-
-
-
 
 
 // convert bits  to string
@@ -117,6 +119,7 @@ int main(int argc, char* argv[])
 	_test_circuit(main_circuit, "01","0");
 	_test_circuit(main_circuit, "10","0");
 	_test_circuit(main_circuit, "11","1");
+
 
 
 }

@@ -8,6 +8,7 @@
 class Function;
 class CodeBloc;
 class BuildContext;
+class Connection;
 
 // type of a variable or function. 
 //ex : "bool"
@@ -51,7 +52,7 @@ public:
 	// get expression type
 	virtual const Type& get_type(void) = 0;
 	// build the circuit for the expression
-	virtual void build_circuit(BuildContext& ctx) = 0;
+	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) = 0;
 };
 
 // ex: 123
@@ -69,7 +70,7 @@ public:
 	// get Operand type
 	virtual const Type& get_type(void) override  { return  type; }
 	// build the circuit for the  expression
-	virtual void build_circuit(BuildContext& ctx) override;
+	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 
 };
 class Variable : public Expression {
@@ -86,9 +87,8 @@ public:
 	// get Operand type
 	const Type& get_type(void) { assert(var_type.is_defined()); return var_type; }
 	// build the circuit for the  expression
-	virtual void build_circuit(BuildContext& ctx) override;
+	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 };
-
 // Math expression. ex :"a+2"
 class BinaryOperation : public Expression {
 public:
@@ -116,7 +116,7 @@ public:
 	virtual const Type& get_type(void) override { return result_type;}
 	
 	// build the circuit for the binairy expression
-	void build_circuit(BuildContext& ctx);
+	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 };
 
 
@@ -127,8 +127,10 @@ class Statement {
 public:
 	// init a statmenet
 	virtual void init(CodeBloc* parent) {}
-
 	virtual bool is_return(void) const { return false; }
+
+	// build the circuit for the return statelebt
+	virtual void build_circuit(BuildContext& ctx) const = 0;
 };
 // "return" statement
 class Statement_Return : public Statement {
@@ -146,11 +148,11 @@ public:
 	const Type& get_type(void) const { return expression->get_type(); }
 
 	// build the circuit for the return statelebt
-	void build_circuit(BuildContext& ctx );
+	virtual void build_circuit(BuildContext& ctx ) const __inner_override;
 };
 
 class CodeBloc {
-protected:
+public:
 	// code statements
 	std::vector<Statement*> statements;
 	Function* parent_function = nullptr;

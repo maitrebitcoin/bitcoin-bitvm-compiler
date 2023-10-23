@@ -182,45 +182,89 @@ void Program::init_and_check_program_tree(void) {
 	// OK
 }
 
-class BuildContext {
+// var during building
+class VarBuild {
 public:
-	Circuit& circuit; // the circuit to build
-	std::vector<Connection*> inputs;  // input bits 
-	std::vector<Connection*> outputs; // output bits 
+	Type type; // type of the variable
+	std::vector<Connection*> bits; // curetn vue. emtpy if var not yet assigned
+	std::string name;
+};
+class KnownVar : public std::vector<VarBuild> {
+public:
+	// find a variable by name
+	VarBuild* find_by_name(std::string name) {
+		for (VarBuild& var_i : *this)
+		{
+			if (var_i.name == name)
+				return &var_i;
+		}
+		return nullptr;
+	}
 };
 
-// build the circuit for the binairy expression
-void BinaryOperation::build_circuit(BuildContext& ctx) {
 
-//TEST
-	assert(ctx.inputs.size() == 2);
+// context for building the circuit
+class BuildContext {
+
+
+public:
+	Circuit& circuit; // the circuit to build
+	KnownVar& variables; // current known variables
+//	std::vector<Connection*> inputs;  // input bits 
+};
+
+
+// build the circuit for the  expression
+std::vector<Connection*> Variable::build_circuit(BuildContext& ctx) {
+
+	// get the variable type by name
+	VarBuild* var= ctx.variables.find_by_name(var_name);
+	if (var== nullptr)
+		throw Error("Unknonwn variable : ", var_name.c_str());
+	// if var not set
+	if (var->bits.size() == 0)
+		throw Error("Uninitialized variable : ", var_name.c_str());
+
+	// set outputs to get the value of the variable
+	return var->bits;
+
+}
+std::vector<Connection*> Literal::build_circuit(BuildContext& ctx) {
+	assert(false); // TODO
+	std::vector<Connection*> result;
+	return result;
+}
+
+// build the circuit for the binairy expression
+std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {
+
+	// build the L& R operands
+	std::vector<Connection*> output_left  = left_operand->build_circuit(ctx);
+	std::vector<Connection*> output_right = right_operand->build_circuit(ctx);
+
+	assert(operation == Operator::op_and);
 	//Gate_NOT* gate_1 = new Gate_NOT();
 	Gate_AND* gate_1 = new Gate_AND();
 	// IN
-	std::array<Connection*, 2> input_2_bit = { ctx.inputs[0], ctx.inputs[1] };
+	std::array<Connection*, 2> input_2_bit = { output_left[0], output_right[0] };
 	// OUT = A AND B
 	std::array<Connection*, 1> bits_result = gate_1->add_to_circuit(ctx.circuit, input_2_bit);
 
-	ctx.outputs.assign(bits_result.begin(), bits_result.end());
+	std::vector<Connection*> result;
+	result.assign(bits_result.begin(), bits_result.end());
+	return result;
 }
 
-// build the circuit for the  expression
-void Variable::build_circuit(BuildContext& ctx) {
-	assert(false); // TODO
-}
-void Literal::build_circuit(BuildContext& ctx) {
-	assert(false); // TODO
-}
 
 // build the circuit for the return statement
-void Statement_Return::build_circuit( BuildContext& ctx) {
+void Statement_Return::build_circuit( BuildContext& ctx) const {
 	
 	// build the expression
-	expression->build_circuit(ctx);
-	int nb_bit_out = (int)ctx.outputs.size();
+	std::vector<Connection*> outputs  =  expression->build_circuit(ctx);
+	int nb_bit_out = (int)outputs.size();
 	assert(nb_bit_out == get_type().size_in_bit());
 	// connect the output of the expression to the output of the circuit
-	ctx.circuit.add_output(ctx.outputs);
+	ctx.circuit.add_output(outputs);
 }
 
 // build a circuit that represents the fuidl
@@ -231,16 +275,30 @@ void Function::build_circuit(class Circuit& circuit) {
 	// get input
 	std::vector<Connection*> current_input = circuit.getInputs();
 	
-	// create context
-	BuildContext ctx{ circuit };
-	ctx.inputs = current_input;
-
-	//TODO
-//	for (Statement statement : body->statements)
+	// init known variables
+	KnownVar variables;
+	int index = 0;
+	for (const Parameter& param_i : definition.parameters)
 	{
-		//statement.build_circuit(circuit);
+		VarBuild var_i;
+		int size = param_i.type.size_in_bit();
+		var_i.bits.assign(  current_input.begin() + index, 
+							current_input.begin() + index + size) ;
+		var_i.type		  = param_i.type;
+		var_i.name		  = param_i.name;
+		variables.push_back(var_i);
+		index += var_i.type.size_in_bit();
 	}
-	// return statement
+	
+	// create context
+	BuildContext ctx{ circuit, variables };
+
+	// build the body
+	for (int i=0;i< body->statements.size()-1;i++) {
+		Statement* statement = body->statements[i];
+		statement->build_circuit(ctx);
+	}
+	// las statement : return 
 	Statement_Return* return_statement =  body->get_return_statement();
 	return_statement->build_circuit(ctx);
 
