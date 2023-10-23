@@ -68,10 +68,10 @@ std::array<Connection*, 1> Gate_XOR::add_to_circuit(Circuit& circuit, std::array
 	std::array<Connection*, 1> nand_a_nand_ab = _nand_2->add_to_circuit(circuit, inputs_2);
 	// nand(b, nand(a, b))
 	std::array<Connection*, 2> inputs_3 = { _inputs[1], nand_ab[0] };
-	std::array<Connection*, 1> nand_b_nand_ab = _nand_2->add_to_circuit(circuit, inputs_3);
+	std::array<Connection*, 1> nand_b_nand_ab = _nand_3->add_to_circuit(circuit, inputs_3);
 	// result
 	std::array<Connection*, 2> inputs_4 = { nand_a_nand_ab[0], nand_b_nand_ab[0] };
-	std::array<Connection*, 1> xor_ab = _nand_2->add_to_circuit(circuit, inputs_4);
+	std::array<Connection*, 1> xor_ab = _nand_4->add_to_circuit(circuit, inputs_4);
 
 	return  xor_ab;
 
