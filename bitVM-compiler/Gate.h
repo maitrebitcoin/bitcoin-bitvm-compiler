@@ -108,15 +108,16 @@ public:
 	// compute the output of the NOT gate
 	virtual std::array<Connection*, 1> add_to_circuit(Circuit& circuit, std::array<Connection*, 1>& _inputs) override;
 };
+class BinaryGate : public T_CompositeeGate<2, 1> {};
 // r = a & b
-class Gate_AND : public T_CompositeeGate<2, 1>
+class Gate_AND : public BinaryGate
 {
 public:
 	// compute the output of the AND gate
 	virtual std::array<Connection*, 1> add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs) override;
 };
 // r = a | b
-class Gate_OR : public T_CompositeeGate<2, 1>
+class Gate_OR : public BinaryGate
 {
 public:
 	// compute the output of the OR gate

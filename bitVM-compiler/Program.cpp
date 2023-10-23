@@ -242,13 +242,27 @@ std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {
 	std::vector<Connection*> output_left  = left_operand->build_circuit(ctx);
 	std::vector<Connection*> output_right = right_operand->build_circuit(ctx);
 
-	assert(operation == Operator::op_and);
-	//Gate_NOT* gate_1 = new Gate_NOT();
-	Gate_AND* gate_1 = new Gate_AND();
+	// create the gate for the operation
+	BinaryGate* gate = nullptr;
+	switch (operation)
+	{
+	case  Operator::op_and:
+		gate = new Gate_AND();
+		break;
+	case Operator::op_or:
+		gate = new Gate_OR();
+		break;
+	default:
+		assert(false);
+		throw Error("Internal error : unexpected operator");
+	}
+
 	// IN
 	std::array<Connection*, 2> input_2_bit = { output_left[0], output_right[0] };
-	// OUT = A AND B
-	std::array<Connection*, 1> bits_result = gate_1->add_to_circuit(ctx.circuit, input_2_bit);
+	// OUT = A OP B
+	std::array<Connection*, 1> bits_result = gate->add_to_circuit(ctx.circuit, input_2_bit);
+	//TODO
+	//delete gate;
 
 	std::vector<Connection*> result;
 	result.assign(bits_result.begin(), bits_result.end());
@@ -301,9 +315,7 @@ void Function::build_circuit(class Circuit& circuit) {
 	// las statement : return 
 	Statement_Return* return_statement =  body->get_return_statement();
 	return_statement->build_circuit(ctx);
-
 }
-
 
 // build a circuit that represents the program
 void Program::build_circuit(class Circuit& circuit_to_build) {

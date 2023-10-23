@@ -35,6 +35,7 @@ enum E_RuleId {
 	RULE_LITTERAL,			// 1011 ex : 123
 	RULE_VARIABLE,			// 1012 ex : a
 	RULE_OPERATOR_AND,		// 1013 ex : a&b
+	RULE_OPERATOR_OR,		// 1013 ex : a|b
 	RULE_PROGRAM			 = 1999, //  the whole program
 };
 // get the token definition
@@ -103,13 +104,19 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		{ RULE_EXPRESSION , {RULE_VARIABLE} ,		[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
 		{ RULE_EXPRESSION , {RULE_LITTERAL } ,		[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
 		{ RULE_EXPRESSION , {RULE_OPERATOR_AND } ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
+		{ RULE_EXPRESSION , {RULE_OPERATOR_OR }  ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
 		//a&b
 		{ RULE_OPERATOR_AND , {RULE_EXPRESSION, '&', RULE_EXPRESSION } ,
 			[this](TokenValue& result, std::vector<TokenValue> p) {
 				result.expresison_value = new_binary_operation( BinaryOperation::Operator::op_and, p[0].expresison_value, p[2].expresison_value);
 			}
 		},
-
+		//a|b
+		{ RULE_OPERATOR_OR , {RULE_EXPRESSION, '|', RULE_EXPRESSION } ,
+			[this](TokenValue& result, std::vector<TokenValue> p) {
+				result.expresison_value = new_binary_operation( BinaryOperation::Operator::op_or, p[0].expresison_value, p[2].expresison_value);
+			}
+		},
 		// ex: a
 		{ RULE_VARIABLE , { TOKEN_IDENTIFIER } ,
 			[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = new_variable( *p[0].string_value);  }
