@@ -11,10 +11,13 @@
 #include "Compiler.h"
 #include "LangageGrammar.h"
 
-LangageGrammar BitVM_C_Grammar;
+//LangageGrammar BitVM_C_Grammar;
 
 // constructor
-Compiler::Compiler(void) {
+Compiler::Compiler(LangageGrammar& language)
+	: lexer(language)
+	, language_context(language)
+{
 	_init_grammar();
 }
 
@@ -73,12 +76,11 @@ bool Compiler::_compile_build_tree(std::istream& source_code_stream, Error& erro
 
 
 
-void Compiler::_init_grammar(void) 
+void Compiler::_init_grammar() 
 {
 
-
 	// init the grammar array
-	auto rules_definition = BitVM_C_Grammar.get_grammar_definition();
+	auto rules_definition = language_context.get_grammar_definition();
 	for (int i = 0; i < rules_definition.size() ; i++) {
 		GrammarRule grammar_rule_i(rules_definition[i]);
 		grammar_rules.push_back(grammar_rule_i);
@@ -249,8 +251,8 @@ void Compiler::_execute_rule(GrammarRule& rule) {
 }
 
 // lexer constructor
-CLexer::CLexer(void) {
-	auto [definitions, len] = BitVM_C_Grammar.get_token_definition();
+CLexer::CLexer(LangageGrammar& language) :language_context(language) {
+	auto [definitions, len] = language_context.get_token_definition();
 	token_definition.assign(definitions, definitions + len);
 }
 
@@ -309,10 +311,10 @@ CToken::CToken(int t)
 }
 
 // contruct a new string token
-CToken::CToken(int t, std::string v) 
+CToken::CToken(int t, std::string v, ObjetKeeper& allocator)
 	: type(t) {
 	str_value = v;
-	value.string_value = BitVM_C_Grammar.new_string(v.c_str());// & value_buffer;
+	value.string_value = allocator.new_string(v.c_str());// & value_buffer;
 }
 
 // remove spaces, tabs and comments
@@ -351,7 +353,7 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 
 	// if the string is empty, return an empty token
 	if (code_in_out.size() == 0)
-		return CToken(0, "");
+		return CToken(0, "", language_context);
 
 	// check if the string star wiht of of the known token
 	for (TokenDefinition definition : token_definition) {
@@ -363,7 +365,7 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 				if (option == ReadOption::remove)
 					code_in_out.erase(0, strlen(definition.token_value));
 				// return the token
-				return CToken(definition.token_type, definition.token_value);
+				return CToken(definition.token_type, definition.token_value, language_context);
 			}
 		}
 		// ex "[0-9*]"
@@ -381,7 +383,7 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 					if (option == ReadOption::remove)
 						code_in_out.erase(0, match_string.size());
 					// return the token
-					return CToken(definition.token_type, match_string);
+					return CToken(definition.token_type, match_string, language_context);
 				}
 			}
 		}
@@ -394,7 +396,7 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 	char tok_c[] = { c,0 };
 	if (option == ReadOption::remove)
 		code_in_out.erase(0, 1);
-	return CToken(c, tok_c);
+	return CToken(c, tok_c, language_context);
 }
 
 
@@ -451,8 +453,9 @@ Compiler::Result Compiler::compile_circuit_from_file(const char* file_name)
 	if (!source_file) {
 		return std::move(Result{ false, null_circuit, Error("Cannot open file ", file_name) });
 	}
-	// compile the source file
-	Compiler compiler;
+	// compile the source file for the  BitVM_C_Grammar
+	LangageGrammar BitVM_C_Grammar;
+	Compiler compiler(BitVM_C_Grammar);
 	Error compile_error;
 	if (!compiler.compile(source_file, compile_error)) {
 		return std::move(Result{ false, null_circuit, compile_error });
