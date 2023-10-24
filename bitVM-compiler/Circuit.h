@@ -54,6 +54,9 @@ public:
 	// reset the circuit gate before a new run
 	void reset(void) const;
 
+	// export to a string
+	std::string export_to_string(void) const;
+
 protected:
 	// get all garbes that have calculated inputes
 	std::vector< Gate*> _get_computable_gate(void) const;

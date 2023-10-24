@@ -115,3 +115,19 @@ void Circuit::reset(void) const
 	}
 }
 
+// export to a string
+// inspired from https://github.com/mcbagz/LogicGates/blob/main/Example.ipynb
+// format : https://pypi.org/project/circuit/
+std::string Circuit::export_to_string(void) const {
+
+	std::string result;
+	//# of gates
+	result += std::to_string(gates.size());
+	result += " ";
+	//# of of wires
+	result += std::to_string(connections.size());
+
+
+
+	return result;
+}

@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 
 	// TODO
 	// save the circuit in a file
-
-
+	auto s = result.circuit.export_to_string();
+	std::cout << s;
 }
 
