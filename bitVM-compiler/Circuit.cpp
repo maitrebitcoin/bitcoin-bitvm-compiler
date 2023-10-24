@@ -3,6 +3,10 @@
 
 #include "Circuit.h"
 
+// constructor
+Circuit::Circuit(void) {
+}
+
 
 // set the numbre of bits inputs of the circuit
 void Circuit::set_inputs(int bit_count) {

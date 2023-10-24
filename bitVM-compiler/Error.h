@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 // compiler error
 class Error {
 public:

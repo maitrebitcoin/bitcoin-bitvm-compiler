@@ -8,6 +8,7 @@
 #include <map>
 #include "Program.h"
 #include "Error.h"
+#include "Circuit.h"
 
 using TokenId = int; // <255 1 char token ex ':', >255 = user defined token
 using RuleId  = int; // over 1000
@@ -153,6 +154,16 @@ protected:
 	// tokenss waiting to be processed by the compiler
 	std::vector<CToken> token_stack;
 public:
+	//==>Main entry point
+	// compile and build the circuit from a file
+	struct Result {
+		bool	ok;
+		Circuit circuit;
+		Error	error;
+	};
+	static Result compile_circuit_from_file(const char* file_name);
+
+
 	// constructor
 	Compiler(void);
 	// compile a memory stream
@@ -179,12 +190,12 @@ protected:
 	// 1s phase : compile a memory stream
 	bool _compile_build_tree(std::istream& source_code_stream, Error& error_out);
 	// compile 1 line of code
-	enum class Result {
+	enum class ResultforLine {
 		nextLine,
 		syntaxError,
 		endOfCode,
 	};
-	Result _compile_line(void);
+	ResultforLine _compile_line(void);
 	// test if a rule is matching the current stack
 	bool is_rule_matching_stack(GrammarRule& rule) ;
 	// find a matchin rule from the token stack

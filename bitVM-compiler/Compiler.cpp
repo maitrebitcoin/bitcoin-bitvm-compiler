@@ -1,12 +1,15 @@
 // implémentation of the compiler
 
-#include "Compiler.h"
-#include "LangageGrammar.h"
+
 #include <sstream>
 #include <vector>
 #include <assert.h>
 #include <regex>
 #include <functional>
+#include <sstream>
+#include <fstream>
+#include "Compiler.h"
+#include "LangageGrammar.h"
 
 LangageGrammar BitVM_C_Grammar;
 
@@ -45,18 +48,18 @@ bool Compiler::_compile_build_tree(std::istream& source_code_stream, Error& erro
 	// read the source code
 	while (lexer.read_next_line()) {
 		// compile 1 line
-		Result result =	_compile_line();
+		ResultforLine result =	_compile_line();
 		switch (result)
 		{	
-		case Result::nextLine:
+		case ResultforLine::nextLine:
 			// continue compilation
 			break;
-		case Result::syntaxError:
+		case ResultforLine::syntaxError:
 			// compilation failed
 			error_out.message     = "syntax error : " + lexer.get_source_code_current_line(); 
 			error_out.line_number = lexer.get_current_line_number();
 			return false;
-		case Result::endOfCode:
+		case ResultforLine::endOfCode:
 			// compilation success
 			return true;
 		}
@@ -396,19 +399,19 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 
 
 // compile 1 line of code
-Compiler::Result Compiler::_compile_line(void) {
+Compiler::ResultforLine Compiler::_compile_line(void) {
 	// ignore empty lines
 	if (lexer.is_current_line_empty()) 
-		return Result::nextLine;;
+		return ResultforLine::nextLine;;
 
 	// read all the tokens
 	while (1) {
 		// get a token for the line
 		CToken token = lexer.get_next_token( CLexer::ReadOption::remove);
 		if (token.type == 0)
-			return Result::nextLine; // End of line, read next line
+			return ResultforLine::nextLine; // End of line, read next line
 		if (token.type == INVALID_TOKEN)
-			return Result::syntaxError;
+			return ResultforLine::syntaxError;
 		// add to stack	
 		token_stack.push_back(token);
 		// check if we have a matching rule
@@ -426,9 +429,9 @@ Compiler::Result Compiler::_compile_line(void) {
 		{
 			// check if the stack is empty
 			if (token_stack.size()>1)
-				return Result::syntaxError;
+				return ResultforLine::syntaxError;
 			// sucess
-			return Result::endOfCode;
+			return ResultforLine::endOfCode;
 		}
 	}
 
@@ -436,4 +439,32 @@ Compiler::Result Compiler::_compile_line(void) {
 // get the program afer compilation
 Program& Compiler::get_programm(void) {
 	return *token_stack[0].value.program_value;
+}
+
+// compile and buil the circuit
+Compiler::Result Compiler::compile_circuit_from_file(const char* file_name)
+{
+	Circuit null_circuit;
+
+	// open the file
+	std::ifstream source_file(file_name);
+	if (!source_file) {
+		return std::move(Result{ false, null_circuit, Error("Cannot open file ", file_name) });
+	}
+	// compile the source file
+	Compiler compiler;
+	Error compile_error;
+	if (!compiler.compile(source_file, compile_error)) {
+		return std::move(Result{ false, null_circuit, compile_error });
+	}
+	// get the compiled program 
+	Program& program = compiler.get_programm();
+
+	// build the circuit
+	Circuit circuit_ok;
+	program.build_circuit(circuit_ok);
+	// success
+	Error no_error;
+	return std::move(Result{ true, std::move(circuit_ok), no_error });
+
 }

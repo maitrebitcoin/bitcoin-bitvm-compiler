@@ -135,6 +135,7 @@
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LangageGrammar.cpp" />
+    <ClCompile Include="SurfaceTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bits.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Connection.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="LangageGrammar.h" />
+    <ClInclude Include="SufaceTest.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sample\hello_word.bvc" />

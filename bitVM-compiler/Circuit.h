@@ -2,6 +2,8 @@
 #include <vector>
 #include "Bits.h"
 #include "Gate.h"
+#include "Error.h"
+
 
 class Gate;
 class Circuit;
@@ -34,6 +36,10 @@ private:
 
 
 public:
+
+	// constructor
+	Circuit(void);
+
 	// set the nimbre of bits inputs of the circuit
 	void set_inputs(int bit_count);
 	// add a gate into the circuit
