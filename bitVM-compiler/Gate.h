@@ -101,8 +101,9 @@ public:
 	virtual std::array<Connection*, 1> add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _input) override;
 };
 
+class UnaryGate : public T_CompositeeGate<1, 1> {};
 // r = !a
-class Gate_NOT : public T_CompositeeGate<1, 1>
+class Gate_NOT : public UnaryGate
 {
 public:
 	// compute the output of the NOT gate

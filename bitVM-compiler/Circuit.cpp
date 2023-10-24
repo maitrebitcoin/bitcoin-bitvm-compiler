@@ -126,6 +126,11 @@ std::string Circuit::export_to_string(void) const {
 	result += " ";
 	//# of of wires
 	result += std::to_string(connections.size());
+	result += "\n";
+	//# of inouts
+	result += std::to_string(inputs.size());
+	result += " ";
+
 
 
 

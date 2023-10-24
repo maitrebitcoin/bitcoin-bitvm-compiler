@@ -37,6 +37,7 @@ enum E_RuleId {
 	RULE_OPERATOR_AND,		// 1013 ex : a&b
 	RULE_OPERATOR_OR,		// 1014 ex : a|b
 	RULE_OPERATOR_XOR,		// 1015 ex : a^b
+	RULE_OPERATOR_NOT,		// 1016 ex : !a
 	RULE_PROGRAM			 = 1999, //  the whole program
 };
 // get the token definition
@@ -107,6 +108,7 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 		{ RULE_EXPRESSION , {RULE_OPERATOR_AND } ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
 		{ RULE_EXPRESSION , {RULE_OPERATOR_OR }  ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
 		{ RULE_EXPRESSION , {RULE_OPERATOR_XOR } ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
+		{ RULE_EXPRESSION , {RULE_OPERATOR_NOT } ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expresison_value = p[0].expresison_value; }	},
 		//a&b
 		{ RULE_OPERATOR_AND , {RULE_EXPRESSION, '&', RULE_EXPRESSION } ,
 			[this](TokenValue& result, std::vector<TokenValue> p) {
@@ -125,6 +127,13 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 				result.expresison_value = new_binary_operation( BinaryOperation::Operator::op_xor, p[0].expresison_value, p[2].expresison_value);
 			}
 		},
+		//a|b
+		{ RULE_OPERATOR_NOT , {'!', RULE_EXPRESSION } ,
+			[this](TokenValue& result, std::vector<TokenValue> p) {
+				result.expresison_value = new_unary_operation(UnaryOperation::Operator::op_not, p[1].expresison_value);
+			}
+		},
+				
 				
 		// ex: a
 		{ RULE_VARIABLE , { TOKEN_IDENTIFIER } ,

@@ -234,6 +234,43 @@ std::vector<Connection*> Literal::build_circuit(BuildContext& ctx) {
 	std::vector<Connection*> result;
 	return result;
 }
+// constructor
+UnaryOperation::UnaryOperation(Operator op, Expression* exp) : operation(op), operand(exp) {
+	// check
+	assert(operand != nullptr);
+}
+// init
+void UnaryOperation::init(CodeBloc* parent_bloc) {
+	operand->init(parent_bloc);
+	result_type = operand->get_type();
+}
+// build the circuit for the binairy expression
+std::vector<Connection*> UnaryOperation::build_circuit(BuildContext& ctx) {
+	// build the  operand
+	std::vector<Connection*> output_ = operand->build_circuit(ctx);
+
+	// create the gate for the operation
+	UnaryGate* gate = nullptr;
+	switch (operation)
+	{
+	case  Operator::op_not:
+		gate = new Gate_NOT();
+		break;
+	default:
+		assert(false);
+		throw Error("Internal error : unexpected operator");
+	}
+
+	// IN
+	std::array<Connection*, 1> input_1_bit = { output_[0] };
+	// OUT = A 
+	std::array<Connection*, 1> bits_result = gate->add_to_circuit(ctx.circuit, input_1_bit);
+	//TODO
+	//delete gate;
+	std::vector<Connection*> result;
+	result.assign(bits_result.begin(), bits_result.end());
+	return result;
+}
 
 // build the circuit for the binairy expression
 std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {

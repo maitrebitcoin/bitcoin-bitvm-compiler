@@ -119,6 +119,31 @@ public:
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 };
+// Math with 1 operand. ex :"!2"
+class UnaryOperation : public Expression {
+public:
+	// type of the result
+	Type result_type;
+	// opération : | & ^ + - *  
+	//  types
+	enum class Operator {
+		op_not,
+	};
+	Operator operation;
+	//  operand
+	Expression*operand;
+	// expression as string for debug purposes
+	//std::string expression_for_debug;
+public:
+	// constructor
+	UnaryOperation(Operator op, Expression* exp);
+	// init
+	virtual void init(CodeBloc* parent_bloc) override;
+	// get expression type
+	virtual const Type& get_type(void) override { return result_type; }
+	// build the circuit for the binairy expression
+	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
+};
 
 
 

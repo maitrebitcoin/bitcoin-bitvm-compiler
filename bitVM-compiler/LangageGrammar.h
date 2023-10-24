@@ -74,6 +74,13 @@ public:
 		expressions.push_back(new_operation);
 		return new_operation;
 	}
+	// get a new unairy operation
+	UnaryOperation* new_unary_operation(UnaryOperation::Operator op, Expression* expr) {
+		UnaryOperation* new_operation = new UnaryOperation(op, expr);
+		expressions.push_back(new_operation);
+		return new_operation;
+	}
+
 	// get a new variable
 	Variable* new_variable( std::string name) {
 		Variable* new_variable = new Variable( name);

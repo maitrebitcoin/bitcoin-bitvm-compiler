@@ -19,11 +19,9 @@ void test_failed( std::string msg="") {
 	exit(1);
 }
 
-
 // test 1 circuit
 //<input_01> : ex : "01"
-void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_result) //, const std::vector<Bit>& expected_result)
-{
+void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_result) {
 	// set the inputs
 	CInputs test_input;
 	while (*inputs)
@@ -55,9 +53,18 @@ void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_re
 	// ok
 }
 
+void test_not_gate(void) {
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_not.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit(result.circuit, "0", "1");
+	_test_circuit(result.circuit, "1", "0");
+}
 
-void test_xor_gate(void)
-{
+void test_xor_gate(void){
 	// ccmpile the circuit
 	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_xor.bvc");
 	if (!result.ok) {
@@ -69,8 +76,7 @@ void test_xor_gate(void)
 	_test_circuit(result.circuit, "10", "1");
 	_test_circuit(result.circuit, "11", "0");
 }
-void test_and_gate(void)
-{
+void test_and_gate(void){
 	// ccmpile the circuit
 	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_and.bvc");
 	if (!result.ok) {
@@ -100,7 +106,8 @@ void test_or_gate(void)
 void run_all_test(void) {
 	std::cout << "Testing...\n";
 
-	//tes basic gates
+	//test basic gates
+	test_not_gate();	std::cout << " NOT - PASSED\n";
 	test_xor_gate();	std::cout << " XOR - PASSED\n";
 	test_and_gate();	std::cout << " AND - PASSED\n";
 	test_or_gate();		std::cout << " OR - PASSED\n";
