@@ -37,6 +37,7 @@ struct TokenDefinition {
 	TokenId	    token_type;
 	const char* token_value;
 	const char* regex;
+	std::function< bool(void)> condtion; // for conditionnal tokens
 };
 
 class ObjetKeeper;
@@ -64,8 +65,9 @@ struct RuleDefinition {
 };
 class GrammarRule : public RuleDefinition  {
 public:
-	bool is_root	 = false;
-	bool is_terminal = false;
+	bool is_root	  = false;
+	bool is_terminal  = false;
+	bool is_recursive = false;
 	// LR(1) parsing :
 	// left basic possible tokens.  
 	std::vector<TokenId> left_token_possible;
@@ -192,6 +194,9 @@ protected:
 	};
 	using MapVisited = std::map<RuleAndRToken, bool>;
 	void _init_grammar_right_conditions(RuleId rule_id, TokenId right_token_required, MapVisited & visited);
+	// set resurively all child rules as recursive
+	using MapVisited2 = std::map<RuleId, bool>;
+	void _set_child_rule_recusive(GrammarRule& rule, MapVisited2& visited);
 	// 1s phase : compile a memory stream
 	bool _compile_build_tree(std::istream& source_code_stream, Error& error_out);
 	// compile 1 line of code

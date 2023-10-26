@@ -186,8 +186,8 @@ void Program::init_and_check_program_tree(void) {
 class VarBuild {
 public:
 	Type type; // type of the variable
-	std::vector<Connection*> bits; // curetn vue. emtpy if var not yet assigned
 	std::string name;
+	std::vector<Connection*> bits; // curetn vue. emtpy if var not yet assigned
 };
 class KnownVar : public std::vector<VarBuild> {
 public:
@@ -199,6 +199,12 @@ public:
 				return &var_i;
 		}
 		return nullptr;
+	}
+	// declare a new local variable
+	void declareLocalVar(Type var_type, std::string var_name) {
+		// TODO
+		VarBuild new_var{ var_type, var_name };
+		push_back(new_var);
 	}
 };
 
@@ -320,6 +326,15 @@ void Statement_Return::build_circuit( BuildContext& ctx) const {
 	// connect the output of the expression to the output of the circuit
 	ctx.circuit.add_output(outputs);
 }
+// build the circuit for the declaration statement
+void Statement_DeclareVar::build_circuit(BuildContext& ctx) const {
+	// if the variable is already known
+	if (ctx.variables.find_by_name(var_name) != nullptr)
+		throw Error("Variable already declared : ", var_name);
+	// declare the variable
+	ctx.variables.declareLocalVar(var_type, var_name );
+}
+
 
 // build a circuit that represents the fuidl
 void Function::build_circuit(class Circuit& circuit) {

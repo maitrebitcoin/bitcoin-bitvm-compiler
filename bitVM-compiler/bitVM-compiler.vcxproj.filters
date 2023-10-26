@@ -88,5 +88,8 @@
     <None Include="sample\test_not.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_local_var.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
 </Project>

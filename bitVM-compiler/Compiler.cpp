@@ -126,24 +126,58 @@ void Compiler::_init_grammar()
 
 	// init R conditions
 	for (GrammarRule& rule : grammar_rules) {
+		// find recursive rules
+		for (TokenOrRuleId token : rule.tokens) {
+			if (token == rule.rule_id) {
+				rule.is_recursive = true;
+				break;
+			}
+		}
+		// if the rule is recursive
+		if (rule.is_recursive) {
+			// set all the the childs recursive too
+			MapVisited2 visited;
+			_set_child_rule_recusive(rule, visited);
+		}
+
 		//for de first R tokens
 		for (int i = 0; i < rule.tokens.size() - 1; i++) {
 			//  token & next token
 			// ex :  RULE_TYPE, TOKEN_IDENTIFIER
 			TokenOrRuleId token_or_rule_i	   = rule.tokens[i ];
 			TokenOrRuleId token_or_rule_next   = rule.tokens[i + 1];
-			// if token i is another rule
+			// if token i is another rule a
 			if (is_rule(token_or_rule_i))
 			{
 				MapVisited visited;
-				_init_grammar_right_conditions(token_or_rule_i, token_or_rule_next, visited);
+				_init_grammar_right_conditions(token_or_rule_i, token_or_rule_next,  visited);
 			}
-	
 		}
 	}
 
-
 }
+// set resurively all child rules as recursive
+void Compiler::_set_child_rule_recusive(GrammarRule& rule, MapVisited2& visited) {
+
+	// if the rule has already been visited
+	if (visited[rule.rule_id]) {
+		return;
+	}
+	visited[rule.rule_id] = true;
+	// for all tokens
+	for (TokenOrRuleId token : rule.tokens) {
+		if (!is_rule(token)) continue;
+
+		// for all rules that can produce <rule_id>
+		_visit_prediction_rules(token, [&](GrammarRule* child_rule) {
+			// set the rule as recursive
+			child_rule->is_recursive = true;
+			// set all the childs as recursive
+			_set_child_rule_recusive(*child_rule, visited);
+			});
+	}
+}
+
 // init right conditions (récursive)
 void Compiler::_init_grammar_right_conditions(RuleId rule_id, TokenOrRuleId right_required, MapVisited& visited) {
 
@@ -162,6 +196,7 @@ void Compiler::_init_grammar_right_conditions(RuleId rule_id, TokenOrRuleId righ
 			rule->add_unique_right_token_conditions(right_required);
 		}
 		else {
+
 			//  right_required is a rule
 			assert(is_rule(right_required));
 			// add its right conditions to <child_rule>
@@ -194,6 +229,11 @@ bool Compiler::is_rule_matching_stack(GrammarRule& rule)  {
 		if (rule.tokens[i] != token_stack[stack_top+i].type)
 			return false;
 	}
+
+	// récrusiv rule  : ignore post conditions
+	if (rule.is_recursive)
+		// matching ok
+		return true;
 	// no post condition .
 	if (rule.right_token_conditions.size()==0)
 		// matching ok
@@ -252,8 +292,8 @@ void Compiler::_execute_rule(GrammarRule& rule) {
 
 // lexer constructor
 CLexer::CLexer(LangageGrammar& language) :language_context(language) {
-	auto [definitions, len] = language_context.get_token_definition();
-	token_definition.assign(definitions, definitions + len);
+	token_definition = language_context.get_token_definition();
+	//token_definition.assign(definitions, definitions + len);
 }
 
 // Init lexer
@@ -357,6 +397,13 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 
 	// check if the string star wiht of of the known token
 	for (TokenDefinition definition : token_definition) {
+		// if thhe definition has a rule, check it
+		if (definition.condtion != nullptr) {
+			// if the condition is not met, continue
+			if (!definition.condtion())
+				continue;
+		}
+
 		// ex "bool"
 		if (definition.token_value != nullptr) {
 			// check if the string start with the token
@@ -402,6 +449,7 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 
 // compile 1 line of code
 Compiler::ResultforLine Compiler::_compile_line(void) {
+	language_context.on_new_line();
 	// ignore empty lines
 	if (lexer.is_current_line_empty()) 
 		return ResultforLine::nextLine;;
@@ -414,6 +462,8 @@ Compiler::ResultforLine Compiler::_compile_line(void) {
 			return ResultforLine::nextLine; // End of line, read next line
 		if (token.type == INVALID_TOKEN)
 			return ResultforLine::syntaxError;
+		// notify a new token 
+		language_context.on_new_token(token);
 		// add to stack	
 		token_stack.push_back(token);
 		// check if we have a matching rule
@@ -465,7 +515,12 @@ Compiler::Result Compiler::compile_circuit_from_file(const char* file_name)
 
 	// build the circuit
 	Circuit circuit_ok;
-	program.build_circuit(circuit_ok);
+	try {
+		program.build_circuit(circuit_ok);
+	}
+	catch (Error& build_error) {
+		return std::move(Result{ false, null_circuit, build_error });
+	}
 	// success
 	Error no_error;
 	return std::move(Result{ true, std::move(circuit_ok), no_error });

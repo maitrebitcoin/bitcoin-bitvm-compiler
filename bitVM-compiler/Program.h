@@ -173,8 +173,24 @@ public:
 	// get return type
 	const Type& get_type(void) const { return expression->get_type(); }
 
-	// build the circuit for the return statelebt
-	virtual void build_circuit(BuildContext& ctx ) const __inner_override;
+	// build the circuit for the return statement
+	virtual void build_circuit(BuildContext& ctx ) const override;
+};
+// int i => declaration of a variable statement
+class Statement_DeclareVar : public Statement {
+protected:
+	// type of the variable
+	Type var_type;
+	// name of the variable
+	std::string var_name;
+public:
+	// constructor
+	Statement_DeclareVar(Type *type, std::string name) : var_type(*type), var_name(name){}
+	// get return type
+	const Type& get_type(void) const { return var_type; }
+
+	// build the circuit for the declaration statement
+	virtual void build_circuit(BuildContext& ctx) const override;
 };
 
 class CodeBloc {

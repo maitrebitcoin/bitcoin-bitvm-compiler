@@ -9,6 +9,7 @@ struct RuleDefinition;
 
 // to keep all string an objet crated during parsing alive
 class ObjetKeeper {
+
 protected:
 	// strings
 	std::vector<std::string *> strings;
@@ -36,7 +37,6 @@ public:
 	~ObjetKeeper(void) {
 		free_all();
 	}
-
 	// get a new string
 	std::string*	new_string(const char *c_string) {
 		std::string* new_string = new std::string(c_string);
@@ -106,12 +106,18 @@ public:
 		code_blocs.push_back(new_code_block);
 		return new_code_block;
 	}
-	// get a new statement
+	// get a new  return statement
 	Statement* new_retun_statement(Expression* expr) {
 		Statement_Return* new_return_statement = new Statement_Return(expr);
 		statements.push_back(new_return_statement);
 		assert(new_return_statement->is_return());
 		return new_return_statement;
+	}
+	// get a new decalre var statement
+	Statement* new_declare_var_statement(Type *type, std::string name) {
+		Statement_DeclareVar* new_declare_var_statement = new Statement_DeclareVar(type, name);
+		statements.push_back(new_declare_var_statement);
+		return new_declare_var_statement;
 	}
 
 	// get a new program
@@ -153,14 +159,41 @@ public:
 		}
 	}
 };
+class CToken;
 
-// definition of the language grammar
-class LangageGrammar : public ObjetKeeper {
+//  parsing context
+class ParsingContext  {
+protected:
+	bool in_body		  = false;
+	bool in_fn_param	  = false;
+	bool in_decl_localvar = false;
+	int num_line = 0;
+public:
+	// caled for each new token 
+	void on_new_token(const CToken& token);
+	// caled for a new line 
+	void on_new_line(void);
+protected:
+	// called when '{' is found
+	void open_bracket(void) {
+		in_body = true;
+	}
+	void close_bracket(void) {
+		in_body = true;
+	}
+};
+
+// definition of the language grammar 
+// and parsing context
+class LangageGrammar : public ObjetKeeper, public ParsingContext {
 
 public:
 	// get the token definition
-	std::pair<TokenDefinition*, int> get_token_definition(void);
+	std::vector<TokenDefinition> get_token_definition(void);
 	// get the grammar definition
 	std::vector<RuleDefinition> get_grammar_definition(void);
+
+
+
 };
 
