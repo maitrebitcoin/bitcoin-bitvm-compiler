@@ -1,19 +1,9 @@
 
 #include "LangageGrammar.h"
 #include "Compiler.h"
-
+#include "TokenId.h"
 
 // token definition (lexer)
-enum E_TokenId {
-	TOKEN_TYPE_BOOL		       =  257,
-	TOKEN_TYPE_BYTE,		   // 258
-	TOKEN_IDENTIFIER_FNNAME,   // 259 - function name
-	TOKEN_IDENTIFIER_FNPARAM,  // 260 - in function parmetres only
-	TOKEN_IDENTIFIER,	       // 261 - in function body statement only,
-	TOKEN_IDENTIFIER_LOCALVAR, // 262 - in function body statement only, after a type: local var déclaration
-	TOKEN_NUMBER,			   // 263
-	TOKEN_RETURN,			   // 264
-};
 static const char *REGEXP_IDENTIFIER = "[a-zA-Z_][a-zA-Z0-9_]*"; // ex : a, a1, a_1, _a1
 std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 	TokenDefinition token_definition[] =
@@ -166,34 +156,3 @@ RuleDefinition rules_definition[] =
 	return std::vector<RuleDefinition>(rules_definition, rules_definition + nb_grammar_rules);
 };
 
-// caled for each new token 
-void ParsingContext::on_new_token(const CToken& token)
-{
-	if (token.type == '{')
-		open_bracket();
-	if (token.type == '}')
-		close_bracket();
-	if (!in_body)
-	{
-		if (token.type == '(')
-			in_fn_param = true;
-		if (token.type == ')')
-			in_fn_param = false; 
-	}
-
-
-	if (in_body)
-	{
-		// in declation of type in body
-		if (	(token.type == TOKEN_TYPE_BOOL)
-			|| (token.type == TOKEN_TYPE_BYTE))	{
-			in_decl_localvar = true;
-		}
-		if (token.type == ';')
-			in_decl_localvar = false;
-	}
-}
-// caled for a new line 
-void ParsingContext::on_new_line(void) {
-	num_line++;
-}

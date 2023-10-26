@@ -151,6 +151,11 @@ public:
 // ex "v=a+2" or "return a+2;"
 class Statement {
 public:
+	// lgne number in the source code
+	int num_line = 0;
+public:
+	// constructor
+	Statement(int line) : num_line(line) {}
 	// init a statmenet
 	virtual void init(CodeBloc* parent) {}
 	virtual bool is_return(void) const { return false; }
@@ -165,7 +170,7 @@ protected:
 	Expression *expression;
 public:
 	// constructor
-	Statement_Return(Expression* e) : expression(e) {}
+	Statement_Return(int line, Expression* e) : Statement(line), expression(e) {}
 	// init a statmenet
 	virtual void init(CodeBloc* parent) override;
 
@@ -185,7 +190,7 @@ protected:
 	std::string var_name;
 public:
 	// constructor
-	Statement_DeclareVar(Type *type, std::string name) : var_type(*type), var_name(name){}
+	Statement_DeclareVar(int line, Type *type, std::string name) : Statement(line), var_type(*type), var_name(name){}
 	// get return type
 	const Type& get_type(void) const { return var_type; }
 

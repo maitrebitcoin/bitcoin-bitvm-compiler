@@ -519,6 +519,7 @@ Compiler::Result Compiler::compile_circuit_from_file(const char* file_name)
 		program.build_circuit(circuit_ok);
 	}
 	catch (Error& build_error) {
+		build_error.file_name = file_name;
 		return std::move(Result{ false, null_circuit, build_error });
 	}
 	// success

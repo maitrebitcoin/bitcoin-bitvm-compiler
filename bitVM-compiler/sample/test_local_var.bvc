@@ -3,5 +3,6 @@ bool main(bool a,bool b)
 {
 	bool c;
 	bool d;
+	bool c;
 	return a^b; 
 }

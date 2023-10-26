@@ -365,7 +365,15 @@ void Function::build_circuit(class Circuit& circuit) {
 	// build the body
 	for (int i=0;i< body->statements.size()-1;i++) {
 		Statement* statement = body->statements[i];
-		statement->build_circuit(ctx);
+		try {
+			statement->build_circuit(ctx);
+		}
+		catch (Error& e) {
+			//add info to the error
+			e.line_number   = statement->num_line;
+			e.function_name = definition.name;
+			throw e;
+		}
 	}
 	// las statement : return 
 	Statement_Return* return_statement =  body->get_return_statement();

@@ -32,7 +32,6 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-
 	// get file name from command line : 1s argument
 	const char* file_name = argv[1];
 
@@ -40,7 +39,7 @@ int main(int argc, char* argv[])
 	Compiler::Result result = Compiler::compile_circuit_from_file(file_name);
 	if (!result.ok) {
 		std::cout << "Compilation failed.\n";
-		std::cout << result.error.message << "\n";
+		std::cout << result.error.toString() << "\n";
 		return 1;
 	}
 

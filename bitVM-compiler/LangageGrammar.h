@@ -3,12 +3,13 @@
 #include <vector>
 #include <assert.h>
 #include "Program.h"
+#include "ParsingContext.h"
 
 struct TokenDefinition;
 struct RuleDefinition;
 
 // to keep all string an objet crated during parsing alive
-class ObjetKeeper {
+class ObjetKeeper : public ParsingContext{
 
 protected:
 	// strings
@@ -108,14 +109,14 @@ public:
 	}
 	// get a new  return statement
 	Statement* new_retun_statement(Expression* expr) {
-		Statement_Return* new_return_statement = new Statement_Return(expr);
+		Statement_Return* new_return_statement = new Statement_Return(get_current_line_number(), expr);
 		statements.push_back(new_return_statement);
 		assert(new_return_statement->is_return());
 		return new_return_statement;
 	}
 	// get a new decalre var statement
 	Statement* new_declare_var_statement(Type *type, std::string name) {
-		Statement_DeclareVar* new_declare_var_statement = new Statement_DeclareVar(type, name);
+		Statement_DeclareVar* new_declare_var_statement = new Statement_DeclareVar(get_current_line_number(), type, name);
 		statements.push_back(new_declare_var_statement);
 		return new_declare_var_statement;
 	}
@@ -161,31 +162,11 @@ public:
 };
 class CToken;
 
-//  parsing context
-class ParsingContext  {
-protected:
-	bool in_body		  = false;
-	bool in_fn_param	  = false;
-	bool in_decl_localvar = false;
-	int num_line = 0;
-public:
-	// caled for each new token 
-	void on_new_token(const CToken& token);
-	// caled for a new line 
-	void on_new_line(void);
-protected:
-	// called when '{' is found
-	void open_bracket(void) {
-		in_body = true;
-	}
-	void close_bracket(void) {
-		in_body = true;
-	}
-};
+
 
 // definition of the language grammar 
 // and parsing context
-class LangageGrammar : public ObjetKeeper, public ParsingContext {
+class LangageGrammar : public ObjetKeeper {
 
 public:
 	// get the token definition
