@@ -102,15 +102,29 @@ void test_or_gate(void)
 	_test_circuit(result.circuit, "11", "1");
 }
 
+void test_local_var(void) {
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_local_var.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit(result.circuit, "00", "0");
+	_test_circuit(result.circuit, "01", "1");
+	_test_circuit(result.circuit, "10", "1");
+	_test_circuit(result.circuit, "11", "0");
+}
+
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
 
 	//test basic gates
-	test_not_gate();	std::cout << " NOT - PASSED\n";
-	test_xor_gate();	std::cout << " XOR - PASSED\n";
-	test_and_gate();	std::cout << " AND - PASSED\n";
-	test_or_gate();		std::cout << " OR - PASSED\n";
+	test_not_gate();	std::cout << " not - PASSED\n";
+	test_xor_gate();	std::cout << " xor - PASSED\n";
+	test_and_gate();	std::cout << " and - PASSED\n";
+	test_or_gate();		std::cout << " or - PASSED\n";
+	test_local_var();	std::cout << " local var - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";
