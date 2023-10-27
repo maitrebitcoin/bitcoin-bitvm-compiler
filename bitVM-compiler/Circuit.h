@@ -56,6 +56,10 @@ public:
 
 	// export to a string
 	std::string export_to_string(void) const;
+	// export to a strem
+	// inspired from https://github.com/mcbagz/LogicGates/blob/main/Example.ipynb
+	// format : https://pypi.org/project/circuit/
+	void export_to_stream(std::ostream& out) const;
 
 protected:
 	// get all garbes that have calculated inputes

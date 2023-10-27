@@ -2,6 +2,9 @@
 // Implementation of the Circuit class.
 
 #include "Circuit.h"
+#include <iostream>  
+#include <sstream>  
+
 
 // constructor
 Circuit::Circuit(void) {
@@ -114,25 +117,28 @@ void Circuit::reset(void) const
 		connection_i->reset();
 	}
 }
-
 // export to a string
 // inspired from https://github.com/mcbagz/LogicGates/blob/main/Example.ipynb
 // format : https://pypi.org/project/circuit/
 std::string Circuit::export_to_string(void) const {
+	//std::string result;
+	std::ostringstream str_stream;
+	export_to_stream(str_stream);
+	return str_stream.str();
+}
+// export to a strem
+// inspired from https://github.com/mcbagz/LogicGates/blob/main/Example.ipynb
+// format : https://pypi.org/project/circuit/
+void Circuit::export_to_stream(std::ostream& out) const {
 
-	std::string result;
+
 	//# of gates
-	result += std::to_string(gates.size());
-	result += " ";
+	out << std::to_string(gates.size());
+	out << ' ';
 	//# of of wires
-	result += std::to_string(connections.size());
-	result += "\n";
+	out << std::to_string(connections.size());
+	out << "\n";
 	//# of inouts
-	result += std::to_string(inputs.size());
-	result += " ";
-
-
-
-
-	return result;
+	out << std::to_string(inputs.size());
+	out << " ";
 }

@@ -1,7 +1,9 @@
 // test the ^ operator with local var assigment
 bool main(bool a,bool b) 
 {
-	bool c;
-	c = a;
-	return c^b; 
+	bool local_c;
+	bool d;
+	local_c = a;
+	d = b;
+	return local_c^d; 
 }
