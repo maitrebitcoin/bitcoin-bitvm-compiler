@@ -169,7 +169,7 @@ public:
 		Circuit circuit;
 		Error	error;
 	};
-	static Result compile_circuit_from_file(const char* file_name);
+	static Result compile_circuit_from_file(std::string file_name);
 
 	// constructor
 	Compiler(LangageGrammar& language);

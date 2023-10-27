@@ -494,7 +494,7 @@ Program& Compiler::get_programm(void) {
 }
 
 // compile and buil the circuit
-Compiler::Result Compiler::compile_circuit_from_file(const char* file_name)
+Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 {
 	Circuit null_circuit;
 
