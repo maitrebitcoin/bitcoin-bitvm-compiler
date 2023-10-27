@@ -8,6 +8,7 @@ enum E_TokenId {
 	TOKEN_IDENTIFIER_FNPARAM,  // 260 - in function parmetres only
 	TOKEN_IDENTIFIER,	       // 261 - in function body statement only,
 	TOKEN_IDENTIFIER_LOCALVAR, // 262 - in function body statement only, after a type: local var déclaration
-	TOKEN_NUMBER,			   // 263
-	TOKEN_RETURN,			   // 264
+	TOKEN_IDENTIFIER_SETVAR,   // 263 - in function body statement only, var name for affectation only.
+	TOKEN_NUMBER,			   // 264
+	TOKEN_RETURN,			   // 265
 };

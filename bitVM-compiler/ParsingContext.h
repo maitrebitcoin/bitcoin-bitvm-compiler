@@ -8,6 +8,7 @@ protected:
 	bool in_body = false;
 	bool in_fn_param = false;
 	bool in_decl_localvar = false;
+	bool in_set_var_possible = false;
 	int num_line = 0;
 public:
 	// caled for each new token 
@@ -21,6 +22,7 @@ protected:
 	// called when '{' is found
 	void open_bracket(void) {
 		in_body = true;
+		in_set_var_possible= true;
 	}
 	void close_bracket(void) {
 		in_body = true;

@@ -17,7 +17,7 @@ void ParsingContext::on_new_token(const CToken& token)
 		open_bracket();
 	if (token.type == '}')
 		close_bracket();
-
+	// in function declaration
 	if (!in_body)
 	{
 		if (token.type == '(')
@@ -25,14 +25,23 @@ void ParsingContext::on_new_token(const CToken& token)
 		if (token.type == ')')
 			in_fn_param = false;
 	}
+	// in function body
 	if (in_body)
 	{
 		// in declation of type in body
 		if (  (token.type == TOKEN_TYPE_BOOL)
 			||(token.type == TOKEN_TYPE_BYTE)) {
-			in_decl_localvar = true;
+			in_decl_localvar    = true;
+			in_set_var_possible = false;
 		}
-		if (token.type == ';')
-			in_decl_localvar = false;
+		// end of statement
+		if (token.type == ';') {
+			in_decl_localvar    = false;
+			in_set_var_possible = true;
+		}
+		else	{
+			// any token afer ';' cannot be a affecation
+			in_set_var_possible = false;
+		}
 	}
 }

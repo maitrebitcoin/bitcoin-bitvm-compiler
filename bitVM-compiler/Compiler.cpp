@@ -508,6 +508,7 @@ Compiler::Result Compiler::compile_circuit_from_file(const char* file_name)
 	Compiler compiler(BitVM_C_Grammar);
 	Error compile_error;
 	if (!compiler.compile(source_file, compile_error)) {
+		compile_error.file_name = file_name;
 		return std::move(Result{ false, null_circuit, compile_error });
 	}
 	// get the compiled program 

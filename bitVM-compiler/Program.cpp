@@ -97,8 +97,16 @@ void CodeBloc::init(Function* parent) {
 	// init parent function
 	parent_function = parent;
 	// init statemtents
-	for (Statement* statement_i : statements)
-		statement_i->init(this);
+	for (Statement* statement_i : statements) {
+		try {
+			statement_i->init(this);
+		}
+		catch (Error& e) {
+			// add the line number
+			e.line_number = statement_i->num_line;
+			throw e;
+		}
+	}
 	// check statements :
 	if (statements.size() == 0)
 		throw Error("Empty function");
@@ -129,10 +137,18 @@ void BinaryOperation::init(CodeBloc* parent_bloc) {
 	result_type = left_operand->get_type();
 
 }
+// init a statmenet
+void Statement_DeclareVar::init(CodeBloc* parent_bloc) {
+	// if variable namae already used
+	const Type* variable_type = parent_bloc->find_variable_by_name(var_name);
+	if (variable_type != nullptr)
+		throw Error("Variable already declared : ", var_name);
+	// declare the variable type
+	parent_bloc->declare_local_variable(var_type, var_name);
 
+}
 // opérand Variable init
-void Variable::init(CodeBloc* parent_bloc)
-{
+void VariableExpression::init(CodeBloc* parent_bloc) {
 	// get the variable type by namae
 	const Type* variable_type = parent_bloc->find_variable_by_name(var_name);
 	if (variable_type == nullptr)
@@ -141,6 +157,11 @@ void Variable::init(CodeBloc* parent_bloc)
 	assert(variable_type->is_defined());
 	var_type = *variable_type;
 }
+//  assignment statement init
+void Statement_SetVar::init(CodeBloc* parent_bloc) {
+	expression->init(parent_bloc);
+}
+
 // find a variable by name
 const Type* CodeBloc::find_variable_by_name(std::string var_name) const {
 	// is it a fiunction parameter ?
@@ -149,11 +170,22 @@ const Type* CodeBloc::find_variable_by_name(std::string var_name) const {
 		return function_param;
 
 	// is it a local variable ?
-	//TODO
+	for (const VariableDefinition& var_i : local_variables)
+	{
+		if (var_i.var_name == var_name)
+			return &var_i.var_type;
+	}
 
 	// not found
 	return nullptr;
 }
+// declare a local variable
+void CodeBloc::declare_local_variable(Type& type, std::string name) {
+	// add the variable to the list
+	local_variables.push_back(VariableDefinition{ type, name });
+}
+
+
 // get the return statement of the bloc
 Statement_Return* CodeBloc::get_return_statement(void) const {
 	// always last in bloc
@@ -183,11 +215,20 @@ void Program::init_and_check_program_tree(void) {
 }
 
 // var during building
-class VarBuild {
+class VarBuild : public VariableDefinition {
 public:
-	Type type; // type of the variable
-	std::string name;
 	std::vector<Connection*> bits; // curetn vue. emtpy if var not yet assigned
+public:
+	// is the variable assigned ?
+	bool is_set(void) const {
+		return bits.size() > 0;
+	}
+	// set variable value
+	void set_value(std::vector<Connection*>& value) {
+		assert(value.size() == var_type.size_in_bit());
+		// set bits
+		bits = value;
+	}
 };
 class KnownVar : public std::vector<VarBuild> {
 public:
@@ -195,17 +236,18 @@ public:
 	VarBuild* find_by_name(std::string name) {
 		for (VarBuild& var_i : *this)
 		{
-			if (var_i.name == name)
-				return &var_i;
+			if (var_i.var_name == name)
+ 				return &var_i;
 		}
 		return nullptr;
 	}
 	// declare a new local variable
-	void declareLocalVar(Type var_type, std::string var_name) {
+	void declare_local_var(Type var_type, std::string var_name) {
 		// TODO
 		VarBuild new_var{ var_type, var_name };
 		push_back(new_var);
 	}
+
 };
 
 
@@ -221,14 +263,14 @@ public:
 
 
 // build the circuit for the  expression
-std::vector<Connection*> Variable::build_circuit(BuildContext& ctx) {
+std::vector<Connection*> VariableExpression::build_circuit(BuildContext& ctx) {
 
 	// get the variable type by name
 	VarBuild* var= ctx.variables.find_by_name(var_name);
 	if (var== nullptr)
 		throw Error("Unknonwn variable : ", var_name);
-	// if var not set
-	if (var->bits.size() == 0)
+	// if variable not set
+	if (!var->is_set())
 		throw Error("Uninitialized variable : ", var_name);
 
 	// set outputs to get the value of the variable
@@ -326,15 +368,32 @@ void Statement_Return::build_circuit( BuildContext& ctx) const {
 	// connect the output of the expression to the output of the circuit
 	ctx.circuit.add_output(outputs);
 }
+
+
+
 // build the circuit for the declaration statement
 void Statement_DeclareVar::build_circuit(BuildContext& ctx) const {
 	// if the variable is already known
 	if (ctx.variables.find_by_name(var_name) != nullptr)
 		throw Error("Variable already declared : ", var_name);
 	// declare the variable
-	ctx.variables.declareLocalVar(var_type, var_name );
+	ctx.variables.declare_local_var(var_type, var_name );
 }
+// build the circuit for the assignment statement
+void Statement_SetVar::build_circuit(BuildContext& ctx) const {
+	// get the variable type by name
+	VarBuild* var = ctx.variables.find_by_name(var_name);
+	if (var == nullptr)
+		throw Error("Unknonwn variable : ", var_name);
+	// check variable type
+	if (!var->var_type.is_same_type( expression->get_type() ) )
+		throw Error("Type mismatch : ", var_name);
 
+	// build the R expression
+	std::vector<Connection*> expression_value = expression->build_circuit(ctx);
+	// connect the output of the expression to current value of the variable
+	var->set_value(expression_value);
+}
 
 // build a circuit that represents the fuidl
 void Function::build_circuit(class Circuit& circuit) {
@@ -353,10 +412,10 @@ void Function::build_circuit(class Circuit& circuit) {
 		int size = param_i.type.size_in_bit();
 		var_i.bits.assign(  current_input.begin() + index, 
 							current_input.begin() + index + size) ;
-		var_i.type		  = param_i.type;
-		var_i.name		  = param_i.name;
+		var_i.var_type	  = param_i.type;
+		var_i.var_name	  = param_i.name;
 		variables.push_back(var_i);
-		index += var_i.type.size_in_bit();
+		index += var_i.var_type.size_in_bit();
 	}
 	
 	// create context

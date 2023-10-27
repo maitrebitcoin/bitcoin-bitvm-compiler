@@ -73,15 +73,21 @@ public:
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 
 };
-class Variable : public Expression {
+class VariableDefinition {
 public:
 	// type of the variable
 	Type var_type;
 	// name of the variable
 	std::string var_name;
+};
+
+class VariableExpression : public VariableDefinition, public Expression {
 public:
 	// constructor
-	Variable(std::string n) : var_type(Type::Native::undefined), var_name(n) {}
+	VariableExpression(std::string n) {
+		var_type = Type::Native::undefined;
+		var_name = n;
+	}
 	// init
 	virtual void init(CodeBloc* parent_bloc) override;
 	// get Operand type
@@ -193,7 +199,24 @@ public:
 	Statement_DeclareVar(int line, Type *type, std::string name) : Statement(line), var_type(*type), var_name(name){}
 	// get return type
 	const Type& get_type(void) const { return var_type; }
-
+	// init a statmenet
+	virtual void init(CodeBloc* parent) override;
+	// build the circuit for the declaration statement
+	virtual void build_circuit(BuildContext& ctx) const override;
+};
+// set a variable statement
+class Statement_SetVar :  public Statement{
+protected:
+	// name of the variable
+	std::string var_name;
+	Expression* expression;
+public:
+	// constructor
+	Statement_SetVar(int line, std::string name, Expression* op) : Statement(line), var_name(name), expression(op) {}
+	// get return type
+	const Type& get_type(void) const { return expression->get_type(); }
+	// init a statmenet
+	virtual void init(CodeBloc* parent) override;
 	// build the circuit for the declaration statement
 	virtual void build_circuit(BuildContext& ctx) const override;
 };
@@ -203,6 +226,9 @@ public:
 	// code statements
 	std::vector<Statement*> statements;
 	Function* parent_function = nullptr;
+	// declared local variables
+	std::vector<VariableDefinition> local_variables;
+
 public:
 	// constructor
 	CodeBloc(Statement *first_statement) { statements.push_back(first_statement);  }
@@ -214,6 +240,9 @@ public:
 	Function* get_parent_function(void) { return parent_function; }
 	// find a variable by name
 	const Type* find_variable_by_name(std::string name) const;
+	// declare a local variable
+	void declare_local_variable(Type& type, std::string name);
+
 	// get the return statement of the bloc
 	Statement_Return* get_return_statement(void) const;
 

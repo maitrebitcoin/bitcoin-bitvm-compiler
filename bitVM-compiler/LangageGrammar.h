@@ -82,9 +82,9 @@ public:
 		return new_operation;
 	}
 
-	// get a new variable
-	Variable* new_variable( std::string name) {
-		Variable* new_variable = new Variable( name);
+	// get a new variable expresison
+	VariableExpression* new_variable( std::string name) {
+		VariableExpression* new_variable = new VariableExpression( name);
 		expressions.push_back(new_variable);
 		return new_variable;
 	}
@@ -120,6 +120,13 @@ public:
 		statements.push_back(new_declare_var_statement);
 		return new_declare_var_statement;
 	}
+	// get a new set var statement
+	Statement* new_set_var_statement( std::string var_name, Expression* expr) {
+		Statement_SetVar* new_set_var_statement = new Statement_SetVar(get_current_line_number(), var_name, expr);
+		statements.push_back(new_set_var_statement);
+		return new_set_var_statement;
+	}
+	
 
 	// get a new program
 	Program* new_program(void) {

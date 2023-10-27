@@ -27,7 +27,7 @@ union TokenValue {
 	Function::AllParameter* function_all_paramters_value;
 	Function::Definition*   function_definition_value;
 	Function*			    function_value;
-	Expression*				expresison_value;
+	Expression*				expression_value;
 	Program*				program_value;
 	CodeBloc*				code_block_value;
 	Statement*				statement_value;
