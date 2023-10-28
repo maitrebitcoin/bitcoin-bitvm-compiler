@@ -9,7 +9,6 @@
 
 // TODO List
 
-// literals
 // array
 //  + - * / % << >> & | ^ ~
 // == != < > <= >=
