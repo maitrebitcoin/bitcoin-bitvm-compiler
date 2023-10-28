@@ -2,6 +2,7 @@
 
 Generate a logical circuit for BitVM Bitcoin from a C like source code
 
+
 Examples :
 ```c
 // simple test program
@@ -17,7 +18,7 @@ generate :
     bitvmcompiler.exe source.bvc export.txt
 ```
 
-output: 
+output : 
 ```
 16 16
 16 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
@@ -44,3 +45,19 @@ output:
 Tested and build with Visual Studio 2022
 
 Bits are in low endian (x86 format)
+
+# current TODO list :
+- a-b
+- operator -
+- operator precedence
+- ( )
+- ~
+- array support
+-  * / % << >> 
+- == != < > <= >=
+- if statement
+- loop statement
+- linux : create a makefile
+- check for unused inputs. actaally generateds a "no more gates" error
+- command line option to test the generated circuit
+
