@@ -51,7 +51,6 @@ Bits are in low endian (x86 format)
 # Current todo list :
 
 - write the language documentation
-- ( )
 - operator precedence
 - array support
 - operators : \* / % << >> 
