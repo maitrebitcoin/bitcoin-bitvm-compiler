@@ -13,6 +13,7 @@ Circuit::Circuit(void) {
 
 // set the numbre of bits inputs of the circuit
 void Circuit::set_inputs(int bit_count) {
+	assert(!is_fully_constructed);
 	for (int i = 0; i < bit_count; i++) {
 		Connection* input_i = new Connection();
 		inputs.push_back(input_i);
@@ -21,6 +22,7 @@ void Circuit::set_inputs(int bit_count) {
 // set connections ouput
 void Circuit::set_output(std::vector<Connection*> new_outputs)
 {
+	assert(!is_fully_constructed);
 	assert(outputs.size() == 0);
 	assert(new_outputs.size() > 0);
 	int i = nb_bits_output();
@@ -37,6 +39,7 @@ void Circuit::set_output(std::vector<Connection*> new_outputs)
 
 // add a gate into the circuit
 void Circuit::add_gate(Gate* gate) {
+	assert(!is_fully_constructed);
 	// add the gate to the circuit
 	gates.push_back(gate);
 	// add ouputs to the circuits
@@ -123,28 +126,78 @@ void Circuit::reset(void) const
 		connection_i->reset();
 	}
 }
+// init gates and connections ID
+void Circuit::init_id(void) 
+{
+	// give an ID to all gates and all connections
+	for (int i = 0; i < gates.size(); i++) {
+		gates[i]->id = i;
+	}
+	int connection_id = 0;
+	for (Connection* input_i : inputs) {
+		input_i->id = connection_id;
+		connection_id++;
+	}
+	for (Connection* connection_i : connections) {
+		if (connection_i->id != 0)
+			continue;
+		connection_i->id = connection_id;
+		connection_id++;
+	}
+
+	is_fully_constructed = true;
+}
+
 // export to a string
-// inspired from https://github.com/mcbagz/LogicGates/blob/main/Example.ipynb
-// format : https://pypi.org/project/circuit/
 std::string Circuit::export_to_string(void) const {
 	//std::string result;
 	std::ostringstream str_stream;
 	export_to_stream(str_stream);
 	return str_stream.str();
 }
-// export to a strem
+// export to a stream in the Bristol Fashion
 // inspired from https://github.com/mcbagz/LogicGates/blob/main/Example.ipynb
 // format : https://pypi.org/project/circuit/
 void Circuit::export_to_stream(std::ostream& out) const {
+	assert(is_fully_constructed);
 
-
-	//# of gates
-	out << std::to_string(gates.size());
-	out << ' ';
-	//# of of wires
-	out << std::to_string(connections.size());
+	//# of gates + # of of wires
+	out << std::to_string(gates.size()) << ' ' << std::to_string(connections.size());
 	out << "\n";
-	//# of inouts
+	//# of inputs
 	out << std::to_string(inputs.size());
-	out << " ";
+	// inputs
+	for (Connection* input_i : inputs) {
+		out << " " << std::to_string(input_i->id);
+	}
+	out << "\n";
+	//# of outputs
+	out << std::to_string(outputs.size());
+	// outputs
+	for (Connection* output_i : outputs) {
+		out << " " << std::to_string(output_i->id);
+	}
+	
+	// Gates
+	for (Gate* gate_i : gates) {
+		out << "\n";
+		// # inputs 
+		auto outs = gate_i->get_outputs();
+		out << std::to_string(outs.size());
+		for (Connection* out_i : outs) {
+			out << " " << std::to_string(out_i->id);
+		}
+		// # outputs
+		out << " ";
+		auto ins = gate_i->get_inputs();
+		out << std::to_string(outs.size());
+		for (Connection* in_i : ins) {
+			out << " " << std::to_string(in_i->id);
+		}
+		// gate type
+		out << " " << gate_i->get_export_type();
+
+	}
+
+	out << "\n";
 }

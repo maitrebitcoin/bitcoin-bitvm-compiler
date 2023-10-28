@@ -31,7 +31,8 @@ private:
 	// connections in the circuit
 	std::vector<Connection*> connections;
 
-	
+	// set to tru ewhen the circuit is connot be modified anymore
+	bool is_fully_constructed = false;
 
 public:
 
@@ -51,6 +52,8 @@ public:
 	std::vector<Bit> run(const CInputs& inputs) const;
 	// reset the circuit gate before a new run
 	void reset(void) const;
+	// init gates and connections ID
+	void init_id(void);
 
 	// size in bits of the output
 	int nb_bits_output(void) const { return (int)outputs.size(); }

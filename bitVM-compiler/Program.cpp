@@ -474,5 +474,6 @@ void Program::build_circuit(class Circuit& circuit_to_build) {
 	// build the circuit for the main function
 	fn_main.build_circuit(circuit_to_build);
 	
-
+	// init id for alla gates ands connections
+	circuit_to_build.init_id();
 }
