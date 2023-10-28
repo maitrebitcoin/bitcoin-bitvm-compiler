@@ -16,6 +16,7 @@
 // == != < > <= >=
 // if
 // loop
+// linux : makefile
 
 #include <iostream>
 #include <sstream>
