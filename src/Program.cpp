@@ -170,7 +170,80 @@ void Statement_DeclareAndSetVar::init(CodeBloc* parent_bloc) {
 	if (!declaration.get_type().is_same_type(affectation.get_type()))
 		throw Error("Type mismatch");
 }
+// convert the value of the literal to a vector of bits for bool type
+std::vector<bool> Literal::_get_bits_value_bool( std::string str_val ) const {
+	std::vector<bool> result;
+	if (str_val == "true")
+		result = { true };
+	else if (str_val == "false")
+		result = { false };
+	else
+		throw Error("Invalid boolean value : ", str_val);
+	return result;
+}
+// convert the value of the literal to a vector of bits for byte type
+// convert to bits in low endian (x86 format)
+// result[0] is the least significant bit, result[7] is the most significant bit
+std::vector<bool> Literal::_get_bits_value_int8(std::string str_val) const {
+	std::vector<bool> result;
+	// conveto signed integer
+	int value_int8 = std::stoi(str_val);
+	// value must be in 8bit signed range
+	if (value_int8 > 127 || value_int8 < -128)
+		throw Error("Invalid signed 8 bit value : ", str_val);
 
+	// convert to bits in low endian (x86 format)
+	for (int i = 0; i < 8; i++)
+	{
+		bool b= value_int8 & 1;
+		result.push_back(b);
+		value_int8 >>= 1;
+	}
+	return result;
+}
+// convert hex string to array of bits in low endian
+std::vector<bool> Literal::hex_string_to_bits(std::string hex_string) {
+	// for eah char in hex string, starting from the end
+	std::vector<bool> result;
+	for (int i = (int)hex_string.size() - 1; i >= 0; i--)
+	{
+		// get the char
+		char c = hex_string[i];
+		// convert to int
+		int value = 0;
+		if (c >= '0' && c <= '9')
+			value = c - '0';
+		else if (c >= 'a' && c <= 'f')
+			value = c - 'a' + 10;
+		else if (c >= 'A' && c <= 'F')
+			value = c - 'A' + 10;
+		else
+			throw Error("Invalid hex string : ", hex_string);
+		// convert to bits le
+		for (int j = 0; j < 4; j++)
+		{
+			bool b = value & 1;
+			result.push_back(b);
+			value >>= 1;
+		}
+	}
+	return result;
+}
+
+// lietral init
+void Literal::init(CodeBloc* parent_bloc) {
+	switch (type.get_native_type())
+	{ 
+		case Type::Native::bit:
+			value_bits = _get_bits_value_bool(value_str);
+			break;
+		case Type::Native::int8:
+			value_bits = _get_bits_value_int8(value_str);
+			break;
+		default:
+			throw Error("Invalid literal type");
+	}
+}
 
 // find a variable by name
 const Type* CodeBloc::find_variable_by_name(std::string var_name) const {
@@ -287,9 +360,21 @@ std::vector<Connection*> VariableExpression::build_circuit(BuildContext& ctx) {
 	return var->bits;
 
 }
+
 std::vector<Connection*> Literal::build_circuit(BuildContext& ctx) {
-	assert(false); // TODO
 	std::vector<Connection*> result;
+
+	auto type = get_type();
+	assert(type.size_in_bit() == value_bits.size());
+	// get a 0 ou 1 connexion for each bit
+	for (int i = 0; i < type.size_in_bit(); i++) {
+		// get the bit value
+		bool b = value_bits[i];
+		// get literal value as a vector of bits
+		Connection* connection_to_0or1 = ctx.circuit.get_literal_values(b);
+		result.push_back(connection_to_0or1);
+	}
+
 	return result;
 }
 // constructor

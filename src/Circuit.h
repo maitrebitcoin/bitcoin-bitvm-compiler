@@ -30,8 +30,10 @@ private:
 	std::vector<Connection*>  outputs;
 	// connections in the circuit
 	std::vector<Connection*> connections;
+	// litteral values : 0 an 1
+	std::array<Connection*,2>  literals01;
 
-	// set to tru ewhen the circuit is connot be modified anymore
+	// set to true when the circuit is connot be modified anymore
 	bool is_fully_constructed = false;
 
 public:
@@ -45,8 +47,12 @@ public:
 	void add_gate(Gate* gate);
 	// set all connections ouput
 	void set_output(std::vector<Connection*> new_outputs);
+	// a get connection for a litteral values
+	Connection* get_literal_values(bool b);
 	// get the input gates in the circuit
 	std::vector<Connection*> getInputs(void) { return inputs; }
+	// is the circuit usign litteral values ?
+	bool is_using_litteral_values(void) const;
 
 	// run the circuit
 	std::vector<Bit> run(const CInputs& inputs) const;

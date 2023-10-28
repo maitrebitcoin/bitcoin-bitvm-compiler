@@ -14,7 +14,7 @@ byte main(byte a,byte b)
 
 generate :
 ```
-    bitvm-compiler.exe source.bvc export.txt
+    bitvmcompiler.exe source.bvc export.txt
 ```
 
 output: 
@@ -42,3 +42,5 @@ output:
 ```
 
 Tested and build with Visual Studio 2022
+
+Bits are in low endian (x86 format)

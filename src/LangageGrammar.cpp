@@ -8,15 +8,17 @@ static const char *REGEXP_IDENTIFIER = "[a-zA-Z_][a-zA-Z0-9_]*"; // ex : a, a1, 
 std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 	TokenDefinition token_definition[] =
 	{
-		{ TOKEN_TYPE_BOOL,  "bool"},
-		{ TOKEN_TYPE_BYTE,  "byte"},
-		{ TOKEN_RETURN,		"return"},
+		{ TOKEN_TYPE_BOOL,			"bool"},
+		{ TOKEN_TYPE_BYTE,			"byte"},	
+		{ TOKEN_RETURN,				"return"},
+		{ TOKEN_TRUE,				"true"},
+		{ TOKEN_FALSE,				"false"},
 		{ TOKEN_IDENTIFIER_FNNAME,	nullptr, REGEXP_IDENTIFIER, [this]() {return !in_body && !in_fn_param; }},
 		{ TOKEN_IDENTIFIER_FNPARAM,	nullptr, REGEXP_IDENTIFIER, [this]() {return !in_body && in_fn_param; }},
 		{ TOKEN_IDENTIFIER_SETVAR  ,nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && in_set_var_possible;}},
 		{ TOKEN_IDENTIFIER,			nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && !in_decl_localvar ; }},
 		{ TOKEN_IDENTIFIER_LOCALVAR,nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && in_decl_localvar ;  }},
-		{ TOKEN_NUMBER,			nullptr, "[0-9]*"},
+		{ TOKEN_NUMBER,				nullptr, "[0-9]*"},
 	};
 	int nb_lex_rules = sizeof(token_definition) / sizeof(token_definition[0]);
 	return std::vector<TokenDefinition>(token_definition, token_definition + nb_lex_rules);
@@ -137,11 +139,21 @@ RuleDefinition rules_definition[] =
 	{ RULE_VARIABLE , { TOKEN_IDENTIFIER } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_variable(*p[0].string_value);  }
 	},
-		// ex: 123
+	// - literals
+	// ex: 123
 	{ RULE_LITTERAL , { TOKEN_NUMBER } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_literal(Type::Native::int8, *p[0].string_value);  }
 	},
-		// bool
+	// true
+	{ RULE_LITTERAL , { TOKEN_TRUE } ,
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_literal(Type::Native::bit, *p[0].string_value);  }
+	},
+	// false
+	{ RULE_LITTERAL , { TOKEN_FALSE } ,
+			[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_literal(Type::Native::bit, *p[0].string_value);  }
+	},
+
+	// bool
 	{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,
 		[this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_Type(Type::Native::bit);  }
 	},

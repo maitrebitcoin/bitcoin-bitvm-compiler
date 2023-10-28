@@ -11,6 +11,8 @@ enum E_TokenId {
 	TOKEN_IDENTIFIER_SETVAR,   // 263 - in function body statement only, var name for affectation only.
 	TOKEN_NUMBER,			   // 264
 	TOKEN_RETURN,			   // 265
+	TOKEN_TRUE,				   // 266 true
+	TOKEN_FALSE,			   // 267 false
 };
 // grammar elements
 enum E_RuleId {

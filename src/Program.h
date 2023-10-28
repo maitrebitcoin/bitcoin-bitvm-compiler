@@ -39,6 +39,7 @@ public:
 	bool is_same_type(const Type& other) const {
 		return native_type == other.native_type;
 	}
+	Native get_native_type(void) const { return native_type; }
 
 };
 
@@ -60,18 +61,29 @@ class Literal : public Expression {
 public:
 	// type of the literal
 	Type type;
-	// value of the literal
-	std::string value;
+	// value of the literal is string forme
+	std::string value_str;
+	// value of the literal in individuals bits
+	std::vector<bool> value_bits;
 public:
 	// constructor
-	Literal(Type t, std::string v) : type(t), value(v) {}
+	Literal(Type t, std::string v) : type(t), value_str(v) {}
 	// init
-	virtual void init(CodeBloc* parent_bloc) override {}
+	virtual void init(CodeBloc* parent_bloc) override;
 	// get Operand type
 	virtual const Type& get_type(void) override  { return  type; }
 	// build the circuit for the  expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 
+	// convert hex string to array of bits in low endian
+	static std::vector<bool> hex_string_to_bits(std::string hex_string);
+protected:
+	// convert the value of the literal to a vector of bits for bool type
+	std::vector<bool> _get_bits_value_bool(std::string str_val) const;
+	// convert the value of the literal to a vector of bits for byte type
+	// convert to bits in low endian (x86 format)
+	// result[0] is the least significant bit, result[7] is the most significant bit
+	std::vector<bool> _get_bits_value_int8(std::string str_val) const;
 };
 class VariableDefinition {
 public:

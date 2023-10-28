@@ -47,12 +47,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>..\$(Platform)\$(Configuration)\obj\</IntDir>
     <OutDir>$(SolutionDir)\..\$(Platform)\$(Configuration)\</OutDir>
-    <TargetName> bitvm-compiler</TargetName>
+    <TargetName> bitvmcompiler</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>..\$(Platform)\$(Configuration)\obj\</IntDir>
     <OutDir>$(SolutionDir)\..\$(Platform)\$(Configuration)\</OutDir>
-    <TargetName> bitvm-compiler</TargetName>
+    <TargetName> bitvmcompiler</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -113,6 +113,7 @@
     <None Include="sample\test_and.bvc" />
     <None Include="sample\test_byte.bvc" />
     <None Include="sample\test_declare_and_set.bvc" />
+    <None Include="sample\test_literal.bvc" />
     <None Include="sample\test_local_var.bvc" />
     <None Include="sample\test_not.bvc" />
     <None Include="sample\test_or.bvc" />

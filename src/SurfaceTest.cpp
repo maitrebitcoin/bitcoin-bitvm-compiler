@@ -4,6 +4,7 @@
 #include "Error.h"
 #include "Circuit.h"
 #include <iostream>
+#include "Program.h"
 
 // convert bits  to string
 std::string bits_to_string(const std::vector<Bit>& bits) {
@@ -52,48 +53,28 @@ void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_re
 	}
 	// ok
 }
-// convert hex string to array of bits
-std::vector<bool> hex_string_to_bits(std::string hex_string) {
-	std::vector<bool> bits;
-	// for eah char in hex string
-	for (char c : hex_string) {
-		// convert to int
-		int i = 0;
-		if (c >= '0' && c <= '9') {
-			i = c - '0';
-		}
-		else if (c >= 'a' && c <= 'f') {
-			i = c - 'a' + 10;
-		}
-		else if (c >= 'A' && c <= 'F') {
-			i = c - 'A' + 10;
-		}
-		else {
-			test_failed("invalid hex string");
-		}
-		// convert to bits
-		for (int j = 0; j < 4; j++) {
-			bits.push_back((i & 1) == 1);
-			i >>= 1;
-		}
-	}
-	return bits;
-}
 
 // test 1 circuit, hex inputs
 //<input_01> : ex : "01"
 void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  hex_expected_result) {
 	// convert hex string to bits
-	auto bits_in = hex_string_to_bits(hex_inputs);
-	auto bits_expected = hex_string_to_bits(hex_expected_result);
-	// set the inputs
+	auto bits_in = Literal::hex_string_to_bits(hex_inputs);
+	auto bits_expected = Literal::hex_string_to_bits(hex_expected_result);
+	// set inputs
 	CInputs test_input;
 	for (bool bit : bits_in) {
 		test_input.add_bit(bit);
 	}
-	// run
-	circuit.reset();
-	std::vector<Bit> test_result = circuit.run(test_input);
+	// run the circuit
+	std::vector<Bit> test_result;
+	try {
+		circuit.reset();
+		test_result = circuit.run(test_input);
+	}
+	catch (Error& e) {
+		test_failed(e.message);
+	}
+
 	if (test_result.size() != bits_expected.size())
 		test_failed("output size mismatch");
 
@@ -196,10 +177,21 @@ void test_byte(void) {
 	_test_circuit_hex(result.circuit, "00FF", "00");
 	_test_circuit_hex(result.circuit, "AB11", "01");
 	_test_circuit_hex(result.circuit, "77FC", "74");
-
 }
-
-
+void test_literal(void) {
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_literal.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "AA", "0A");
+	_test_circuit_hex(result.circuit, "FF", "1F");
+	_test_circuit_hex(result.circuit, "00", "00");
+	_test_circuit_hex(result.circuit, "FE", "1E");
+	_test_circuit_hex(result.circuit, "11", "11");
+	_test_circuit_hex(result.circuit, "EC", "0C");
+}
 
 
 // run all tests
@@ -214,6 +206,7 @@ void run_all_test(void) {
 	test_local_var();			std::cout << " local var - PASSED\n";
 	test_local_var_and_set();	std::cout << " local set var & set - PASSED\n";
 	test_byte();				std::cout << " byte - PASSED\n";
+	test_literal();				std::cout << " literal - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

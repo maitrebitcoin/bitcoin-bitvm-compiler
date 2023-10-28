@@ -1,0 +1,7 @@
+// test literals
+byte main(byte a) 
+{
+	bool b=true;
+	byte local_a_modulo32 = a & 31;
+	return local_a_modulo32; 
+}

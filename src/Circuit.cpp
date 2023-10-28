@@ -37,7 +37,7 @@ void Circuit::set_output(std::vector<Connection*> new_outputs)
 }
 
 
-// add a gate into the circuit
+// add a gate and its connexions into the circuit
 void Circuit::add_gate(Gate* gate) {
 	assert(!is_fully_constructed);
 	// add the gate to the circuit
@@ -48,8 +48,22 @@ void Circuit::add_gate(Gate* gate) {
 		// +1 connection
 		connections.push_back(ouput_gate_i);
 	}
-	
 }
+// a get connection for a litteral values
+Connection* Circuit::get_literal_values(bool b) {
+	// init at 1st call
+	if (literals01[b] == nullptr) {
+		literals01[b] = new Connection();
+		literals01[b]->set_value(b);
+	}
+	return literals01[b];
+}
+// is the circuit usign litteral values ?
+bool Circuit::is_using_litteral_values(void) const {
+	return literals01[0] != nullptr
+		|| literals01[1] != nullptr; 
+}
+
 
 // get all gartes that have calculated inputes but have not been run yet
 std::vector< Gate*> Circuit::_get_computable_gate(void) const {
@@ -83,7 +97,7 @@ std::vector<Bit> Circuit::run(const CInputs& in_values) const {
 		std::vector< Gate*> gate_to_run = _get_computable_gate();
 		// if no more gates to run, error
 		if (gate_to_run.size() == 0) 
-			throw "internal error : no more gates";
+			throw Error( "internal error : no more gates" );
 		// run the gates
 		for (Gate* gate : gate_to_run) {
 			gate->compute();
@@ -133,7 +147,13 @@ void Circuit::init_id(void)
 	for (int i = 0; i < gates.size(); i++) {
 		gates[i]->id = i;
 	}
+	// init literals
 	int connection_id = 0;
+	if (literals01[0])
+		literals01[0]->id = connection_id++;
+	if (literals01[1])
+		literals01[1]->id = connection_id++;
+	// init inputs and connections
 	for (Connection* input_i : inputs) {
 		input_i->id = connection_id;
 		connection_id++;
@@ -168,6 +188,7 @@ std::string Circuit::export_to_string(void) const {
 // export to a stream in the Bristol Fashion
 // inspired from https://github.com/mcbagz/LogicGates/blob/main/Example.ipynb
 // format : https://pypi.org/project/circuit/
+// see also https://homes.esat.kuleuven.be/~nsmart/MPC/
 void Circuit::export_to_stream(std::ostream& out) const {
 	assert(is_fully_constructed);
 
@@ -186,6 +207,18 @@ void Circuit::export_to_stream(std::ostream& out) const {
 	// outputs
 	for (Connection* output_i : outputs) {
 		out << " " << std::to_string(output_i->id);
+	}
+
+	//  0 and 1 for litterals
+	if (is_using_litteral_values())
+	{
+		// wire 0 is assigned the value 0 and wire 1 the value 1
+		if (literals01[0]) {
+			out << "\n" << "1 1 0 " << literals01[0]->id << " EQ";
+		}
+		if (literals01[1]) {
+			out << "\n" << "1 1 1 " << literals01[1]->id << " EQ";
+		}
 	}
 	
 	// Gates
