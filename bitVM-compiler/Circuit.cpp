@@ -148,6 +148,16 @@ void Circuit::init_id(void)
 	is_fully_constructed = true;
 }
 
+// get stats on the circuit
+Circuit::Stats Circuit::get_stats(void) const {
+	Circuit::Stats result;
+	result.nb_gates		 =(int)gates.size();
+	result.nb_connections=(int)connections.size();
+	result.nb_inputs	 =(int)inputs.size();
+	result.nb_outputs	 =(int)outputs.size();
+	return result;
+}
+
 // export to a string
 std::string Circuit::export_to_string(void) const {
 	//std::string result;

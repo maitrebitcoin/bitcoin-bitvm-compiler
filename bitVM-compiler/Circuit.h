@@ -64,6 +64,14 @@ public:
 	// inspired from https://github.com/mcbagz/LogicGates/blob/main/Example.ipynb
 	// format : https://pypi.org/project/circuit/
 	void export_to_stream(std::ostream& out) const;
+	// get stats
+	struct Stats {
+		int nb_gates = 0;
+		int nb_connections = 0;
+		int nb_inputs = 0;
+		int nb_outputs = 0;
+	};
+	Stats get_stats(void) const;
 
 protected:
 	// get all garbes that have calculated inputes

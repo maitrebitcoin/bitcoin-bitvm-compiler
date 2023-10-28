@@ -3,7 +3,7 @@
 // Main.cpp : This file contains the 'main' function. Program execution begins and ends there.
 
 // Usage :
-//   bitVM-compiler <source_file_name>
+//   bitVM-compiler <source_file_name> <output_file_name>
 
 // compilee a program compatible with bitVM
 
@@ -22,6 +22,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <iostream>
 #include "Circuit.h"
 #include "Gate.h"
 #include "Bits.h"
@@ -34,8 +35,10 @@ public:
 	bool show_help = false;
 	// -test : run all surface tests
 	bool run_test = false;
-	// source file name
+	// source & destination file names
 	std::string source_file_name;
+	std::string destination_file_name;
+
 public:
 	// constructor
 	CommandLine(int argc, char* argv[]);
@@ -53,9 +56,10 @@ CommandLine::CommandLine(int argc, char* argv[]) {
 		run_test = true;
 		return;
 	}
-	// get file name from command line : 1s argument
+	// get file names from command line
 	source_file_name = argv[1];
-
+	if (argc>2)
+		destination_file_name = argv[2];
 }
 
 
@@ -67,7 +71,7 @@ int main(int argc, char* argv[])
 
 	// need help ?
 	if (command_line.show_help) {
-		std::cout << "Usage : bitVM-compiler <source_file_name>\n";
+		std::cout << "Usage : bitVM-compiler <source_file_name> <output_file_name>\n";
 		return 1;
 	}
 	// run tests ?
@@ -84,10 +88,32 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	// TODO
+	// if not file name : show the circuit on the console
+	if (command_line.destination_file_name == "")
+	{
+		result.circuit.export_to_stream(std::cout);
+		return 0; // OK
+	}
+
 	// save the circuit in a file
-	auto s = result.circuit.export_to_string();
-	std::cout << s;
+	// open the file to write and remplace if already exists
+	std::ofstream  destination_file(command_line.destination_file_name, std::ios::out | std::ios::trunc);
+	if (!destination_file) {
+		std::cout << "Cannot save file " << command_line.destination_file_name;
+		return 1;
+	}
+	result.circuit.export_to_stream(destination_file);
+	destination_file.close();
+	// succes, show stats about the circuit
+	Circuit::Stats stats = result.circuit.get_stats();
+	std::cout << "Compilation ok\n";
+	std::cout << command_line.destination_file_name << " generated.\n";
+	std::cout << "# inputs : " << stats.nb_inputs		<< "\n";
+	std::cout << "# outpus : " << stats.nb_outputs		<< "\n";
+	std::cout << "# gates  : " << stats.nb_gates		<< "\n";
+	std::cout << "# wires  : " << stats.nb_connections  << "\n";
+
+	
 	return 0;
 }
 
