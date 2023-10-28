@@ -93,7 +93,7 @@
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LangageGrammar.cpp" />
-    <ClCompile Include="SurfaceTest.cpp" />
+    <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bits.h" />
@@ -105,7 +105,7 @@
     <ClInclude Include="Connection.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="LangageGrammar.h" />
-    <ClInclude Include="SufaceTest.h" />
+    <ClInclude Include="Test.h" />
     <ClInclude Include="TokenId.h" />
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +116,7 @@
     <None Include="sample\test_declare_and_set.bvc" />
     <None Include="sample\test_literal.bvc" />
     <None Include="sample\test_local_var.bvc" />
+    <None Include="sample\test_negate.bvc" />
     <None Include="sample\test_not.bvc" />
     <None Include="sample\test_or.bvc" />
     <None Include="sample\test_xor.bvc" />

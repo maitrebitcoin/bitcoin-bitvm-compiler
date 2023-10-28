@@ -1,0 +1,5 @@
+// test the -a operator
+byte main(byte a) 
+{
+	return -a; 
+}

@@ -142,7 +142,12 @@ RuleDefinition rules_definition[] =
 			result.expression_value = new_unary_operation(UnaryOperation::Operator::op_not, p[1].expression_value);
 		}
 	},
-
+	//-a
+	{ RULE_OPERATOR_NOT , {'-', RULE_EXPRESSION } ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.expression_value = new_unary_operation(UnaryOperation::Operator::op_negate, p[1].expression_value);
+		}
+	},
 			
 	// ex: a
 	{ RULE_VARIABLE , { TOKEN_IDENTIFIER } ,

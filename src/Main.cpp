@@ -26,7 +26,7 @@
 #include "Gate.h"
 #include "Bits.h"
 #include "Compiler.h"
-#include "SufaceTest.h"
+#include "Test.h"
 
 class CommandLine {
 public:

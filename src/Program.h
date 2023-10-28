@@ -35,6 +35,8 @@ public:
 	int size_in_bit(void) const;
 	// type is defineds ?
 	bool is_defined(void) const { return native_type != Native::undefined; }
+	// type is bool ?
+	bool is_bool(void) const { return native_type == Native::bit; }
 	// compare
 	bool is_same_type(const Type& other) const {
 		return native_type == other.native_type;
@@ -137,11 +139,11 @@ public:
 	
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
-protected:
+
 	// build the circuit for the "a+b" expression
-	std::vector<Connection*> _build_circuit_add(BuildContext& ctx,
-												std::vector<Connection*>& in_a,
-												std::vector<Connection*>& in_b);
+	static std::vector<Connection*>  build_circuit_add(BuildContext& ctx,
+													   std::vector<Connection*>& in_a,
+													   std::vector<Connection*>& in_b);
 };
 // Math with 1 operand. ex :"!2"
 class UnaryOperation : public Expression {
@@ -151,7 +153,8 @@ public:
 	// opération : | & ^ + - *  
 	//  types
 	enum class Operator {
-		op_not,
+		op_not,	   // !a
+		op_negate, // -a
 	};
 	Operator operation;
 	//  operand
@@ -167,6 +170,11 @@ public:
 	virtual const Type& get_type(void) override { return result_type; }
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
+protected:
+	// build the circuit for the not expression
+	std::vector<Connection*> _build_circuit_not(BuildContext& ctx, std::vector<Connection*>& inputs);
+	// build the circuit for the negate expression
+	std::vector<Connection*> _build_circuit_negation(BuildContext& ctx, std::vector<Connection*>& inputs);
 };
 
 

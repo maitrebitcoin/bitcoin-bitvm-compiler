@@ -1,4 +1,7 @@
 // tests of the compiler
+// -synxtax, grammar
+// -gats logic
+// -operations
 
 #include "Compiler.h"
 #include "Error.h"
@@ -215,14 +218,34 @@ void test_addition(void) {
 	_test_circuit_hex(result.circuit, "87E7", "6E");
 	_test_circuit_hex(result.circuit, "FFFF", "FE");
 	_test_circuit_hex(result.circuit, "01FF", "00");
-}
+	_test_circuit_hex(result.circuit, "FF01", "00");
 
+}
+void test_negate(void) {
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_negate.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "00", "00");
+	_test_circuit_hex(result.circuit, "01", "FF");
+	_test_circuit_hex(result.circuit, "FF", "01");
+	_test_circuit_hex(result.circuit, "02", "FE");
+	_test_circuit_hex(result.circuit, "14", "EC");
+	_test_circuit_hex(result.circuit, "77", "89");
+	_test_circuit_hex(result.circuit, "89", "77");
+	_test_circuit_hex(result.circuit, "ED", "13");
+	_test_circuit_hex(result.circuit, "13", "ED");
+	_test_circuit_hex(result.circuit, "81", "7F");
+	_test_circuit_hex(result.circuit, "7F", "81");
+}
 
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
 
-	test_addition();
+	test_negate();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
@@ -234,6 +257,7 @@ void run_all_test(void) {
 	test_byte();				std::cout << " byte - PASSED\n";
 	test_literal();				std::cout << " literal - PASSED\n";
 	test_addition();			std::cout << " addition - PASSED\n";
+	test_negate();				std::cout << " negate - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

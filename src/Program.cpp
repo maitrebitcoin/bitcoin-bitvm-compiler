@@ -390,29 +390,52 @@ void UnaryOperation::init(CodeBloc* parent_bloc) {
 // build the circuit for the binairy expression
 std::vector<Connection*> UnaryOperation::build_circuit(BuildContext& ctx) {
 	// build the  operand
-	std::vector<Connection*> output_ = operand->build_circuit(ctx);
+	std::vector<Connection*> inputs = operand->build_circuit(ctx);
 
 	// create the gate for the operation
 	UnaryGate* gate = nullptr;
 	switch (operation)
 	{
-	case  Operator::op_not:
-		gate = new Gate_NOT();
-		break;
+	case Operator::op_not:
+		// type bool only
+		if (!get_type().is_bool())
+			throw Error("Operator ! is reserved for bool type only");
+		return _build_circuit_not(ctx, inputs);
+	case Operator::op_negate:
+		if (get_type().is_bool())
+			throw Error("Operator - is not defined for bool type");
+		return _build_circuit_negation(ctx, inputs);
 	default:
 		assert(false);
 		throw Error("Internal error : unexpected operator");
 	}
-
-	// IN
-	std::array<Connection*, 1> input_1_bit = { output_[0] };
-	// OUT = A 
-	std::array<Connection*, 1> bits_result = gate->add_to_circuit(ctx.circuit, input_1_bit);
-	//TODO
-	//delete gate;
+}
+// build the circuit for the not expression
+std::vector<Connection*> UnaryOperation::_build_circuit_not(BuildContext & ctx, std::vector<Connection*>& inputs) {
+	assert(inputs.size() == get_type().size_in_bit());
+	// OUT = !A for each bit
 	std::vector<Connection*> result;
-	result.assign(bits_result.begin(), bits_result.end());
+	for (int i = 0; i < inputs.size(); i++) {
+		std::array<Connection*, 1> input_1_bit = { inputs[i] };
+		std::array<Connection*, 1> bits_result = Gate_NOT().add_to_circuit(ctx.circuit, input_1_bit);
+		result.push_back(bits_result[0]);
+	}
 	return result;
+}
+
+// build the circuit for the negate expression
+std::vector<Connection*> UnaryOperation::_build_circuit_negation(BuildContext & ctx, std::vector<Connection*>& inputs) {
+	std::vector<Connection*> result;
+	// create a 2's complement
+	std::vector<Connection*> not_inputs =_build_circuit_not(ctx, inputs);
+	// get 1 with the right size
+	std::vector<Connection*> _1;
+	for (int i = 0; i < inputs.size(); i++) {
+		_1.push_back( ctx.circuit.get_literal_values( i==0 ));
+	}
+	// add 1
+	return BinaryOperation::build_circuit_add(ctx, not_inputs, _1);
+
 }
 
 // build the circuit for the binairy expression
@@ -437,7 +460,7 @@ std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {
 		break;
 	case Operator::op_add:
 		// + is not bit to bit independant
-		return _build_circuit_add(ctx, output_left, output_right);
+		return build_circuit_add(ctx, output_left, output_right);
 		break;
 	default:
 		assert(false);
@@ -461,11 +484,12 @@ std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {
 	return result;
 }
 // build the circuit for the "a+b" expression
-std::vector<Connection*> BinaryOperation::_build_circuit_add(BuildContext& ctx,
+std::vector<Connection*> BinaryOperation::build_circuit_add(BuildContext& ctx,
 														std::vector<Connection*>& in_a,
 														std::vector<Connection*>& in_b ) {
+	assert(in_a.size()== in_b.size());
 	std::vector<Connection*> result;
-	int size = get_type().size_in_bit();
+	int size = (int)in_a.size();
 	Gate_ADD  gate_add;  // add 2 birs, return carry + 1 bit 
 	Gate_ADDC gate_addc; // add 2 birs + carry, return carry + 1 bit 
 	// start with 1st bit addition

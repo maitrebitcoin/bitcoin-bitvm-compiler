@@ -25,7 +25,7 @@
     <ClCompile Include="Program.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="SurfaceTest.cpp">
+    <ClCompile Include="Test.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -60,7 +60,7 @@
     <ClInclude Include="TokenId.h">
       <Filter>source\header</Filter>
     </ClInclude>
-    <ClInclude Include="SufaceTest.h">
+    <ClInclude Include="Test.h">
       <Filter>source\header</Filter>
     </ClInclude>
   </ItemGroup>
@@ -93,6 +93,9 @@
       <Filter>sample</Filter>
     </None>
     <None Include="sample\test_add.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_negate.bvc">
       <Filter>sample</Filter>
     </None>
   </ItemGroup>
