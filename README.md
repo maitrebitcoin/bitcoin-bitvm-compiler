@@ -54,8 +54,8 @@ Bits are in low endian (x86 format)
 - ( )
 - operator precedence
 - array support
--  * / % << >> 
-- == != < > <= >=
+- operators : \* / % << >> 
+- test operators : == != < > <= >=
 - procedure calls
 - if statement
 - loop statement
