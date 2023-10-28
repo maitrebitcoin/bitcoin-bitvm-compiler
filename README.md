@@ -44,10 +44,13 @@ output :
 
 Tested and build with Visual Studio 2022
 
+# note
+
 Bits are in low endian (x86 format)
 
 # current TODO list :
-- a-b
+
+- write the language documentation
 - operator -
 - operator precedence
 - ( )
@@ -55,8 +58,10 @@ Bits are in low endian (x86 format)
 - array support
 -  * / % << >> 
 - == != < > <= >=
+- procedure calls
 - if statement
 - loop statement
+- basic function stdlib (sha256, shnor,... )
 - linux : create a makefile
 - check for unused inputs. actaally generateds a "no more gates" error
 - command line option to test the generated circuit
