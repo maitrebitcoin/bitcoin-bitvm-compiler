@@ -44,16 +44,15 @@ output :
 
 Tested and build with Visual Studio 2022
 
-# note
+# Notes
 
 Bits are in low endian (x86 format)
 
-# current TODO list :
+# Current todo list :
 
 - write the language documentation
-- operator -
-- operator precedence
 - ( )
+- operator precedence
 - array support
 -  * / % << >> 
 - == != < > <= >=
