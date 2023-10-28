@@ -22,18 +22,16 @@ public:
 // represents a virtual circuit
 class Circuit {
 private:
-	// number of bits for the inputs
-	//int nb_bits_inputs = 0;
-	// number of bits for the outputs
-	int nb_bits_output = 0;
 	// inputs in the circuit
 	std::vector<Connection*>  inputs;
 	// gates in the circuit
 	std::vector<Gate*> gates;
+	// ouputs of the circuit
+	std::vector<Connection*>  outputs;
 	// connections in the circuit
 	std::vector<Connection*> connections;
 
-
+	
 
 public:
 
@@ -44,8 +42,8 @@ public:
 	void set_inputs(int bit_count);
 	// add a gate into the circuit
 	void add_gate(Gate* gate);
-	// add connections ouput
-	void add_output(std::vector<Connection*> outputs);
+	// set all connections ouput
+	void set_output(std::vector<Connection*> new_outputs);
 	// get the input gates in the circuit
 	std::vector<Connection*> getInputs(void) { return inputs; }
 
@@ -53,6 +51,9 @@ public:
 	std::vector<Bit> run(const CInputs& inputs) const;
 	// reset the circuit gate before a new run
 	void reset(void) const;
+
+	// size in bits of the output
+	int nb_bits_output(void) const { return (int)outputs.size(); }
 
 	// export to a string
 	std::string export_to_string(void) const;

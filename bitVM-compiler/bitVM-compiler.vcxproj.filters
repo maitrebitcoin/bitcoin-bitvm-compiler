@@ -103,5 +103,8 @@
     <None Include="sample\test_declare_and_set.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_byte.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -7,6 +7,18 @@
 
 // compilee a program compatible with bitVM
 
+// TODO List
+
+// export format
+// add to github
+// readme.md
+// literals
+// array
+//  + - * / % << >> & | ^ ~
+// == != < > <= >=
+// if
+// loop
+
 #include <iostream>
 #include <sstream>
 #include <fstream>

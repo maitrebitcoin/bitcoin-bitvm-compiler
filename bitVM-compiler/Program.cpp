@@ -355,20 +355,27 @@ std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {
 		throw Error("Internal error : unexpected operator");
 	}
 
-	// IN
-	std::array<Connection*, 2> input_2_bit = { output_left[0], output_right[0] };
-	// OUT = A OP B
-	std::array<Connection*, 1> bits_result = gate->add_to_circuit(ctx.circuit, input_2_bit);
-	//TODO
-	//delete gate;
-
+	// for each bit connect gate input and output
 	std::vector<Connection*> result;
-	result.assign(bits_result.begin(), bits_result.end());
+	int size = get_type().size_in_bit();
+	assert(output_left.size() == size);
+	assert(output_right.size() == size);
+	for (int i= 0; i < size; i++) {
+		// IN
+		std::array<Connection*, 2> input_2_bit = { output_left[i], output_right[i] };
+		// OUT = A OP B
+		std::array<Connection*, 1> bits_result = gate->add_to_circuit(ctx.circuit, input_2_bit);
+		//TODO
+		//delete gate;
+		result.insert(result.end(), bits_result.begin(), bits_result.end());
+
+	}
+
 	return result;
 }
 
 
-// build the circuit for the return statement
+// build the circuit for the return statem-ent
 void Statement_Return::build_circuit( BuildContext& ctx) const {
 	
 	// build the expression
@@ -376,7 +383,7 @@ void Statement_Return::build_circuit( BuildContext& ctx) const {
 	int nb_bit_out = (int)outputs.size();
 	assert(nb_bit_out == get_type().size_in_bit());
 	// connect the output of the expression to the output of the circuit
-	ctx.circuit.add_output(outputs);
+	ctx.circuit.set_output(outputs);
 }
 
 

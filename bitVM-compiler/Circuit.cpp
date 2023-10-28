@@ -18,16 +18,20 @@ void Circuit::set_inputs(int bit_count) {
 		inputs.push_back(input_i);
 }}
 
-// add connections ouput
-void Circuit::add_output(std::vector<Connection*> outputs)
+// set connections ouput
+void Circuit::set_output(std::vector<Connection*> new_outputs)
 {
-	int i = nb_bits_output;
-	for (Connection* connexion : outputs) {
+	assert(outputs.size() == 0);
+	assert(new_outputs.size() > 0);
+	int i = nb_bits_output();
+	assert(i == 0);
+
+	for (Connection* connexion : new_outputs) {
 		connexion->is_output = true;
 		connexion->n_ouput_index = i;
 		i++;
+		outputs.push_back(connexion);
 	}
-	nb_bits_output = 1;
 }
 
 
@@ -58,7 +62,7 @@ std::vector< Gate*> Circuit::_get_computable_gate(void) const {
 
 // run the circuit
 std::vector<Bit> Circuit::run(const CInputs& in_values) const {
-	assert(nb_bits_output > 0);
+	assert(nb_bits_output() > 0);
 	assert(in_values.size() > 0);
 	assert(in_values.size() == inputs.size());
 
@@ -69,6 +73,7 @@ std::vector<Bit> Circuit::run(const CInputs& in_values) const {
 	}
 
 	// run whle we have not a result 
+	int nb_step = 0;
 	while (true)
 	{
 		// get gates that have calculated intpus
@@ -85,7 +90,7 @@ std::vector<Bit> Circuit::run(const CInputs& in_values) const {
 		// =all the needed outpus bits are calculated
 
 		// init result from calculated outos
-		std::vector<Bit> result(nb_bits_output);
+		std::vector<Bit> result(nb_bits_output());
 		int bits_calculated = 0;
 		for (Connection* connection_i : connections) {
 
@@ -97,9 +102,10 @@ std::vector<Bit> Circuit::run(const CInputs& in_values) const {
 			}
 		}
 		// if all bits are calculated, return the result
-		if (bits_calculated == nb_bits_output)
+		if (bits_calculated == nb_bits_output())
 			return result;
 		// continue calculation
+		nb_step++;
 		
 	} // while (true)
 
