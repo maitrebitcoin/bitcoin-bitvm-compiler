@@ -9,7 +9,7 @@
 
 // TODO List
 
-// +
+// -a
 // delete gates
 // array
 //  + - * / % << >> & | ^ ~
