@@ -405,6 +405,8 @@ std::vector<Connection*> UnaryOperation::build_circuit(BuildContext& ctx) {
 		if (get_type().is_bool())
 			throw Error("Operator - is not defined for bool type");
 		return build_circuit_negation(ctx, inputs);
+	case Operator::op_complement:
+		return build_circuit_not(ctx, inputs);
 	default:
 		assert(false);
 		throw Error("Internal error : unexpected operator");

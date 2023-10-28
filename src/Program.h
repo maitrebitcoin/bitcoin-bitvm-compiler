@@ -158,8 +158,9 @@ public:
 	// opération : | & ^ + - *  
 	//  types
 	enum class Operator {
-		op_not,	   // !a
-		op_negate, // -a
+		op_not,		  // !a
+		op_negate,	  // -a
+		op_complement,// ~a
 	};
 	Operator operation;
 	//  operand

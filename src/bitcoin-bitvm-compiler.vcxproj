@@ -113,6 +113,7 @@
     <None Include="sample\test_add.bvc" />
     <None Include="sample\test_and.bvc" />
     <None Include="sample\test_byte.bvc" />
+    <None Include="sample\test_complement.bvc" />
     <None Include="sample\test_declare_and_set.bvc" />
     <None Include="sample\test_literal.bvc" />
     <None Include="sample\test_local_var.bvc" />

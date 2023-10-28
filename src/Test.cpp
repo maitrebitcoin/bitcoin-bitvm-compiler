@@ -251,6 +251,25 @@ void test_subtraction(void) {
 	_test_circuit_hex(result.circuit, "FFFE", "01") ;
 	_test_circuit_hex(result.circuit, "FFFF", "00") ;
 }
+void test_complement(void) {
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_complement.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "00", "FF");
+	_test_circuit_hex(result.circuit, "01", "FE");
+	_test_circuit_hex(result.circuit, "02", "FD");
+	_test_circuit_hex(result.circuit, "03", "FC");
+	_test_circuit_hex(result.circuit, "FF", "00");
+	_test_circuit_hex(result.circuit, "13", "EC");
+	_test_circuit_hex(result.circuit, "EC", "13");
+	_test_circuit_hex(result.circuit, "81", "7E");
+	_test_circuit_hex(result.circuit, "7E", "81");
+	_test_circuit_hex(result.circuit, "DD", "22");
+
+}
 
 // run all tests
 void run_all_test(void) {
@@ -268,6 +287,7 @@ void run_all_test(void) {
 	test_addition();			std::cout << " addition - PASSED\n";
 	test_negate();				std::cout << " negate - PASSED\n";
 	test_subtraction();			std::cout << " subtraction - PASSED\n";
+	test_complement();			std::cout << " complement - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

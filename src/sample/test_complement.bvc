@@ -1,0 +1,5 @@
+// test the complement operator : ~
+byte main(byte a) 
+{
+	return ~a; 
+}

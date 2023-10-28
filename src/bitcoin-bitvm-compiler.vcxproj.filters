@@ -101,6 +101,9 @@
     <None Include="sample\test_sub.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_complement.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
