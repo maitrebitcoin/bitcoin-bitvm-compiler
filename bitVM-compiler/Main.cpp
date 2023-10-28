@@ -9,7 +9,6 @@
 
 // TODO List
 
-// export format
 // add to github
 // readme.md
 // literals
@@ -112,7 +111,6 @@ int main(int argc, char* argv[])
 	std::cout << "# outpus : " << stats.nb_outputs		<< "\n";
 	std::cout << "# gates  : " << stats.nb_gates		<< "\n";
 	std::cout << "# wires  : " << stats.nb_connections  << "\n";
-
 	
 	return 0;
 }
