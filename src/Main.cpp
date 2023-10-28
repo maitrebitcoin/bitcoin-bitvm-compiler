@@ -9,8 +9,6 @@
 
 // TODO List
 
-// add to github
-// readme.md
 // literals
 // array
 //  + - * / % << >> & | ^ ~
