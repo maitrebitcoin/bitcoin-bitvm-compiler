@@ -77,3 +77,33 @@ std::array<Connection*, 1> Gate_XOR::add_to_circuit(Circuit& circuit, std::array
 
 }
 
+// (r,carry) = a + b
+// compute the output of the gate
+std::array<Connection*, 2> Gate_ADD::add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs) {
+
+	std::array<Connection*, 2> _ab = { _inputs[0], _inputs[1] };
+	std::array<Connection*, 1> a_xor_b = Gate_XOR().add_to_circuit(circuit, _ab);
+	std::array<Connection*, 1> a_and_b = Gate_AND().add_to_circuit(circuit, _ab);
+	// low   = a xor b
+	// carry = a and b
+	return { a_xor_b[0], a_and_b[0] };
+}
+
+// full adder
+// (r,carry) = a + b + carry_in 
+// compute the output of the gate
+std::array<Connection*, 2> Gate_ADDC::add_to_circuit(Circuit& circuit, std::array<Connection*, 3>& _inputs) {
+	// easy implentation wirh 2 half adders and an or gate
+	// source : https://www.geeksforgeeks.org/full-adder-in-digital-logic/
+	std::array<Connection*, 2> _ab = { _inputs[0], _inputs[1] };
+	std::array<Connection*, 2> add_ab = Gate_ADD().add_to_circuit(circuit, _ab);
+	std::array<Connection*, 2> _c_add_ab = { _inputs[2], add_ab[0] };
+	std::array<Connection*, 2> add_c_addab = Gate_ADD().add_to_circuit(circuit, _c_add_ab);
+	// carry from the 2 addders
+	std::array<Connection*, 2> _2c = { add_ab[1], add_c_addab[1] };
+	std::array<Connection*, 1> c_out = Gate_OR().add_to_circuit(circuit, _2c);
+
+	// low   = a + b + c
+	return { add_c_addab[0], c_out[0] };
+}
+

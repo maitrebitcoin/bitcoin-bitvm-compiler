@@ -92,6 +92,9 @@
     <None Include="sample\test_literal.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_add.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">

@@ -9,6 +9,8 @@
 
 // TODO List
 
+// +
+// delete gates
 // array
 //  + - * / % << >> & | ^ ~
 // == != < > <= >=

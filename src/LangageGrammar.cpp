@@ -111,6 +111,7 @@ RuleDefinition rules_definition[] =
 	{ RULE_EXPRESSION , {RULE_OPERATOR_OR }  ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
 	{ RULE_EXPRESSION , {RULE_OPERATOR_XOR } ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
 	{ RULE_EXPRESSION , {RULE_OPERATOR_NOT } ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
+	{ RULE_EXPRESSION , {RULE_OPERATOR_ADD } ,	[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
 		//a&b
 	{ RULE_OPERATOR_AND , {RULE_EXPRESSION, '&', RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
@@ -129,12 +130,20 @@ RuleDefinition rules_definition[] =
 			result.expression_value = new_binary_operation(BinaryOperation::Operator::op_xor, p[0].expression_value, p[2].expression_value);
 		}
 	},
-	//a|b
+	//a+b
+	{ RULE_OPERATOR_ADD , {RULE_EXPRESSION, '+', RULE_EXPRESSION } ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.expression_value = new_binary_operation(BinaryOperation::Operator::op_add, p[0].expression_value, p[2].expression_value);
+		}
+	},
+	//!a
 	{ RULE_OPERATOR_NOT , {'!', RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.expression_value = new_unary_operation(UnaryOperation::Operator::op_not, p[1].expression_value);
 		}
 	},
+
+			
 	// ex: a
 	{ RULE_VARIABLE , { TOKEN_IDENTIFIER } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_variable(*p[0].string_value);  }

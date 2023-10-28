@@ -118,6 +118,7 @@ public:
 		op_and,
 		op_or,
 		op_xor,
+		op_add,
 	};
 	Operator operation;
 	// left operand
@@ -136,6 +137,11 @@ public:
 	
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
+protected:
+	// build the circuit for the "a+b" expression
+	std::vector<Connection*> _build_circuit_add(BuildContext& ctx,
+												std::vector<Connection*>& in_a,
+												std::vector<Connection*>& in_b);
 };
 // Math with 1 operand. ex :"!2"
 class UnaryOperation : public Expression {

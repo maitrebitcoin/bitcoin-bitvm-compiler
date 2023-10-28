@@ -66,22 +66,22 @@ void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  he
 		test_input.add_bit(bit);
 	}
 	// run the circuit
-	std::vector<Bit> test_result;
+	std::vector<Bit> result;
 	try {
 		circuit.reset();
-		test_result = circuit.run(test_input);
+		result = circuit.run(test_input);
 	}
 	catch (Error& e) {
 		test_failed(e.message);
 	}
 
-	if (test_result.size() != bits_expected.size())
+	if (result.size() != bits_expected.size())
 		test_failed("output size mismatch");
 
 	// check outputs
 	for (int i = 0; i < bits_expected.size(); i++) {
 		bool expected_bit_i = bits_expected[i];
-		if (expected_bit_i != test_result[i]) {
+		if (expected_bit_i != result[i]) {
 			// FAILED
 			test_failed(hex_expected_result);
 			return;
@@ -192,11 +192,37 @@ void test_literal(void) {
 	_test_circuit_hex(result.circuit, "11", "11");
 	_test_circuit_hex(result.circuit, "EC", "0C");
 }
+void test_addition(void) {
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_add.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "0000", "00");
+	_test_circuit_hex(result.circuit, "0001", "01");
+	_test_circuit_hex(result.circuit, "0100", "01");
+	_test_circuit_hex(result.circuit, "0010", "10");
+	_test_circuit_hex(result.circuit, "0201", "03");
+	_test_circuit_hex(result.circuit, "0202", "04");
+	_test_circuit_hex(result.circuit, "0203", "05");
+	_test_circuit_hex(result.circuit, "0101", "02");
+	_test_circuit_hex(result.circuit, "0701", "08");
+	_test_circuit_hex(result.circuit, "FE01", "FF");
+	_test_circuit_hex(result.circuit, "EF01", "F0");
+	_test_circuit_hex(result.circuit, "01FE", "FF");
+	_test_circuit_hex(result.circuit, "14DE", "F2");
+	_test_circuit_hex(result.circuit, "87E7", "6E");
+	_test_circuit_hex(result.circuit, "FFFF", "FE");
+	_test_circuit_hex(result.circuit, "01FF", "00");
+}
 
 
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
+
+	test_addition();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
@@ -207,6 +233,7 @@ void run_all_test(void) {
 	test_local_var_and_set();	std::cout << " local set var & set - PASSED\n";
 	test_byte();				std::cout << " byte - PASSED\n";
 	test_literal();				std::cout << " literal - PASSED\n";
+	test_addition();			std::cout << " addition - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

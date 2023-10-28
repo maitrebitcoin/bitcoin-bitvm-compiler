@@ -148,4 +148,18 @@ public:
 	virtual std::array<Connection*, 1> add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs) override;
 };
 
-
+// (r,carry) = a + b
+class Gate_ADD : public T_CompositeeGate<2, 2>
+{
+public:
+	// compute the output of the OR gate
+	virtual std::array<Connection*, 2> add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs) override;
+};
+// full adder
+// (r,carry) = a + b + c
+class Gate_ADDC : public T_CompositeeGate<3, 2>
+{
+public:
+	// compute the output of the gate
+	virtual std::array<Connection*, 2> add_to_circuit(Circuit& circuit, std::array<Connection*, 3>& _inputs) override;
+};
