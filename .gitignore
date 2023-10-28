@@ -1,4 +1,3 @@
-/.vs
+src/.vs
 /x64
-/bitVM-compiler/x64
 *.user

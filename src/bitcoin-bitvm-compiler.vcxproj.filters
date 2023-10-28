@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Circuit.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Compiler.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Connection.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Gate.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="LangageGrammar.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="ParsingContext.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Program.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="SurfaceTest.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Bits.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="Circuit.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="Compiler.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="Connection.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="Error.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="LangageGrammar.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="ParsingContext.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="Program.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="TokenId.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="SufaceTest.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sample\test_and.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_byte.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_declare_and_set.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_local_var.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_not.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_or.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_xor.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\hello_word.bvc">
+      <Filter>sample</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{bef01747-d23d-453e-a016-2f729997259d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sample">
+      <UniqueIdentifier>{f3a9187d-f6e0-4b11-a012-7fa27ee058c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\header">
+      <UniqueIdentifier>{782b3a38-a7fc-48f1-9ef8-6f19875e988e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
