@@ -114,6 +114,8 @@ RuleDefinition rules_definition[] =
 	{ RULE_EXPRESSION , {RULE_OPERATOR_ADD } ,		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
 	{ RULE_EXPRESSION , {RULE_OPERATOR_SUB } ,		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
 	{ RULE_EXPRESSION , {RULE_OPERATOR_COMPLEMENT} ,[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
+	//(a)
+	{ RULE_EXPRESSION , { '(',RULE_EXPRESSION, ')'},[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[1].expression_value; }},
 	//a&b
 	{ RULE_OPERATOR_AND , {RULE_EXPRESSION, '&', RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {

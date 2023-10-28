@@ -270,6 +270,20 @@ void test_complement(void) {
 	_test_circuit_hex(result.circuit, "DD", "22");
 
 }
+void test_parenthesis(void) {
+	// ccmpile the circuit : res = ~(a&b)-(a+b);
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_parenthesis.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "0000", "FF");
+	_test_circuit_hex(result.circuit, "FF00", "00");
+	_test_circuit_hex(result.circuit, "FFFF", "02");
+	_test_circuit_hex(result.circuit, "0102", "FC");
+	_test_circuit_hex(result.circuit, "547D", "DA");
+
+}
 
 // run all tests
 void run_all_test(void) {
@@ -288,6 +302,7 @@ void run_all_test(void) {
 	test_negate();				std::cout << " negate - PASSED\n";
 	test_subtraction();			std::cout << " subtraction - PASSED\n";
 	test_complement();			std::cout << " complement - PASSED\n";
+	test_parenthesis();			std::cout << " parenthesis - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";
