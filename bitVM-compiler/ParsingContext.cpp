@@ -34,6 +34,10 @@ void ParsingContext::on_new_token(const CToken& token)
 			in_decl_localvar    = true;
 			in_set_var_possible = false;
 		}
+		// for "bool b=a" case :
+		if (token.type == TOKEN_IDENTIFIER_LOCALVAR ) {
+			in_decl_localvar   = false;
+		}
 		// end of statement
 		if (token.type == ';') {
 			in_decl_localvar    = false;

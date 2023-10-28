@@ -126,7 +126,14 @@ public:
 		statements.push_back(new_set_var_statement);
 		return new_set_var_statement;
 	}
-	
+	// get a new declare and set var statement
+	Statement* new_declare_and_set_var_statement(Type* type, std::string name, Expression* expr) {
+		Statement_DeclareAndSetVar* new_declare_and_set_var_statement = new Statement_DeclareAndSetVar(get_current_line_number(), type, name, expr);
+		statements.push_back(new_declare_and_set_var_statement);
+		return new_declare_and_set_var_statement;
+	}
+
+
 
 	// get a new program
 	Program* new_program(void) {

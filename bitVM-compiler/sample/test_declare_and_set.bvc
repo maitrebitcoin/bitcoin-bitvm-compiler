@@ -1,0 +1,6 @@
+// test the ^ operator with local var declaration and assigment
+bool main(bool a,bool b) 
+{
+	bool local_a_xor_b = a ^ b;
+	return local_a_xor_b; 
+}

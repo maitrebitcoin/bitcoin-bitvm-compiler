@@ -22,28 +22,7 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 	return std::vector<TokenDefinition>(token_definition, token_definition + nb_lex_rules);
 }
 
-// grammar elements
-enum E_RuleId {
-	RULE_FUNCTION			= 1000,
-	RULE_FUNCTION_DEFINTION,// 1001 ex : bool f(byte a, byte b) 
-	RULE_TYPE,				// 1002 ex : bool
-	RULE_N_PARAMETERS_DECL,	// 1003 ex : (bool a, byte b)		
-	RULE_1_PARAMETER_DECL,	// 1004 ex : bool b
-	RULE_CODEBLOC,			// 1005 ex : { return a+b; }
-	RULE_N_STATEMENTS,		// 1006 ex : a++;b++;return a+b;	
-	RULE_1_STATEMENT,		// 1007 ex : a++
-	RULE_STATEMENT	,		// 1008 ex : a++
-	RULE_OPERATION,			// 1009 ex : a&b
-	RULE_INSTRUCITON_RETURN,// 1010 ex : return a+b
-	RULE_EXPRESSION,		// 1011 ex : 123 our a or a+b
-	RULE_LITTERAL,			// 1012 ex : 123
-	RULE_VARIABLE,			// 1013 ex : a
-	RULE_OPERATOR_AND,		// 1014 ex : a&b
-	RULE_OPERATOR_OR,		// 1015 ex : a|b
-	RULE_OPERATOR_XOR,		// 1016 ex : a^b
-	RULE_OPERATOR_NOT,		// 1017 ex : !a
-	RULE_PROGRAM			 = 1999, //  the whole program
-};
+// grammar 
 std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 RuleDefinition rules_definition[] =
 {
@@ -113,6 +92,13 @@ RuleDefinition rules_definition[] =
 	{ RULE_1_STATEMENT , {TOKEN_IDENTIFIER_SETVAR, '=', RULE_EXPRESSION, ';'} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_set_var_statement(*p[0].string_value, p[2].expression_value);
+		}
+	},
+	// variable declaration ands affectation
+	// ex: bool a = b+c;
+	{ RULE_1_STATEMENT , {RULE_TYPE, TOKEN_IDENTIFIER_LOCALVAR, '=', RULE_EXPRESSION, ';'} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.statement_value = new_declare_and_set_var_statement(p[0].type_value, *p[1].string_value,  p[3].expression_value);
 		}
 	},
 

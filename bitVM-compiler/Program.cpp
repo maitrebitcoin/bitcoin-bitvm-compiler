@@ -161,6 +161,16 @@ void VariableExpression::init(CodeBloc* parent_bloc) {
 void Statement_SetVar::init(CodeBloc* parent_bloc) {
 	expression->init(parent_bloc);
 }
+// declare and set init
+void Statement_DeclareAndSetVar::init(CodeBloc* parent_bloc) {
+	// init set and assign
+	declaration.init(parent_bloc);
+	affectation.init(parent_bloc);
+	// check the type
+	if (!declaration.get_type().is_same_type(affectation.get_type()))
+		throw Error("Type mismatch");
+}
+
 
 // find a variable by name
 const Type* CodeBloc::find_variable_by_name(std::string var_name) const {
@@ -394,6 +404,15 @@ void Statement_SetVar::build_circuit(BuildContext& ctx) const {
 	// connect the output of the expression to current value of the variable
 	var->set_value(expression_value);
 }
+// build the circuit for the dérale dans set statement
+void Statement_DeclareAndSetVar::build_circuit(BuildContext& ctx) const {
+	// declare the variable
+	declaration.build_circuit(ctx);
+	// set variable value
+	affectation.build_circuit(ctx);
+
+}
+
 
 // build a circuit that represents the fuidl
 void Function::build_circuit(class Circuit& circuit) {

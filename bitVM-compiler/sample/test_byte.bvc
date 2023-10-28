@@ -1,0 +1,6 @@
+// test the byt native type
+byte main(byte a,byte b) 
+{
+	byte local_a_and_b = a & b;
+	return local_a_and_b; 
+}
