@@ -7,17 +7,8 @@
 
 class Gate;
 class Circuit;
+class CRunInputs;
 
-class CInputs : public std::vector <Bit>
-{
-public:
-	// add 1 bit
-	void add_bit(bool b) {
-		Bit bit;
-		bit.set_value(b);
-		this->push_back(bit);
-	}
-};
 
 // represents a virtual circuit
 class Circuit {
@@ -54,15 +45,17 @@ public:
 	// is the circuit usign litteral values ?
 	bool is_using_litteral_values(void) const;
 
+	// size in bits of the output
+	int nb_bits_output(void) const { return (int)outputs.size(); }
+
+	// get inout of the circuit. to set values before running it
+	CRunInputs get_run_inputs(void) const;
 	// run the circuit
-	std::vector<Bit> run(const CInputs& inputs) const;
+	std::vector<Bit> run(const CRunInputs& inputs) const;
 	// reset the circuit gate before a new run
 	void reset(void) const;
 	// init gates and connections ID
 	void init_id(void);
-
-	// size in bits of the output
-	int nb_bits_output(void) const { return (int)outputs.size(); }
 
 	// export to a string
 	std::string export_to_string(void) const;
@@ -82,5 +75,38 @@ public:
 protected:
 	// get all garbes that have calculated inputes
 	std::vector< Gate*> _get_computable_gate(void) const;
+
+};
+
+class CRunInputs : public std::vector <Bit>
+{
+	friend Circuit;
+
+private:
+	// construstor, for Circuit only
+	CRunInputs(void) {};
+	// init inpute
+	void init(int nb_bit) {
+		// init the vector
+		for (int i = 0; i < nb_bit; i++)
+			this->push_back(Bit());
+	}
+
+public:
+	// set a 1 bit value
+	void set_bit_value(int numvar, bool b) {
+		assert(numvar < (int)this->size());
+		// set the value
+		(*this)[numvar].set_value(b);
+	}
+	// set the value of a 8 bit var
+	void set_byte_value(int numvar, std::vector<bool> bits) {
+		assert(numvar * 8 < (int)this->size());
+		assert(bits.size() == 8);
+		// set 8 bitsd of the value
+		for (int i = 0; i < 8; i++)	{
+			set_bit_value(numvar * 8 + i, bits[i]);
+		}
+	}
 
 };

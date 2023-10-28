@@ -77,8 +77,17 @@ std::vector< Gate*> Circuit::_get_computable_gate(void) const {
 	return computable_gates;
 }
 
+// get inout of the circuit. to set values before running it
+CRunInputs Circuit::get_run_inputs(void) const {
+	assert(is_fully_constructed);
+	CRunInputs result;
+	result.init((int)inputs.size());
+	return std::move(result);
+}
+
+
 // run the circuit
-std::vector<Bit> Circuit::run(const CInputs& in_values) const {
+std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
 	assert(nb_bits_output() > 0);
 	assert(in_values.size() > 0);
 	assert(in_values.size() == inputs.size());

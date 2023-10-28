@@ -400,19 +400,19 @@ std::vector<Connection*> UnaryOperation::build_circuit(BuildContext& ctx) {
 		// type bool only
 		if (!get_type().is_bool())
 			throw Error("Operator ! is reserved for bool type only");
-		return _build_circuit_not(ctx, inputs);
+		return build_circuit_not(ctx, inputs);
 	case Operator::op_negate:
 		if (get_type().is_bool())
 			throw Error("Operator - is not defined for bool type");
-		return _build_circuit_negation(ctx, inputs);
+		return build_circuit_negation(ctx, inputs);
 	default:
 		assert(false);
 		throw Error("Internal error : unexpected operator");
 	}
 }
 // build the circuit for the not expression
-std::vector<Connection*> UnaryOperation::_build_circuit_not(BuildContext & ctx, std::vector<Connection*>& inputs) {
-	assert(inputs.size() == get_type().size_in_bit());
+std::vector<Connection*> UnaryOperation::build_circuit_not(BuildContext & ctx, std::vector<Connection*>& inputs) {
+
 	// OUT = !A for each bit
 	std::vector<Connection*> result;
 	for (int i = 0; i < inputs.size(); i++) {
@@ -424,10 +424,10 @@ std::vector<Connection*> UnaryOperation::_build_circuit_not(BuildContext & ctx, 
 }
 
 // build the circuit for the negate expression
-std::vector<Connection*> UnaryOperation::_build_circuit_negation(BuildContext & ctx, std::vector<Connection*>& inputs) {
+std::vector<Connection*> UnaryOperation::build_circuit_negation(BuildContext & ctx, std::vector<Connection*>& inputs) {
 	std::vector<Connection*> result;
 	// create a 2's complement
-	std::vector<Connection*> not_inputs =_build_circuit_not(ctx, inputs);
+	std::vector<Connection*> not_inputs = build_circuit_not(ctx, inputs);
 	// get 1 with the right size
 	std::vector<Connection*> _1;
 	for (int i = 0; i < inputs.size(); i++) {
@@ -459,9 +459,11 @@ std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {
 		gate = new Gate_XOR();
 		break;
 	case Operator::op_add:
-		// + is not bit to bit independant
+		// a+b is not bit to bit independant
 		return build_circuit_add(ctx, output_left, output_right);
-		break;
+	case Operator::op_sub:
+		// a-b is not bit to bit independant
+		return build_circuit_sub(ctx, output_left, output_right);
 	default:
 		assert(false);
 		throw Error("Internal error : unexpected operator");
@@ -485,8 +487,8 @@ std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {
 }
 // build the circuit for the "a+b" expression
 std::vector<Connection*> BinaryOperation::build_circuit_add(BuildContext& ctx,
-														std::vector<Connection*>& in_a,
-														std::vector<Connection*>& in_b ) {
+															std::vector<Connection*>& in_a,
+															std::vector<Connection*>& in_b ) {
 	assert(in_a.size()== in_b.size());
 	std::vector<Connection*> result;
 	int size = (int)in_a.size();
@@ -507,7 +509,18 @@ std::vector<Connection*> BinaryOperation::build_circuit_add(BuildContext& ctx,
 	assert( result.size() == size);
 	return result;
 }
-
+// build the circuit for the "a-b" expression
+std::vector<Connection*> BinaryOperation::build_circuit_sub(BuildContext& ctx,
+															std::vector<Connection*>& in_a,
+															std::vector<Connection*>& in_b) {
+	assert(in_a.size() == in_b.size());
+	// implent wita a-b = a+(-b)
+	// build the circuit for -b
+	std::vector<Connection*> neg_b = UnaryOperation::build_circuit_negation(ctx, in_b);
+	// build the circuit for a+(-b)
+	std::vector<Connection*> a_minus_b = build_circuit_add(ctx, in_a, neg_b);
+	return a_minus_b;
+}
 
 
 

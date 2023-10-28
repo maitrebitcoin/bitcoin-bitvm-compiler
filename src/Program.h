@@ -121,6 +121,7 @@ public:
 		op_or,
 		op_xor,
 		op_add,
+		op_sub,
 	};
 	Operator operation;
 	// left operand
@@ -139,11 +140,15 @@ public:
 	
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
-
 	// build the circuit for the "a+b" expression
 	static std::vector<Connection*>  build_circuit_add(BuildContext& ctx,
 													   std::vector<Connection*>& in_a,
 													   std::vector<Connection*>& in_b);
+	// build the circuit for the "a-b" expression
+	static std::vector<Connection*>  build_circuit_sub(BuildContext& ctx,
+													   std::vector<Connection*>& in_a,
+													   std::vector<Connection*>& in_b);
+
 };
 // Math with 1 operand. ex :"!2"
 class UnaryOperation : public Expression {
@@ -170,11 +175,11 @@ public:
 	virtual const Type& get_type(void) override { return result_type; }
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
-protected:
+
 	// build the circuit for the not expression
-	std::vector<Connection*> _build_circuit_not(BuildContext& ctx, std::vector<Connection*>& inputs);
+	static std::vector<Connection*> build_circuit_not(BuildContext& ctx, std::vector<Connection*>& inputs);
 	// build the circuit for the negate expression
-	std::vector<Connection*> _build_circuit_negation(BuildContext& ctx, std::vector<Connection*>& inputs);
+	static std::vector<Connection*> build_circuit_negation(BuildContext& ctx, std::vector<Connection*>& inputs);
 };
 
 

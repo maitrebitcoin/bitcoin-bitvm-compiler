@@ -5,18 +5,7 @@
 // Usage :
 //   bitVM-compiler <source_file_name> <output_file_name>
 
-// compilee a program compatible with bitVM
-
-// TODO List
-
-// -a
-// delete gates
-// array
-//  + - * / % << >> & | ^ ~
-// == != < > <= >=
-// if
-// loop
-// linux : makefile
+// compile a program compatible with bitVM
 
 #include <iostream>
 #include <sstream>

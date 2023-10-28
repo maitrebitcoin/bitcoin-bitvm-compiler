@@ -1,0 +1,5 @@
+// test the a-b operator
+byte main(byte a,byte b) 
+{
+	return a-b; 
+}

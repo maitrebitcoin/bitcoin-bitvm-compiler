@@ -34,6 +34,7 @@ enum E_RuleId {
 	RULE_OPERATOR_OR,		// 1015 ex : a|b
 	RULE_OPERATOR_XOR,		// 1016 ex : a^b
 	RULE_OPERATOR_NOT,		// 1017 ex : !a
-	RULE_OPERATOR_ADD,		// 1017 ex : a+b
+	RULE_OPERATOR_ADD,		// 1018 ex : a+b
+	RULE_OPERATOR_SUB,		// 1019 ex : a-b
 	RULE_PROGRAM = 1999, //  the whole program
 };

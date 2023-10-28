@@ -119,6 +119,7 @@
     <None Include="sample\test_negate.bvc" />
     <None Include="sample\test_not.bvc" />
     <None Include="sample\test_or.bvc" />
+    <None Include="sample\test_sub.bvc" />
     <None Include="sample\test_xor.bvc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

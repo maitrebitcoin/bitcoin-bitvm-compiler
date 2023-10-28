@@ -27,16 +27,10 @@ void test_failed( std::string msg="") {
 //<input_01> : ex : "01"
 void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_result) {
 	// set the inputs
-	CInputs test_input;
-	while (*inputs)
-	{
-		if (*inputs == '1')
-			test_input.add_bit(true);
-		else
-			test_input.add_bit(false);
-		inputs++;
-	}
-
+	CRunInputs test_input = circuit.get_run_inputs();
+	test_input.set_bit_value(0, inputs[0] == '1');
+	if (inputs[1]!=0) // 2 inputs ?
+		test_input.set_bit_value(1, inputs[1] == '1');
 	// run
 	circuit.reset();
 	std::vector<Bit> test_result = circuit.run(test_input);
@@ -61,13 +55,14 @@ void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_re
 //<input_01> : ex : "01"
 void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  hex_expected_result) {
 	// convert hex string to bits
-	auto bits_in = Literal::hex_string_to_bits(hex_inputs);
+	auto bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0,2));
+	auto bits_b = Literal::hex_string_to_bits(hex_inputs.substr(2,2));
 	auto bits_expected = Literal::hex_string_to_bits(hex_expected_result);
-	// set inputs
-	CInputs test_input;
-	for (bool bit : bits_in) {
-		test_input.add_bit(bit);
-	}
+	// set inputs1 & 2
+	CRunInputs test_input = circuit.get_run_inputs();
+	test_input.set_byte_value(0, bits_a);
+	if (bits_b.size() > 0)
+		test_input.set_byte_value(1, bits_b);
 	// run the circuit
 	std::vector<Bit> result;
 	try {
@@ -240,12 +235,26 @@ void test_negate(void) {
 	_test_circuit_hex(result.circuit, "81", "7F");
 	_test_circuit_hex(result.circuit, "7F", "81");
 }
+void test_subtraction(void) {
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_sub.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "0000", "00");
+	_test_circuit_hex(result.circuit, "0100", "01");
+	_test_circuit_hex(result.circuit, "0001", "FF");
+	_test_circuit_hex(result.circuit, "1312", "01") ;
+	_test_circuit_hex(result.circuit, "817F", "02") ;
+	_test_circuit_hex(result.circuit, "DA73", "67") ;
+	_test_circuit_hex(result.circuit, "FFFE", "01") ;
+	_test_circuit_hex(result.circuit, "FFFF", "00") ;
+}
 
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
-
-	test_negate();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
@@ -258,6 +267,7 @@ void run_all_test(void) {
 	test_literal();				std::cout << " literal - PASSED\n";
 	test_addition();			std::cout << " addition - PASSED\n";
 	test_negate();				std::cout << " negate - PASSED\n";
+	test_subtraction();			std::cout << " subtraction - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";
