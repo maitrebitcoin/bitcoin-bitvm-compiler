@@ -53,7 +53,7 @@ Bits are in low endian (x86 format)
 - write the language documentation
 - operator precedence
 - array support
-- test operators : != < > <= >=
+- test operators : < > <= >=
 - operators : \* / % 
 - procedure calls
 - if statement
@@ -62,4 +62,4 @@ Bits are in low endian (x86 format)
 - linux : create a makefile
 - check for unused inputs. actaally generateds a "no more gates" error
 - command line option to test the generated circuit
-
+- opitmise the generated circuit
