@@ -53,7 +53,7 @@ Bits are in low endian (x86 format)
 - write the language documentation
 - operator precedence
 - array support
-- test operators : == != < > <= >=
+- test operators : != < > <= >=
 - operators : \* / % 
 - procedure calls
 - if statement
