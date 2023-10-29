@@ -9,6 +9,9 @@ class Function;
 class CodeBloc;
 class BuildContext;
 class Connection;
+class BinaryOperation;
+class Literal;
+class LangageAttributes;
 
 // type of a variable or function. 
 //ex : "bool"
@@ -50,15 +53,21 @@ public:
 // opérandd expression. "a" ,123, or a+b
 class Expression {
 protected:
-
+	// true if the expression is between parentesis. ex: (a+1)
+	bool has_parentesis = false;
 public:
-	// init
-	virtual void init(CodeBloc* parent_bloc) = 0;
+	// set if the expression is between parentesis. ex: (a+1)
+	void set_parentesis(bool b) { has_parentesis = b; }
+
 	// get expression type
 	virtual const Type& get_type(void) = 0;
 	// if the expression is a littrela, return it
-	virtual class Literal* cast_to_literal(void) { return nullptr; }
+	virtual Literal* cast_to_literal(void) { return nullptr; }
+	// if the expression is a binairy expression, return it
+	virtual BinaryOperation* cast_to_BinaryOperation(void) { return nullptr; }
 
+	// init
+	virtual void init(CodeBloc* parent_bloc) = 0;
 	// build the circuit for the expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) = 0;
 };
@@ -120,14 +129,15 @@ public:
 	// build the circuit for the  expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 };
+
 // Math expression. ex :"a+2"
 class BinaryOperation : public Expression {
 public:
 	// type of the result
 	Type result_type;
-	// opération : | & ^ + - *  
-	//  types
+	// opération types : | & ^ + - *  
 	enum class Operator {
+		invalid_operator = -1,
 		op_and,
 		op_or,
 		op_xor,
@@ -141,6 +151,9 @@ public:
 		op_test_lower_or_equal,
 		op_test_greater,
 		op_test_greater_or_equal,
+		op_mult,
+		op_div,
+		op_modulo,
 	};
 	Operator operation;
 	// left operand
@@ -152,11 +165,17 @@ public:
 public:
 	// constructor
 	BinaryOperation(Operator op, Expression* left, Expression* right);
+	// reorg epxresion tree to ensure operator precedence
+	// retrun the new root of the expression
+	BinaryOperation* reorg_for_precedence( LangageAttributes& language);
 	// init
 	virtual void init(CodeBloc* parent_bloc) override;
+	// true is the expression has a higher precedence than the othe expression
+	bool has_higher_precedence(const BinaryOperation& other_expression, LangageAttributes& language) const;
 	// get expression type
 	virtual const Type& get_type(void) override { return result_type;}
-	
+	// if the expression is a binairy expression, return it
+	virtual BinaryOperation* cast_to_BinaryOperation(void) override  { return this; }
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 	// build the circuit for the "a+b" expression

@@ -85,6 +85,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LangageAttributes.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ParsingContext.cpp" />
     <ClCompile Include="Program.cpp" />
@@ -98,6 +99,7 @@
   <ItemGroup>
     <ClInclude Include="Bits.h" />
     <ClInclude Include="Error.h" />
+    <ClInclude Include="LangageAttributes.h" />
     <ClInclude Include="ParsingContext.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="Circuit.h" />

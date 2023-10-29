@@ -1,6 +1,5 @@
 // implémentation of the compiler
 
-
 #include <sstream>
 #include <vector>
 #include <assert.h>
@@ -11,10 +10,8 @@
 #include "Compiler.h"
 #include "LangageGrammar.h"
 
-//LangageGrammar BitVM_C_Grammar;
-
 // constructor
-Compiler::Compiler(LangageGrammar& language)
+Compiler::Compiler(LangageDefinitionAndContext& language)
 	: lexer(language)
 	, language_context(language)
 {
@@ -291,7 +288,7 @@ void Compiler::_execute_rule(GrammarRule& rule) {
 }
 
 // lexer constructor
-CLexer::CLexer(LangageGrammar& language) :language_context(language) {
+CLexer::CLexer(LangageDefinitionAndContext& language) :language_context(language) {
 	token_definition = language_context.get_token_definition();
 	//token_definition.assign(definitions, definitions + len);
 }
@@ -504,7 +501,7 @@ Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 		return std::move(Result{ false, null_circuit, Error("Cannot open file ", file_name) });
 	}
 	// compile the source file for the  BitVM_C_Grammar
-	LangageGrammar BitVM_C_Grammar;
+	LangageDefinitionAndContext BitVM_C_Grammar;
 	Compiler compiler(BitVM_C_Grammar);
 	Error compile_error;
 	if (!compiler.compile(source_file, compile_error)) {

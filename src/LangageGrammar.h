@@ -2,8 +2,10 @@
 #include <string>
 #include <vector>
 #include <assert.h>
+#include <map>
 #include "Program.h"
 #include "ParsingContext.h"
+#include "LangageAttributes.h"
 
 struct TokenDefinition;
 struct RuleDefinition;
@@ -193,18 +195,23 @@ public:
 class CToken;
 
 
-
-// definition of the language grammar 
-// and parsing context
-class LangageGrammar : public ObjetKeeper {
-
+// language grammar and tokens
+class LangageGrammar : public ObjetKeeper // needed for the lexer ands parser to allcoate nodes
+{
 public:
 	// get the token definition
 	std::vector<TokenDefinition> get_token_definition(void);
 	// get the grammar definition
 	std::vector<RuleDefinition> get_grammar_definition(void);
-
-
-
 };
+
+// definition of the language and and context for parsing
+// - grammar 
+// - attibues
+// - parsing context
+class LangageDefinitionAndContext :
+	  public LangageGrammar 
+	, public LangageAttributes 
+{};
+
 

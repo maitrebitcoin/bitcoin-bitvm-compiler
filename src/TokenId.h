@@ -45,5 +45,7 @@ enum E_RuleId {
 	RULE_OPERATOR_ADD,			// 1018 ex : a+b
 	RULE_OPERATOR_SUB,			// 1019 ex : a-b
 	RULE_OPERATOR_COMPLEMENT,   // 1020 ex : ~a 
+	RULE_OPERATOR_SHIFT,		// 1021 ex : << >>
+	RULE_OPERATOR_CMP,			// 1022 ex : <= > ===
 	RULE_PROGRAM = 1999, //  the whole program
 };

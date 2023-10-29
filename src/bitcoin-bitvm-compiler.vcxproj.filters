@@ -28,6 +28,9 @@
     <ClCompile Include="Test.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="LangageAttributes.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bits.h">
@@ -61,6 +64,9 @@
       <Filter>source\header</Filter>
     </ClInclude>
     <ClInclude Include="Test.h">
+      <Filter>source\header</Filter>
+    </ClInclude>
+    <ClInclude Include="LangageAttributes.h">
       <Filter>source\header</Filter>
     </ClInclude>
   </ItemGroup>

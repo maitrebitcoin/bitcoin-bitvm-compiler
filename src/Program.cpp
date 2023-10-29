@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "Error.h"
 #include "Circuit.h"
+#include "LangageGrammar.h"
 
 // return the size in bits of a type
 int Type::size_in_bit(void) const
@@ -57,6 +58,36 @@ BinaryOperation::BinaryOperation(Operator op, Expression* left, Expression* righ
 	//	TODO
 	// build the expression for debug purposes
 }
+// reorg epxresion tree to ensure operator precedence
+// ex: "a + b * c" must be calculad as "a + (b * c)"
+// retrun the new root of the expression
+BinaryOperation* BinaryOperation::BinaryOperation::reorg_for_precedence(LangageAttributes &language) {
+	// only if the 1st operand is a binary operation
+	BinaryOperation* left_operand_2op = left_operand->cast_to_BinaryOperation();
+	if (left_operand_2op == nullptr)
+		return this; // do nothing and keep tree as it is
+	// if the expression is in (), do nothing
+	if (left_operand_2op->has_parentesis)
+		return this; 
+	// if the precedence is ok
+	// ex: a*b+c
+	if (left_operand_2op->has_higher_precedence(*this, language))
+		return this; // do nothing and keep tree as it is
+	// if the precedence is not ok
+	// ex: a*b+c
+	// regorg the tree : (a + b) * c => a + (b*c)"
+	this->left_operand				= left_operand_2op->left_operand; 
+	left_operand_2op->right_operand = this;
+	return left_operand_2op;
+
+}
+// true is the expression has a higher precedence than the othe expression
+bool BinaryOperation::has_higher_precedence(const BinaryOperation& other_expression, LangageAttributes& language) const {
+	// compare precedence with the other expression
+	int cmp = language.compare_operator_precedence( (int)operation, (int)other_expression.operation );
+	return cmp> 0;
+}
+
 
 // function constructor
 Function::Function(Definition* def, CodeBloc* fn_body)

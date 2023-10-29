@@ -451,6 +451,7 @@ void test_greater_lower(void) {
 	_test_circuit_hex(result.circuit, "FFFE", "0");
 	_test_circuit_hex(result.circuit, "FEFF", "1");
 	_test_circuit_hex(result.circuit, "FFFF", "1");
+
 }
 
 // run all tests

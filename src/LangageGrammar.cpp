@@ -2,6 +2,8 @@
 #include "LangageGrammar.h"
 #include "Compiler.h"
 #include "TokenId.h"
+#include "Program.h"
+#include "ParsingContext.h"
 
 
 // token definition (lexer)
@@ -123,8 +125,14 @@ RuleDefinition rules_definition[] =
 	{ RULE_EXPRESSION , {RULE_OPERATOR_ADD } ,		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
 	{ RULE_EXPRESSION , {RULE_OPERATOR_SUB } ,		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
 	{ RULE_EXPRESSION , {RULE_OPERATOR_COMPLEMENT} ,[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
+	{ RULE_EXPRESSION , {RULE_OPERATOR_SHIFT} ,		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
+	{ RULE_EXPRESSION , {RULE_OPERATOR_CMP} ,		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
 	//(a)
-	{ RULE_EXPRESSION , { '(',RULE_EXPRESSION, ')'},[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[1].expression_value; }},
+	{ RULE_EXPRESSION , { '(',RULE_EXPRESSION, ')'},[this](TokenValue& result, std::vector<TokenValue> p) { 
+			result.expression_value = p[1].expression_value; 
+			result.expression_value->set_parentesis(true);
+		}
+	},
 	//a&b
 	{ RULE_OPERATOR_AND , {RULE_EXPRESSION, '&', RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
@@ -156,49 +164,49 @@ RuleDefinition rules_definition[] =
 		}
 	},
 	//a<<2
-	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_LEFT_SHIFT, RULE_EXPRESSION } ,
+	{ RULE_OPERATOR_SHIFT , {RULE_EXPRESSION, TOKEN_LEFT_SHIFT, RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.expression_value = new_shift_operation(BinaryOperation::Operator::op_left_shift, p[0].expression_value, p[2].expression_value);
 		}
 	},
 	//a>>2
-	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_RIGHT_SHIFT, RULE_EXPRESSION } ,
+	{ RULE_OPERATOR_SHIFT , {RULE_EXPRESSION, TOKEN_RIGHT_SHIFT, RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.expression_value = new_shift_operation(BinaryOperation::Operator::op_right_shift, p[0].expression_value, p[2].expression_value);
 		}
 	},
 	//a==b
-	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_TEST_EQUAL, RULE_EXPRESSION } ,
+	{ RULE_OPERATOR_CMP , {RULE_EXPRESSION, TOKEN_TEST_EQUAL, RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.expression_value = new_test_operation(BinaryOperation::Operator::op_test_equal, p[0].expression_value, p[2].expression_value);
 		}
 	},
 	//a!=b
-	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_TEST_NOTEQUAL, RULE_EXPRESSION } ,
+	{ RULE_OPERATOR_CMP , {RULE_EXPRESSION, TOKEN_TEST_NOTEQUAL, RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.expression_value = new_test_operation(BinaryOperation::Operator::op_test_not_equal, p[0].expression_value, p[2].expression_value);
 		}
 	},		
 	//a<b
-	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_TEST_LOWER, RULE_EXPRESSION } ,
+	{ RULE_OPERATOR_CMP , {RULE_EXPRESSION, TOKEN_TEST_LOWER, RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.expression_value = new_test_operation(BinaryOperation::Operator::op_test_lower, p[0].expression_value, p[2].expression_value);
 		}
 	},	
 	//a<=b
-	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_TEST_LOWEROREQ, RULE_EXPRESSION } ,
+	{ RULE_OPERATOR_CMP , {RULE_EXPRESSION, TOKEN_TEST_LOWEROREQ, RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.expression_value = new_test_operation(BinaryOperation::Operator::op_test_lower_or_equal, p[0].expression_value, p[2].expression_value);
 		}
 	},	
 	//a>b
-	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_TEST_GREATER, RULE_EXPRESSION } ,
+	{ RULE_OPERATOR_CMP , {RULE_EXPRESSION, TOKEN_TEST_GREATER, RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.expression_value = new_test_operation(BinaryOperation::Operator::op_test_greater, p[0].expression_value, p[2].expression_value);
 		}
 	},	
 	//a>=b
-	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_TEST_GREATEROREQ, RULE_EXPRESSION } ,
+	{ RULE_OPERATOR_CMP , {RULE_EXPRESSION, TOKEN_TEST_GREATEROREQ, RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.expression_value = new_test_operation(BinaryOperation::Operator::op_test_greater_or_equal, p[0].expression_value, p[2].expression_value);
 		}

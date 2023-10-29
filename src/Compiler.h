@@ -16,7 +16,7 @@ using TokenOrRuleId = int; // TokenId ou TokenId, depending on the value
 static const TokenId INVALID_TOKEN  = - 1;
 static bool is_token(TokenOrRuleId id) { return id < 1000; }
 static bool is_rule(TokenOrRuleId id) { return id >= 1000; }
-class LangageGrammar;
+class LangageDefinitionAndContext;
 
 // types for the node during parsign
 union TokenValue {
@@ -112,10 +112,10 @@ protected:
 	// what remains to be read in current line
 	std::string remaining_ligne;
 	// langue defintion & context
-	LangageGrammar& language_context;
+	LangageDefinitionAndContext& language_context;
 public:
 	// constructor
-	CLexer( LangageGrammar& language);
+	CLexer(LangageDefinitionAndContext& language);
 	// Init
 	void init(std::istream& source);
 	// read one line of code
@@ -145,14 +145,13 @@ protected:
 
 };
 
-class LangageGrammar;
 class Compiler
 {
 protected:
 	// token lexer : get tokens from the code
 	CLexer lexer;
 	// langue defintion & context
-	LangageGrammar& language_context;
+	LangageDefinitionAndContext& language_context;
 
 	// grammar of the compiler 
 	std::vector <GrammarRule> grammar_rules;
@@ -172,7 +171,7 @@ public:
 	static Result compile_circuit_from_file(std::string file_name);
 
 	// constructor
-	Compiler(LangageGrammar& language);
+	Compiler(LangageDefinitionAndContext& language);
 	// compile a memory stream
 	bool compile(std::istream& source_code, Error& error_out);
 	// get the program afer compilation
