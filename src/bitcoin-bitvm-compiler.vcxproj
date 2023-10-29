@@ -121,6 +121,7 @@
     <None Include="sample\test_local_var.bvc" />
     <None Include="sample\test_negate.bvc" />
     <None Include="sample\test_not.bvc" />
+    <None Include="sample\test_notequal_byte.bvc" />
     <None Include="sample\test_or.bvc" />
     <None Include="sample\test_parenthesis.bvc" />
     <None Include="sample\test_shit_left.bvc" />

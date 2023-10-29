@@ -119,6 +119,9 @@
     <None Include="sample\test_equal_byte.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_notequal_byte.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">

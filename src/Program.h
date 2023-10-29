@@ -192,6 +192,11 @@ public:
 	virtual void init(CodeBloc* parent_bloc) override;
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
+	// build the circuit for the "==" expression
+	static std::vector<Connection*>  build_circuit_equal(BuildContext& ctx,
+		std::vector<Connection*>& in_a,
+		std::vector<Connection*>& in_b);
+
 };
 
 

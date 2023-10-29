@@ -173,7 +173,12 @@ RuleDefinition rules_definition[] =
 			result.expression_value = new_test_operation(BinaryOperation::Operator::op_test_equal, p[0].expression_value, p[2].expression_value);
 		}
 	},
-			
+	//a!=b
+	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_TEST_NOTEQUAL, RULE_EXPRESSION } ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.expression_value = new_test_operation(BinaryOperation::Operator::op_test_not_equal, p[0].expression_value, p[2].expression_value);
+		}
+	},			
 			
 	//!a
 	{ RULE_OPERATOR_NOT , {'!', RULE_EXPRESSION } ,

@@ -358,10 +358,27 @@ void test_equal_byte(void) {
 	_test_circuit_hex(result.circuit, "FEFF", "0");
 	_test_circuit_hex(result.circuit, "FFFE", "0");
 }
+void test_notequal_byte(void) {
+	// ccmpile the circuit : res = ~(a&b)-(a+b);
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_notequal_byte.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "0000", "0");
+	_test_circuit_hex(result.circuit, "0101", "0");
+	_test_circuit_hex(result.circuit, "2121", "0");
+	_test_circuit_hex(result.circuit, "2111", "1");
+	_test_circuit_hex(result.circuit, "2112", "1");
+	_test_circuit_hex(result.circuit, "FFFE", "1");
+}
 
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
+
+	//TEST
+	test_notequal_byte();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
@@ -382,6 +399,7 @@ void run_all_test(void) {
 	test_shit_left();			std::cout << " shit left - PASSED\n";
 	test_shit_right();			std::cout << " shit right - PASSED\n";
 	test_equal_byte();			std::cout << " equal byte - PASSED\n";
+	test_notequal_byte();		std::cout << " notequal byte - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

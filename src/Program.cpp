@@ -594,13 +594,36 @@ std::vector<Connection*> ShiftOperation::build_circuit(BuildContext& ctx) {
 // build the circuit for the "== != < > <= >= " expressions
 std::vector<Connection*> TestOperation::build_circuit(BuildContext& ctx) {
 	// build the L& R operands
-	std::vector<Connection*> op_left  = left_operand->build_circuit(ctx);
+	std::vector<Connection*> op_left = left_operand->build_circuit(ctx);
 	std::vector<Connection*> op_right = right_operand->build_circuit(ctx);
-	int nb_bit = (int)op_left.size();
 
-	// test available operators
-	if (operation != Operator::op_test_equal)
-		throw(Error("Internal error : unimplemened operator")); // TODO, implement other operators
+	// ==
+	if (operation == Operator::op_test_equal) {
+		return build_circuit_equal(ctx, op_left, op_right);
+	}
+	// !=
+	if (operation == Operator::op_test_not_equal) {
+		// build the circuit for ==
+		std::vector<Connection*> equal = build_circuit_equal(ctx, op_left, op_right);
+		// negate the result
+		std::array<Connection*, 1> input_1_bit = { equal[0] };
+		std::array<Connection*, 1> bit_not_equal = Gate_NOT().add_to_circuit(ctx.circuit, input_1_bit);
+		std::vector<Connection*> result(1, nullptr);
+		result[0] = bit_not_equal[0];
+		return result;
+	}
+
+	// TODO, implement other operators
+	// not an available operators
+	throw(Error("Internal error : unimplemened operator"));
+
+}
+// build the circuit for the "==" expression
+std::vector<Connection*>  TestOperation::build_circuit_equal(BuildContext & ctx,
+															std::vector<Connection*>& op_left,
+															std::vector<Connection*>& op_right)
+{
+	int nb_bit = (int)op_left.size();
 
 	// build the circuit for the test
 	std::vector<Connection*> result(1, nullptr);
