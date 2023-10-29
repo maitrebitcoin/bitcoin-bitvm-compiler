@@ -117,8 +117,12 @@
     <None Include="sample\test_declare_and_set.bvc" />
     <None Include="sample\test_equal_bool.bvc" />
     <None Include="sample\test_equal_byte.bvc" />
+    <None Include="sample\test_greater.bvc" />
+    <None Include="sample\test_greater_or_equal.bvc" />
     <None Include="sample\test_literal.bvc" />
     <None Include="sample\test_local_var.bvc" />
+    <None Include="sample\test_lower.bvc" />
+    <None Include="sample\test_lower_or_equal.bvc" />
     <None Include="sample\test_negate.bvc" />
     <None Include="sample\test_not.bvc" />
     <None Include="sample\test_notequal_byte.bvc" />

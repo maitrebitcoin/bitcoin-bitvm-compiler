@@ -594,7 +594,7 @@ std::vector<Connection*> ShiftOperation::build_circuit(BuildContext& ctx) {
 // build the circuit for the "== != < > <= >= " expressions
 std::vector<Connection*> TestOperation::build_circuit(BuildContext& ctx) {
 	// build the L& R operands
-	std::vector<Connection*> op_left = left_operand->build_circuit(ctx);
+	std::vector<Connection*> op_left  = left_operand->build_circuit(ctx);
 	std::vector<Connection*> op_right = right_operand->build_circuit(ctx);
 
 	// ==
@@ -612,6 +612,49 @@ std::vector<Connection*> TestOperation::build_circuit(BuildContext& ctx) {
 		result[0] = bit_not_equal[0];
 		return result;
 	}
+	// >
+	if (operation == Operator::op_test_greater) {
+		// build the circuit for the "b-a" expression
+		std::vector<Connection*> b_minus_a = build_circuit_sub(ctx, op_right, op_left );
+		// get the bit sign of b-a : true if (b-a)<0 => a > b
+		std::vector<Connection*> b_minus_a_is_negative(1, b_minus_a[op_right.size()-1]);
+		return b_minus_a_is_negative;
+	}
+	// <=
+	if (operation == Operator::op_test_lower_or_equal) {
+		// build the circuit for the "a-b" expression
+		std::vector<Connection*> b_minus_a = build_circuit_sub(ctx, op_right, op_left);
+		// get the bit sign of b-a : true if (b-a)<0 => a > b
+		Connection* b_minus_a_is_negative = b_minus_a[op_right.size() - 1];
+		// a<=b = !(a>b) 
+		std::array<Connection*, 1> input_1_bit = { b_minus_a_is_negative };
+		std::array<Connection*, 1> bit_result = Gate_NOT().add_to_circuit(ctx.circuit, input_1_bit);
+		std::vector<Connection*> result(1, bit_result[0]);
+		return result;
+	}
+	// <
+	if (operation == Operator::op_test_lower) {
+		// build the circuit for the "a-b" expression
+		std::vector<Connection*> a_minus_b = build_circuit_sub(ctx, op_left, op_right);
+		// get the bit sign of b-a : true if (b-a)<0 => a > b
+		std::vector<Connection*> a_minus_b_is_negative(1, a_minus_b[op_right.size() - 1]);
+		return a_minus_b_is_negative;
+	}
+	// >=
+	if (operation == Operator::op_test_greater_or_equal) {
+		// build the circuit for the "a-b" expression
+		std::vector<Connection*> a_minus_b = build_circuit_sub(ctx, op_left, op_right);
+		// get the bit sign of b-a : true if (b-a)<0 => a > b
+		Connection* a_minus_b_is_negative = a_minus_b[op_right.size() - 1];
+		// a<=b = !(a>b) 
+			std::array<Connection*, 1> input_1_bit = { a_minus_b_is_negative };
+		std::array<Connection*, 1> bit_result = Gate_NOT().add_to_circuit(ctx.circuit, input_1_bit);
+		std::vector<Connection*> result(1, bit_result[0]);
+		return result;
+	}
+
+
+
 
 	// TODO, implement other operators
 	// not an available operators

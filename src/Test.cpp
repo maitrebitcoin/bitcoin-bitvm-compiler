@@ -372,6 +372,86 @@ void test_notequal_byte(void) {
 	_test_circuit_hex(result.circuit, "2112", "1");
 	_test_circuit_hex(result.circuit, "FFFE", "1");
 }
+void test_greater_lower(void) {
+	// ccmpile the circuit : res =  a>b
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_greater.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "0000", "0");
+	_test_circuit_hex(result.circuit, "0100", "1");
+	_test_circuit_hex(result.circuit, "0200", "1");
+	_test_circuit_hex(result.circuit, "0202", "0");
+	_test_circuit_hex(result.circuit, "0201", "1");
+	_test_circuit_hex(result.circuit, "0102", "0");
+	_test_circuit_hex(result.circuit, "6E56", "1");
+	_test_circuit_hex(result.circuit, "6E6D", "1");
+	_test_circuit_hex(result.circuit, "6E6E", "0");
+	_test_circuit_hex(result.circuit, "6E6F", "0");
+	_test_circuit_hex(result.circuit, "2112", "1");
+	_test_circuit_hex(result.circuit, "FFFE", "1");
+	_test_circuit_hex(result.circuit, "FFFF", "0");
+
+	// ccmpile the circuit : res =  a>=b
+	result = Compiler::compile_circuit_from_file("./sample/test_greater_or_equal.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "0000", "1");
+	_test_circuit_hex(result.circuit, "0100", "1");
+	_test_circuit_hex(result.circuit, "0200", "1");
+	_test_circuit_hex(result.circuit, "0202", "1");
+	_test_circuit_hex(result.circuit, "0201", "1");
+	_test_circuit_hex(result.circuit, "0102", "0");
+	_test_circuit_hex(result.circuit, "6E56", "1");
+	_test_circuit_hex(result.circuit, "6E6D", "1");
+	_test_circuit_hex(result.circuit, "6E6E", "1");
+	_test_circuit_hex(result.circuit, "6E6F", "0");
+	_test_circuit_hex(result.circuit, "2112", "1");
+	_test_circuit_hex(result.circuit, "FFFE", "1");
+	_test_circuit_hex(result.circuit, "FEFF", "0");
+	_test_circuit_hex(result.circuit, "FFFF", "1");
+
+
+	// ccmpile the circuit : res =  a<b
+	result = Compiler::compile_circuit_from_file("./sample/test_lower.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	_test_circuit_hex(result.circuit, "0000", "0");
+	_test_circuit_hex(result.circuit, "0100", "0");
+	_test_circuit_hex(result.circuit, "0001", "1");
+	_test_circuit_hex(result.circuit, "0200", "0");
+	_test_circuit_hex(result.circuit, "0707", "0");
+	_test_circuit_hex(result.circuit, "0102", "1");
+	_test_circuit_hex(result.circuit, "6E56", "0");
+	_test_circuit_hex(result.circuit, "6E6D", "0");
+	_test_circuit_hex(result.circuit, "6E6E", "0");
+	_test_circuit_hex(result.circuit, "6E6F", "1");
+	_test_circuit_hex(result.circuit, "FFFE", "0");
+	_test_circuit_hex(result.circuit, "FFFF", "0");
+
+	// ccmpile the circuit : res  a<=b
+	result = Compiler::compile_circuit_from_file("./sample/test_lower_or_equal.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	_test_circuit_hex(result.circuit, "0000", "1");
+	_test_circuit_hex(result.circuit, "0100", "0");
+	_test_circuit_hex(result.circuit, "0001", "1");
+	_test_circuit_hex(result.circuit, "0200", "0");
+	_test_circuit_hex(result.circuit, "0707", "1");
+	_test_circuit_hex(result.circuit, "0102", "1");
+	_test_circuit_hex(result.circuit, "6E56", "0");
+	_test_circuit_hex(result.circuit, "6E6D", "0");
+	_test_circuit_hex(result.circuit, "6E6E", "1");
+	_test_circuit_hex(result.circuit, "6E6F", "1");
+	_test_circuit_hex(result.circuit, "FFFE", "0");
+	_test_circuit_hex(result.circuit, "FEFF", "1");
+	_test_circuit_hex(result.circuit, "FFFF", "1");
+}
 
 // run all tests
 void run_all_test(void) {
@@ -397,6 +477,7 @@ void run_all_test(void) {
 	test_shit_right();			std::cout << " shit right - PASSED\n";
 	test_equal_byte();			std::cout << " equal byte - PASSED\n";
 	test_notequal_byte();		std::cout << " notequal byte - PASSED\n";
+	test_greater_lower();		std::cout << " greater lower - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";
