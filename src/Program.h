@@ -17,7 +17,7 @@ public:
 	enum class Native {
 		undefined,	// not set/ invalide
 		bit,		// bool
-		int8,		// char
+		int8,		// char  signe char
 		uint8,		// byte / unsigned char
 		int64,		// long long
 		uint64,		// unsigned long long
@@ -37,6 +37,8 @@ public:
 	bool is_defined(void) const { return native_type != Native::undefined; }
 	// type is bool ?
 	bool is_bool(void) const { return native_type == Native::bit; }
+	// type is integer ?
+	bool is_integer(void) const { return native_type == Native::int8 || native_type == Native::uint8; }
 	// compare
 	bool is_same_type(const Type& other) const {
 		return native_type == other.native_type;
@@ -54,6 +56,9 @@ public:
 	virtual void init(CodeBloc* parent_bloc) = 0;
 	// get expression type
 	virtual const Type& get_type(void) = 0;
+	// if the expression is a littrela, return it
+	virtual class Literal* cast_to_literal(void) { return nullptr; }
+
 	// build the circuit for the expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) = 0;
 };
@@ -74,6 +79,12 @@ public:
 	virtual void init(CodeBloc* parent_bloc) override;
 	// get Operand type
 	virtual const Type& get_type(void) override  { return  type; }
+	// if the expression is a littrela, return it
+	virtual Literal* cast_to_literal(void) override  { return this; }
+	// value of the literal has int. only for int type
+	int get_int_value(void) const { return std::stoi(value_str); }
+
+
 	// build the circuit for the  expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 
@@ -122,6 +133,8 @@ public:
 		op_xor,
 		op_add,
 		op_sub,
+		op_left_shift,
+		op_right_shift,
 	};
 	Operator operation;
 	// left operand
@@ -148,8 +161,25 @@ public:
 	static std::vector<Connection*>  build_circuit_sub(BuildContext& ctx,
 													   std::vector<Connection*>& in_a,
 													   std::vector<Connection*>& in_b);
+	
+};
+// bit shit expression. ex :"a<<3"
+class ShiftOperation : public BinaryOperation {
+protected:
+	// value of the lirreral R agufment
+	int nb_sihft = 0;	
+public:
+	// constructor
+	ShiftOperation(Operator op, Expression* left, Expression* right) : BinaryOperation(op, left, right) {};
+
+	// init
+	virtual void init(CodeBloc* parent_bloc) override;
+	// build the circuit for the binairy expression
+	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 
 };
+
+
 // Math with 1 operand. ex :"!2"
 class UnaryOperation : public Expression {
 public:

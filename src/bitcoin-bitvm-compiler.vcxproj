@@ -121,6 +121,8 @@
     <None Include="sample\test_not.bvc" />
     <None Include="sample\test_or.bvc" />
     <None Include="sample\test_parenthesis.bvc" />
+    <None Include="sample\test_shit_left.bvc" />
+    <None Include="sample\test_shit_right.bvc" />
     <None Include="sample\test_sub.bvc" />
     <None Include="sample\test_xor.bvc" />
   </ItemGroup>

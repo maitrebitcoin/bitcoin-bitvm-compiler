@@ -75,6 +75,15 @@ public:
 		expressions.push_back(new_operation);
 		return new_operation;
 	}
+	// get a new shift operation
+	ShiftOperation* new_shift_operation(BinaryOperation::Operator op, Expression* left, Expression* right)
+	{
+		ShiftOperation* new_operation = new ShiftOperation(op, left, right);
+		expressions.push_back(new_operation);
+		return new_operation;
+	}
+
+
 	// get a new unairy operation
 	UnaryOperation* new_unary_operation(UnaryOperation::Operator op, Expression* expr) {
 		UnaryOperation* new_operation = new UnaryOperation(op, expr);

@@ -284,6 +284,40 @@ void test_parenthesis(void) {
 	_test_circuit_hex(result.circuit, "547D", "DA");
 
 }
+void test_shit_left(void) {
+	// ccmpile the circuit : res = ~(a&b)-(a+b);
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_shit_left.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "00", "00");
+	_test_circuit_hex(result.circuit, "01", "08");
+	_test_circuit_hex(result.circuit, "03", "18");
+	_test_circuit_hex(result.circuit, "07", "38");
+	_test_circuit_hex(result.circuit, "10", "80");
+	_test_circuit_hex(result.circuit, "40", "00");
+	_test_circuit_hex(result.circuit, "9D", "E8");
+	_test_circuit_hex(result.circuit, "FF", "F8");
+}
+void test_shit_right(void) {
+	// ccmpile the circuit : res = ~(a&b)-(a+b);
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_shit_right.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "00", "00");
+	_test_circuit_hex(result.circuit, "01", "00");
+	_test_circuit_hex(result.circuit, "03", "00");
+	_test_circuit_hex(result.circuit, "08", "01");
+	_test_circuit_hex(result.circuit, "18", "03");
+	_test_circuit_hex(result.circuit, "37", "06");
+	_test_circuit_hex(result.circuit, "80", "10");
+	_test_circuit_hex(result.circuit, "40", "08");
+	_test_circuit_hex(result.circuit, "9D", "13");
+	_test_circuit_hex(result.circuit, "FF", "1F");
+}
 
 // run all tests
 void run_all_test(void) {
@@ -294,6 +328,7 @@ void run_all_test(void) {
 	test_xor_gate();			std::cout << " xor - PASSED\n";
 	test_and_gate();			std::cout << " and - PASSED\n";
 	test_or_gate();				std::cout << " or - PASSED\n";
+	// test basic langage consctuctions and operators
 	test_local_var();			std::cout << " local var - PASSED\n";
 	test_local_var_and_set();	std::cout << " local set var & set - PASSED\n";
 	test_byte();				std::cout << " byte - PASSED\n";
@@ -303,6 +338,8 @@ void run_all_test(void) {
 	test_subtraction();			std::cout << " subtraction - PASSED\n";
 	test_complement();			std::cout << " complement - PASSED\n";
 	test_parenthesis();			std::cout << " parenthesis - PASSED\n";
+	test_shit_left();			std::cout << " shit left - PASSED\n";
+	test_shit_right();			std::cout << " shit right - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

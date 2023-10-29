@@ -13,6 +13,8 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_RETURN,				"return"},
 		{ TOKEN_TRUE,				"true"},
 		{ TOKEN_FALSE,				"false"},
+		{ TOKEN_LEFT_SHIFT,			"<<"},
+		{ TOKEN_RIGHT_SHIFT,		">>"},
 		{ TOKEN_IDENTIFIER_FNNAME,	nullptr, REGEXP_IDENTIFIER, [this]() {return !in_body && !in_fn_param; }},
 		{ TOKEN_IDENTIFIER_FNPARAM,	nullptr, REGEXP_IDENTIFIER, [this]() {return !in_body && in_fn_param; }},
 		{ TOKEN_IDENTIFIER_SETVAR  ,nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && in_set_var_possible;}},
@@ -144,6 +146,18 @@ RuleDefinition rules_definition[] =
 	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, '-', RULE_EXPRESSION } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.expression_value = new_binary_operation(BinaryOperation::Operator::op_sub, p[0].expression_value, p[2].expression_value);
+		}
+	},
+	//a<<2
+	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_LEFT_SHIFT, RULE_EXPRESSION } ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.expression_value = new_shift_operation(BinaryOperation::Operator::op_left_shift, p[0].expression_value, p[2].expression_value);
+		}
+	},
+	//a>>2
+	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_RIGHT_SHIFT, RULE_EXPRESSION } ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.expression_value = new_shift_operation(BinaryOperation::Operator::op_right_shift, p[0].expression_value, p[2].expression_value);
 		}
 	},
 			

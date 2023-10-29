@@ -13,6 +13,8 @@ enum E_TokenId {
 	TOKEN_RETURN,			   // 265
 	TOKEN_TRUE,				   // 266 true
 	TOKEN_FALSE,			   // 267 false
+	TOKEN_LEFT_SHIFT,		   // 268 <<
+	TOKEN_RIGHT_SHIFT,		   // 269 >>
 };
 // grammar elements
 enum E_RuleId {

@@ -107,6 +107,12 @@
     <None Include="sample\test_parenthesis.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_shit_left.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_shit_right.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
