@@ -82,6 +82,13 @@ public:
 		expressions.push_back(new_operation);
 		return new_operation;
 	}
+	// gest a new comparison operation
+	TestOperation* new_test_operation(BinaryOperation::Operator op, Expression* left, Expression* right)
+	{
+		TestOperation* new_operation = new TestOperation(op, left, right);
+		expressions.push_back(new_operation);
+		return new_operation;
+	}
 
 
 	// get a new unairy operation

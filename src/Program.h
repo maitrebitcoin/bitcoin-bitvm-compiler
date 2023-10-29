@@ -135,6 +135,12 @@ public:
 		op_sub,
 		op_left_shift,
 		op_right_shift,
+		op_test_equal,
+		op_test_not_equal,
+		op_test_lower,
+		op_test_lower_or_equal,
+		op_test_greater,
+		op_test_greater_or_equal,
 	};
 	Operator operation;
 	// left operand
@@ -171,12 +177,21 @@ protected:
 public:
 	// constructor
 	ShiftOperation(Operator op, Expression* left, Expression* right) : BinaryOperation(op, left, right) {};
-
 	// init
 	virtual void init(CodeBloc* parent_bloc) override;
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
-
+};
+// test operator ex : "a==b"
+// bit shit expression. ex :"a<<3"
+class TestOperation : public BinaryOperation {
+public:
+	// constructor
+	TestOperation(Operator op, Expression* left, Expression* right) : BinaryOperation(op, left, right) {};
+	// init
+	virtual void init(CodeBloc* parent_bloc) override;
+	// build the circuit for the binairy expression
+	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 };
 
 

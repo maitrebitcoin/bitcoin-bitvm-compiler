@@ -1,0 +1,5 @@
+// test the == operator with byte operands
+bool main(byte a,byte b) 
+{
+	return a==b; 
+}

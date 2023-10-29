@@ -57,7 +57,11 @@ void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  he
 	// convert hex string to bits
 	auto bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0,2));
 	auto bits_b = Literal::hex_string_to_bits(hex_inputs.substr(2,2));
-	auto bits_expected = Literal::hex_string_to_bits(hex_expected_result);
+	std::vector<bool>  bits_expected;
+	if (hex_expected_result.size()==1) // bool
+		bits_expected.push_back(hex_expected_result[0] == '1');
+	else
+		bits_expected = Literal::hex_string_to_bits(hex_expected_result);
 	// set inputs1 & 2
 	CRunInputs test_input = circuit.get_run_inputs();
 	test_input.set_byte_value(0, bits_a);
@@ -137,6 +141,20 @@ void test_or_gate(void)
 	_test_circuit(result.circuit, "10", "1");
 	_test_circuit(result.circuit, "11", "1");
 }
+void test_equal_bool(void)
+{
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_equal_bool.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit(result.circuit, "00", "1");
+	_test_circuit(result.circuit, "01", "0");
+	_test_circuit(result.circuit, "10", "0");
+	_test_circuit(result.circuit, "11", "1");
+}
+
 
 void test_local_var(void) {
 	// ccmpile the circuit
@@ -318,16 +336,42 @@ void test_shit_right(void) {
 	_test_circuit_hex(result.circuit, "9D", "13");
 	_test_circuit_hex(result.circuit, "FF", "1F");
 }
+void test_equal_byte(void) {
+	// ccmpile the circuit : res = ~(a&b)-(a+b);
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_equal_byte.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "0000", "1");
+	_test_circuit_hex(result.circuit, "0101", "1");
+	_test_circuit_hex(result.circuit, "2121", "1");
+	_test_circuit_hex(result.circuit, "2111", "0");
+	_test_circuit_hex(result.circuit, "2112", "0");
+	_test_circuit_hex(result.circuit, "5151", "1");
+	_test_circuit_hex(result.circuit, "5152", "0");
+	_test_circuit_hex(result.circuit, "5153", "0");
+	_test_circuit_hex(result.circuit, "5154", "0");
+	_test_circuit_hex(result.circuit, "DDDD", "1");
+	_test_circuit_hex(result.circuit, "DD53", "0");
+	_test_circuit_hex(result.circuit, "FFFF", "1");
+	_test_circuit_hex(result.circuit, "FEFF", "0");
+	_test_circuit_hex(result.circuit, "FFFE", "0");
+}
 
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
+
+	//TEMP
+	test_equal_byte();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
 	test_xor_gate();			std::cout << " xor - PASSED\n";
 	test_and_gate();			std::cout << " and - PASSED\n";
 	test_or_gate();				std::cout << " or - PASSED\n";
+	test_equal_bool();			std::cout << " equal - PASSED\n";
 	// test basic langage consctuctions and operators
 	test_local_var();			std::cout << " local var - PASSED\n";
 	test_local_var_and_set();	std::cout << " local set var & set - PASSED\n";
@@ -340,6 +384,7 @@ void run_all_test(void) {
 	test_parenthesis();			std::cout << " parenthesis - PASSED\n";
 	test_shit_left();			std::cout << " shit left - PASSED\n";
 	test_shit_right();			std::cout << " shit right - PASSED\n";
+	test_equal_byte();			std::cout << " equal byte - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

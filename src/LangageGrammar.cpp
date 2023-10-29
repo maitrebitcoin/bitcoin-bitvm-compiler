@@ -3,6 +3,7 @@
 #include "Compiler.h"
 #include "TokenId.h"
 
+
 // token definition (lexer)
 static const char *REGEXP_IDENTIFIER = "[a-zA-Z_][a-zA-Z0-9_]*"; // ex : a, a1, a_1, _a1
 std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
@@ -15,6 +16,12 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_FALSE,				"false"},
 		{ TOKEN_LEFT_SHIFT,			"<<"},
 		{ TOKEN_RIGHT_SHIFT,		">>"},
+		{ TOKEN_TEST_EQUAL,			"=="},
+		{ TOKEN_TEST_NOTEQUAL,		"!="},
+		{ TOKEN_TEST_LOWER,			"<"},
+		{ TOKEN_TEST_LOWEROREQ,		"<="},
+		{ TOKEN_TEST_GREATER,		">"},
+		{ TOKEN_TEST_GREATEROREQ,	">="},
 		{ TOKEN_IDENTIFIER_FNNAME,	nullptr, REGEXP_IDENTIFIER, [this]() {return !in_body && !in_fn_param; }},
 		{ TOKEN_IDENTIFIER_FNPARAM,	nullptr, REGEXP_IDENTIFIER, [this]() {return !in_body && in_fn_param; }},
 		{ TOKEN_IDENTIFIER_SETVAR  ,nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && in_set_var_possible;}},
@@ -160,6 +167,13 @@ RuleDefinition rules_definition[] =
 			result.expression_value = new_shift_operation(BinaryOperation::Operator::op_right_shift, p[0].expression_value, p[2].expression_value);
 		}
 	},
+	//a==b
+	{ RULE_OPERATOR_SUB , {RULE_EXPRESSION, TOKEN_TEST_EQUAL, RULE_EXPRESSION } ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.expression_value = new_test_operation(BinaryOperation::Operator::op_test_equal, p[0].expression_value, p[2].expression_value);
+		}
+	},
+			
 			
 	//!a
 	{ RULE_OPERATOR_NOT , {'!', RULE_EXPRESSION } ,

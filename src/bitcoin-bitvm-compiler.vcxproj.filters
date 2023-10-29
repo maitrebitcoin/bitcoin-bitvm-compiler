@@ -113,6 +113,12 @@
     <None Include="sample\test_shit_right.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_equal_bool.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_equal_byte.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">

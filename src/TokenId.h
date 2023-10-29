@@ -15,6 +15,12 @@ enum E_TokenId {
 	TOKEN_FALSE,			   // 267 false
 	TOKEN_LEFT_SHIFT,		   // 268 <<
 	TOKEN_RIGHT_SHIFT,		   // 269 >>
+	TOKEN_TEST_EQUAL,		   // 270 ==
+	TOKEN_TEST_NOTEQUAL,	   // 270 !=
+	TOKEN_TEST_LOWER,		   // 270 <
+	TOKEN_TEST_LOWEROREQ,	   // 270 <=
+	TOKEN_TEST_GREATER,		   // 270 >
+	TOKEN_TEST_GREATEROREQ,	   // 270 >=
 };
 // grammar elements
 enum E_RuleId {

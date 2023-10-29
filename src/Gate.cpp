@@ -76,7 +76,14 @@ std::array<Connection*, 1> Gate_XOR::add_to_circuit(Circuit& circuit, std::array
 	return  xor_ab;
 
 }
-
+// compute the output of the XNOR gate
+std::array<Connection*, 1> Gate_XNOR::add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs)
+{
+	// !(a xor b)
+	std::array < Connection*, 1> xor_ab = Gate_XOR().add_to_circuit(circuit, _inputs);
+	// !
+	return Gate_NOT().add_to_circuit(circuit, xor_ab);
+}
 // (r,carry) = a + b
 // compute the output of the gate
 std::array<Connection*, 2> Gate_ADD::add_to_circuit(Circuit& circuit, std::array<Connection*, 2>& _inputs) {
