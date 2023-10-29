@@ -60,6 +60,6 @@ Bits are in low endian (x86 format)
 - loop statement
 - basic function stdlib (sha256, shnor,... )
 - linux : create a makefile
-- check for unused inputs. actaally generateds a "no more gates" error
+- check for unused inputs instead of a "no more gates" error
 - command line option to test the generated circuit
 - opitmise the generated circuit
