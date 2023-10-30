@@ -75,17 +75,30 @@ BinaryOperation* BinaryOperation::BinaryOperation::reorg_for_precedence(LangageA
 		return this; // do nothing and keep tree as it is
 	// if the precedence is not ok
 	// ex: a*b+c
-	// regorg the tree : (a + b) * c => a + (b*c)"
-	this->left_operand				= left_operand_2op->left_operand; 
+	// regorganize the tree :
+	//	             this
+	//		  left    |        
+	//		  a + b   *   c   
+	// =>
+	//            result
+	// 	 	        |   this
+	//		   a    +   b * c      
+	auto a = left_operand_2op->left_operand;
+	auto b = left_operand_2op->right_operand;
+	auto c = this->right_operand;
+	BinaryOperation* result = left_operand_2op;
+	left_operand_2op->left_operand = a;
+	this->left_operand             = b;
+	this->right_operand            = c;
 	left_operand_2op->right_operand = this;
-	return left_operand_2op;
+	return result;
 
 }
 // true is the expression has a higher precedence than the othe expression
 bool BinaryOperation::has_higher_precedence(const BinaryOperation& other_expression, LangageAttributes& language) const {
 	// compare precedence with the other expression
 	int cmp = language.compare_operator_precedence( (int)operation, (int)other_expression.operation );
-	return cmp> 0;
+	return cmp < 0;
 }
 
 

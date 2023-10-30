@@ -11,7 +11,9 @@ struct TokenDefinition;
 struct RuleDefinition;
 
 // to keep all string an objet crated during parsing alive
-class ObjetKeeper : public ParsingContext{
+class ObjetKeeper : public ParsingContext, 
+					public LangageAttributes 
+{
 
 protected:
 	// strings
@@ -75,24 +77,22 @@ public:
 	{
 		BinaryOperation* new_operation = new BinaryOperation(op,left,right);
 		expressions.push_back(new_operation);
-		return new_operation;
+		return new_operation->reorg_for_precedence(*this);
 	}
 	// get a new shift operation
-	ShiftOperation* new_shift_operation(BinaryOperation::Operator op, Expression* left, Expression* right)
+	BinaryOperation* new_shift_operation(BinaryOperation::Operator op, Expression* left, Expression* right)
 	{
 		ShiftOperation* new_operation = new ShiftOperation(op, left, right);
 		expressions.push_back(new_operation);
-		return new_operation;
+		return new_operation->reorg_for_precedence(*this);;
 	}
 	// gest a new comparison operation
-	TestOperation* new_test_operation(BinaryOperation::Operator op, Expression* left, Expression* right)
+	BinaryOperation* new_test_operation(BinaryOperation::Operator op, Expression* left, Expression* right)
 	{
 		TestOperation* new_operation = new TestOperation(op, left, right);
 		expressions.push_back(new_operation);
-		return new_operation;
+		return new_operation->reorg_for_precedence(*this);;
 	}
-
-
 	// get a new unairy operation
 	UnaryOperation* new_unary_operation(UnaryOperation::Operator op, Expression* expr) {
 		UnaryOperation* new_operation = new UnaryOperation(op, expr);
@@ -211,7 +211,7 @@ public:
 // - parsing context
 class LangageDefinitionAndContext :
 	  public LangageGrammar 
-	, public LangageAttributes 
+//	, public LangageAttributes 
 {};
 
 

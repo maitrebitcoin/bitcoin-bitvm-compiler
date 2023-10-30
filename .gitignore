@@ -1,3 +1,9 @@
 src/.vs
 /x64
 *.user
+*.tlog
+*.log
+*.obj
+*.exe
+*.pdb
+*.idb

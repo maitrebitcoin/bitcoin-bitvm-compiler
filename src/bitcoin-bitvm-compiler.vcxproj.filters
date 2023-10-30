@@ -140,6 +140,9 @@
     <None Include="sample\test_lower_or_equal.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_precedencec.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">

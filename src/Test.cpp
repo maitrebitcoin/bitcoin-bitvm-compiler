@@ -453,7 +453,20 @@ void test_greater_lower(void) {
 	_test_circuit_hex(result.circuit, "FFFF", "1");
 
 }
+void test_precedence(void) {
+	// ccmpile the circuit : 
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_precedencec.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "0000", "00");
+	_test_circuit_hex(result.circuit, "02FF", "10");
+	_test_circuit_hex(result.circuit, "0FFF", "78");
+	_test_circuit_hex(result.circuit, "EEDD", "60");
 
+
+}
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
@@ -479,6 +492,7 @@ void run_all_test(void) {
 	test_equal_byte();			std::cout << " equal byte - PASSED\n";
 	test_notequal_byte();		std::cout << " notequal byte - PASSED\n";
 	test_greater_lower();		std::cout << " greater lower - PASSED\n";
+	test_precedence();			std::cout << " precedence - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";
