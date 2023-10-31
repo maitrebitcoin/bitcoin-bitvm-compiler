@@ -50,7 +50,6 @@ Bits are in low endian (x86 format)
 
 # Current todo list :
 
-- literal hexa b=0x5E
 - write the language documentation
 - array support
 - operators : \* / % 
