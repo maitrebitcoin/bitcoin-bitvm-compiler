@@ -256,13 +256,26 @@ std::vector<bool> Literal::_get_bits_value_bool( std::string str_val ) const {
 		throw Error("Invalid boolean value : ", str_val);
 	return result;
 }
+// value of the literal has int. only for int type
+int Literal::get_int_value(void) const
+{
+	assert(get_type().is_integer());
+
+	// if the is hexa. ex :"0xED"
+	if (value_str.size() > 2 && value_str[0] == '0' && value_str[1] == 'x')
+		return std::stoi(value_str, nullptr, 16);
+	// value is decimal ex; "123"
+	return std::stoi(value_str); 
+}
+
+
 // convert the value of the literal to a vector of bits for byte type
 // convert to bits in low endian (x86 format)
 // result[0] is the least significant bit, result[7] is the most significant bit
 std::vector<bool> Literal::_get_bits_value_int8(std::string str_val) const {
 	std::vector<bool> result;
-	// conveto signed integer
-	int value_int8 = std::stoi(str_val);
+	// conver to integer
+	int value_int8 = get_int_value();
 	// value must be in 8bit signed range
 	if (value_int8 > 127 || value_int8 < -128)
 		throw Error("Invalid signed 8 bit value : ", str_val);

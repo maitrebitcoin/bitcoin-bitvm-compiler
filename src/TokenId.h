@@ -21,6 +21,7 @@ enum E_TokenId {
 	TOKEN_TEST_LOWEROREQ,	   // 270 <=
 	TOKEN_TEST_GREATER,		   // 270 >
 	TOKEN_TEST_GREATEROREQ,	   // 270 >=
+	TOKEN_HEXANUMBER,		   // 271 0xF2
 };
 // grammar elements
 enum E_RuleId {

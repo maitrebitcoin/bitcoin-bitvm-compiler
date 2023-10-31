@@ -29,6 +29,7 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_IDENTIFIER_SETVAR  ,nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && in_set_var_possible;}},
 		{ TOKEN_IDENTIFIER,			nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && !in_decl_localvar ; }},
 		{ TOKEN_IDENTIFIER_LOCALVAR,nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && in_decl_localvar ;  }},
+		{ TOKEN_HEXANUMBER,			nullptr, "0x[0-9A-Fa-f]*"},
 		{ TOKEN_NUMBER,				nullptr, "[0-9]*"},
 	};
 	int nb_lex_rules = sizeof(token_definition) / sizeof(token_definition[0]);
@@ -239,6 +240,10 @@ RuleDefinition rules_definition[] =
 	// - literals
 	// ex: 123
 	{ RULE_LITTERAL , { TOKEN_NUMBER } ,
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_literal(Type::Native::int8, *p[0].string_value);  }
+	},
+	// ex: 0Xff
+	{ RULE_LITTERAL , { TOKEN_HEXANUMBER } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_literal(Type::Native::int8, *p[0].string_value);  }
 	},
 	// true

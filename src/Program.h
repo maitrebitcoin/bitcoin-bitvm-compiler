@@ -60,7 +60,7 @@ public:
 	void set_parentesis(bool b) { has_parentesis = b; }
 
 	// get expression type
-	virtual const Type& get_type(void) = 0;
+	virtual const Type& get_type(void) const = 0;
 	// if the expression is a littrela, return it
 	virtual Literal* cast_to_literal(void) { return nullptr; }
 	// if the expression is a binairy expression, return it
@@ -87,17 +87,16 @@ public:
 	// init
 	virtual void init(CodeBloc* parent_bloc) override;
 	// get Operand type
-	virtual const Type& get_type(void) override  { return  type; }
+	virtual const Type& get_type(void) const override  { return  type; }
 	// if the expression is a littrela, return it
 	virtual Literal* cast_to_literal(void) override  { return this; }
 	// value of the literal has int. only for int type
-	int get_int_value(void) const { return std::stoi(value_str); }
-
+	int get_int_value(void) const;
 
 	// build the circuit for the  expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 
-	// convert hex string to array of bits in low endian
+	// convert hex string of any size to array of bits in low endian
 	static std::vector<bool> hex_string_to_bits(std::string hex_string);
 protected:
 	// convert the value of the literal to a vector of bits for bool type
@@ -125,7 +124,7 @@ public:
 	// init
 	virtual void init(CodeBloc* parent_bloc) override;
 	// get Operand type
-	const Type& get_type(void) { assert(var_type.is_defined()); return var_type; }
+	const Type& get_type(void) const { assert(var_type.is_defined()); return var_type; }
 	// build the circuit for the  expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 };
@@ -173,7 +172,7 @@ public:
 	// true is the expression has a higher precedence than the othe expression
 	bool has_higher_precedence(const BinaryOperation& other_expression, LangageAttributes& language) const;
 	// get expression type
-	virtual const Type& get_type(void) override { return result_type;}
+	virtual const Type& get_type(void) const override { return result_type;}
 	// if the expression is a binairy expression, return it
 	virtual BinaryOperation* cast_to_BinaryOperation(void) override  { return this; }
 	// build the circuit for the binairy expression
@@ -242,7 +241,7 @@ public:
 	// init
 	virtual void init(CodeBloc* parent_bloc) override;
 	// get expression type
-	virtual const Type& get_type(void) override { return result_type; }
+	virtual const Type& get_type(void) const override { return result_type; }
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 

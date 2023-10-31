@@ -2,6 +2,7 @@
 byte main(byte a) 
 {
 	bool b=true;
-	byte local_a_modulo32 = a & 31;
+	byte c=31;
+	byte local_a_modulo32 = a & 0x1F;
 	return local_a_modulo32; 
 }
