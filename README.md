@@ -52,6 +52,7 @@ Bits are in low endian (x86 format)
 
 - write the language documentation
 - array support
+- structure support
 - operators : \* / % 
 - procedure calls
 - if statement
