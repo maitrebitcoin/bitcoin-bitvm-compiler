@@ -15,12 +15,12 @@ Statement_DeclareStruct::Statement_DeclareStruct(int line, std::string name, Cod
 		if (statement_declare_var == nullptr)
 			throw Error("Invalid struct member declaration");
 		// add the member
-		_add_member(&statement_declare_var->type, statement_declare_var->name);
+		_add_member(statement_declare_var->type, statement_declare_var->name);
 	}
 }
 // add a member to the struct
 void Statement_DeclareStruct::_add_member(Type* type, std::string name) {
-	VariableDefinition new_member(*type,name);
+	VariableDefinition new_member(type,name);
 	struct_type.members.push_back(new_member);
 }
 // init a statmenet

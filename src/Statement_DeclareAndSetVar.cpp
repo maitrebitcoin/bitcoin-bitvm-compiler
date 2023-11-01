@@ -13,7 +13,6 @@ void Statement_DeclareAndSetVar::init(CodeBloc* parent_bloc) {
 		throw Error("Type mismatch");
 }
 
-
 // build the circuit for "int a=3"
 void Statement_DeclareAndSetVar::build_circuit(BuildContext& ctx) const {
 	// declare the variable

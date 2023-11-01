@@ -9,7 +9,7 @@ void Statement_Return::init(CodeBloc* parent_bloc) {
 	// intialize the expression
 	expression->init(parent_bloc);
 	// get return type
-	Type returned_type = get_type();
+	const Type& returned_type = get_type();
 
 	// check the return type
 	Function* parent_function = parent_bloc->get_parent_function();

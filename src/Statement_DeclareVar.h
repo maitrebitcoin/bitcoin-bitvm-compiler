@@ -10,7 +10,7 @@ public:
 	// cast in Statement_DeclareVar
 	virtual Statement_DeclareVar* cast_to_Statement_DeclareVarr(void) override { return this; }
 	// get return type
-	const Type& get_type(void) const { return type; }
+	const Type& get_type(void) const { return *type; }
 	// init a statmenet
 	virtual void init(CodeBloc* parent) override;
 	// build the circuit for the declaration statement

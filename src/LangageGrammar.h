@@ -48,20 +48,20 @@ public:
 		strings.push_back(new_string);
 		return new_string;
 	}	
-	// get a new Type 
-	Type* new_Type(Type::Native t) {
-		Type* new_type = new Type(t);
+	// get a new Basic Type 
+	TypeBasic* new_type_basic(Type::Native t) {
+		TypeBasic* new_type = new TypeBasic(t);
 		Types.push_back(new_type);
 		return new_type;
 	}
 	// get a new function parameter
-	Function::Parameter* new_function_parameter(Type type, std::string name) {
+	Function::Parameter* new_function_parameter(Type* type, std::string name) {
 		Function::Parameter* new_parameter = new Function::Parameter(type, name);
 		function_parameters.push_back(new_parameter);
 		return new_parameter;
 	}
 	// get a new function definition
-	Function::Definition* new_function_definition(Type type, std::string name, Function::AllParameter* all_params ) {
+	Function::Definition* new_function_definition(Type* type, std::string name, Function::AllParameter* all_params ) {
 		Function::Definition* new_definition = new Function::Definition(type, name, all_params);
 		function_definitions.push_back(new_definition);
 		return new_definition;
@@ -107,7 +107,7 @@ public:
 		return new_variable;
 	}
 	// get a new litteral
-	Literal* new_literal(Type type, std::string name) {
+	Literal* new_literal(TypeBasic type, std::string name) {
 		Literal* new_literal = new Literal(type, name);
 		expressions.push_back(new_literal);
 		return new_literal;

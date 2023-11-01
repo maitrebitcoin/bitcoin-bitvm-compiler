@@ -15,7 +15,7 @@ void Statement_SetVar::build_circuit(BuildContext& ctx) const {
 	if (var == nullptr)
 		throw Error("Unknonwn variable : ", var_name);
 	// check variable type
-	if (!var->type.is_same_type(expression->get_type()))
+	if (!var->type->is_same_type(expression->get_type()))
 		throw Error("Type mismatch : ", var_name);
 
 	// build the R expression

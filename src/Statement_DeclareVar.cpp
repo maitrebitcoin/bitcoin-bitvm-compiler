@@ -6,7 +6,7 @@
 // constructor
 Statement_DeclareVar::Statement_DeclareVar(int line, Type* type, std::string name) 
 	: Statement(line)
-	, VariableDefinition(*type, name) 
+	, VariableDefinition(type, name) 
 {}
 
 

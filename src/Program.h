@@ -24,14 +24,14 @@ class LangageAttributes;
 class Literal : public Expression {
 public:
 	// type of the literal
-	Type type;
+	TypeBasic type;
 	// value of the literal is string forme
 	std::string value_str;
 	// value of the literal in individuals bits
 	std::vector<bool> value_bits;
 public:
 	// constructor
-	Literal(Type t, std::string v) : type(t), value_str(v) {}
+	Literal(TypeBasic t, std::string v) : type(t), value_str(v) {}
 	// init
 	virtual void init(CodeBloc* parent_bloc) override;
 	// get Operand type
@@ -61,7 +61,7 @@ protected:
 class BinaryOperation : public Expression {
 public:
 	// type of the result
-	Type result_type;
+	TypeBasic result_type;
 	// opération types : | & ^ + - *  
 	enum class Operator {
 		invalid_operator = -1,
@@ -149,7 +149,7 @@ public:
 class UnaryOperation : public Expression {
 public:
 	// type of the result
-	Type result_type;
+	TypeBasic result_type;
 	// opération : | & ^ + - *  
 	//  types
 	enum class Operator {
@@ -191,7 +191,7 @@ public:
 	// 1 parameters of the function
 	struct Parameter : VariableDefinition {
 		// constructor
-		Parameter(Type t, std::string n) : VariableDefinition(t,n) {}
+		Parameter(Type* t, std::string n) : VariableDefinition(t,n) {}
 	};
 	// all the parameters of the function
 	struct AllParameter {
@@ -210,11 +210,11 @@ public:
 		// name of the function
 		std::string name;
 		// return type of the function
-		Type return_type;
+		Type* return_type;
 		// parameters of the function
 		std::vector<Parameter> parameters;
 		// constructor
-		Definition(Type t, std::string n, Function::AllParameter* all_params);
+		Definition(Type* t, std::string n, Function::AllParameter* all_params);
 	};
 
 protected:
@@ -231,7 +231,7 @@ public:
 	// get the name of the function
 	std::string get_name(void) const { return definition.name; }
 	// get the return type of the function
-	const Type &get_return_type(void) const { return definition.return_type; }
+	const Type &get_return_type(void) const { return *definition.return_type; }
 	// return the number of bits needed for the input parameters
 	int size_in_bit_input(void) const;
 	// return the number of bits needed to store the return value

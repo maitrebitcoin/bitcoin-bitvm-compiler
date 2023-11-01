@@ -1,8 +1,11 @@
 #pragma once
 
+#include <assert.h>
+class TypeStruct;
+class TypeBasic;
 
-// type of a variable or function. 
-//ex : "bool"
+// type of a variable or returned by a function. 
+//ex : "bool" ou "struct MyStruct"
 class Type {
 public:
 	enum class Native {
@@ -15,31 +18,52 @@ public:
 		uint256,	// unsigned __int256
 		user_struct,// user defined structure type
 	};
+
+	// return the size in bits of the type
+	virtual int size_in_bit(void) const = 0;
+	// compare
+	virtual bool is_same_type(const Type& other) const = 0;
+	// type is a basic type (ie not a struct) ?
+	virtual bool is_basic(void) const = 0;
+	// type is bool ?
+	virtual bool is_bool(void) const { return false; }
+	// type is integer ?
+	virtual bool is_integer(void) const { return false; }
+
+	// cast to "TypeBasic"
+	virtual const TypeBasic* cast_to_TypeBasic(void) const { return nullptr; }
+	// cast to "TypeStruct"
+	virtual const TypeStruct* cast_to_TypeStruct(void) const { return nullptr; }
+
+};
+ 
+// basic/native/scalar types.
+//ex : "bool"
+class TypeBasic : public Type {
+
+
 protected:
 	Native native_type = Native::undefined;
 public:
 	// constructor
-	Type(void) {}
-	Type(Native t) : native_type(t) {}
-	Type(const Type& source) : native_type(source.native_type) {}
+	TypeBasic(void) {}
+	TypeBasic(Native t) : native_type(t) { assert(t != Native::user_struct); }
+	TypeBasic(const TypeBasic& source) : native_type(source.native_type) {}
+	// cast to "TypeBasic"
+	virtual const TypeBasic* cast_to_TypeBasic(void) const override { return this; }
 
 	// return the size in bits of the type
-	virtual int size_in_bit(void) const;
-	// type is defineds ?
-	bool is_defined(void) const { return native_type != Native::undefined; }
+	virtual int size_in_bit(void) const override;
 	// type is bool ?
-	bool is_bool(void) const { return native_type == Native::bit; }
+	virtual bool is_bool(void) const  override { return native_type == Native::bit; }
 	// type is integer ?
-	bool is_integer(void) const { return native_type == Native::int8 || native_type == Native::uint8; }
+	virtual bool is_integer(void) const override { return native_type == Native::int8 || native_type == Native::uint8; }
 	// type is a basic type (ie not a struct) ?
-	bool is_basic(void) const { return native_type != Native::user_struct && is_defined(); }
+	virtual bool is_basic(void) const { return true; }
 	// compare
-	bool is_same_type(const Type& other) const {
-		return native_type == other.native_type;
-	}
-	Native get_native_type(void) const { return native_type; }
+	virtual bool is_same_type(const Type& other) const override;
 
-	// cast to "TypeStruct"
-	virtual class TypeStruct* cast_to_TypeStruct(void)  { return nullptr; }
+	// get the native type
+	Native get_native_type(void) const { return native_type; }
 };
 

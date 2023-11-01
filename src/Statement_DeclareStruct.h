@@ -5,7 +5,7 @@
 // declare a struct statement
 class Statement_DeclareStruct : public Statement {
 protected:
-	// type of the strucct
+	// type of the struct
 	TypeStruct struct_type;
 
 public:

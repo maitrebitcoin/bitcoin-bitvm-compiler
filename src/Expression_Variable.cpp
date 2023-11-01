@@ -10,7 +10,7 @@ void Expression_Variable::init(CodeBloc* parent_bloc) {
 	if (variable_defintion == nullptr)
 		throw Error("Variable not found", name);
 	// set the type
-	assert(variable_defintion->type.is_defined());
+	assert(variable_defintion->type != nullptr);
 	type = variable_defintion->type;
 }
 

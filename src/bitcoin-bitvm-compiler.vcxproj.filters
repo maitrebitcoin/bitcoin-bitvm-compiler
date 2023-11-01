@@ -58,6 +58,9 @@
     <ClCompile Include="Statement_DeclareAndSetVar.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
+    <ClCompile Include="Type.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">

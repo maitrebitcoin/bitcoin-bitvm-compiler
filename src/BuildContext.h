@@ -20,7 +20,7 @@ public:
 	std::vector<Connection*> bits; // curetn vue. emtpy if var not yet assigned
 public:
 	// constructor
-	VarBuild(Type t, std::string n) : VariableDefinition(t, n) { }
+	VarBuild(Type* t, std::string n) : VariableDefinition(t, n) { }
 
 	// is the variable assigned ?
 	bool is_set(void) const {
@@ -28,7 +28,7 @@ public:
 	}
 	// set variable value
 	void set_value(std::vector<Connection*>& value) {
-		assert(value.size() == type.size_in_bit());
+		assert(value.size() == type->size_in_bit());
 		// set bits
 		bits = value;
 	}
@@ -51,7 +51,7 @@ public:
 		return nullptr;
 	}
 	// declare a new local variable
-	void declare_local_var(Type var_type, std::string var_name) {
+	void declare_local_var(Type* var_type, std::string var_name) {
 		// TODO
 		VarBuild new_var{ var_type, var_name };
 		push_back(new_var);

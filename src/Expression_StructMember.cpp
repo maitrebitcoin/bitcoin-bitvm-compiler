@@ -27,7 +27,7 @@ void Expression_StructMember::init(CodeBloc* parent_bloc) {
 	}
 	// must be a struct
 	assert(false); //TODO
-	TypeStruct* parent_type_struct = nullptr;// parent_definition->type.cast_to_TypeStruct();
+	const TypeStruct* parent_type_struct = parent_definition->type->cast_to_TypeStruct();
 	if (parent_type_struct == nullptr)	{
 		// error : parent is not a structure
 		throw Error("not a structure : ", parent_name);

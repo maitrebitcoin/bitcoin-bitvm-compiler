@@ -103,6 +103,7 @@
     <ClCompile Include="Statement_SetVar.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Expression_Variable.cpp" />
+    <ClCompile Include="Type.cpp" />
     <ClCompile Include="TypeStruct.cpp" />
   </ItemGroup>
   <ItemGroup>

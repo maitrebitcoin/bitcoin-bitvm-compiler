@@ -56,7 +56,7 @@ RuleDefinition rules_definition[] =
 	// ex : bool fct_name(bool a, byte b)
 	{ RULE_FUNCTION_DEFINTION, { RULE_TYPE, TOKEN_IDENTIFIER_FNNAME, '(', RULE_N_PARAMETERS_DECL ,')'},
 		[this](TokenValue& result, std::vector<TokenValue> p) {
-			result.function_definition_value = new_function_definition(*p[0].type_value, *p[1].string_value, p[3].function_all_paramters_value);  }
+			result.function_definition_value = new_function_definition(p[0].type_value, *p[1].string_value, p[3].function_all_paramters_value);  }
 	},
 	// ex: bool a, byte b
 	{ RULE_N_PARAMETERS_DECL , { RULE_N_PARAMETERS_DECL, ',', RULE_1_PARAMETER_DECL } ,
@@ -69,7 +69,7 @@ RuleDefinition rules_definition[] =
 	},
 	// ex : bool a 
 	{ RULE_1_PARAMETER_DECL , { RULE_TYPE, TOKEN_IDENTIFIER_FNPARAM } ,
-		[this](TokenValue& result, std::vector<TokenValue> p) { result.function_paramter_value = new_function_parameter(*p[0].type_value, *p[1].string_value);  }
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.function_paramter_value = new_function_parameter(p[0].type_value, *p[1].string_value);  }
 	},
 		// ex { a++; return a; }
 	{ RULE_CODEBLOC , { '{', RULE_N_STATEMENTS, '}'} ,
@@ -270,11 +270,11 @@ RuleDefinition rules_definition[] =
 
 	// bool
 	{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,
-		[this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_Type(Type::Native::bit);  }
+		[this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::bit);  }
 	},
 		// byte
 	{ RULE_TYPE , { TOKEN_TYPE_BYTE } ,
-		[this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_Type(Type::Native::int8);  }
+		[this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::int8);  }
 	},
 };
 	int nb_grammar_rules = sizeof(rules_definition) / sizeof(rules_definition[0]);

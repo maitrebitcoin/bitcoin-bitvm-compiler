@@ -7,43 +7,23 @@
 #include "LangageGrammar.h"
 #include "BuildContext.h"
 
-// return the size in bits of a type
-int Type::size_in_bit(void) const
-{
-	switch (native_type)
-	{
-	case Type::Native::undefined:
-		assert(false);
-		return 0;
-	case Type::Native::bit:    return 1;
-	case Type::Native::int8:   return 8;
-	case Type::Native::uint8:  return 8;
-	case Type::Native::int64:  return 64;
-	case Type::Native::uint64: return 64;
-	case Type::Native::uint256:return 256;
-	default:
-		assert(false);
-		return 0;
-	}
-}
-
 // return the number of bits needed for the input parameters
 int Function::size_in_bit_input(void) const
 {
 	// addd the size of each parameter
 	int nb_bit = 0;
 	for (Parameter param_i : definition.parameters)
-		nb_bit += param_i.type.size_in_bit();
+		nb_bit += param_i.type->size_in_bit();
 	return nb_bit;
 }
 // return the number of bits needed to store the return value
 int Function::size_in_bit_output(void) const {
 	// size of the return type
-	return definition.return_type.size_in_bit();
+	return definition.return_type->size_in_bit();
 }
 
 // Function Definition constructor
-Function::Definition::Definition(Type type, std::string function_name, Function::AllParameter* all_params)
+Function::Definition::Definition(Type* type, std::string function_name, Function::AllParameter* all_params)
 	: return_type(type)
 	, name(function_name)
 {
@@ -146,13 +126,24 @@ void BinaryOperation::init(CodeBloc* parent_bloc) {
 	// left and right operand must have the same type
 	if (!left_operand->get_type().is_same_type(right_operand->get_type()))
 		throw Error("Type mismatch");
-	result_type = left_operand->get_type();
+	// type must ba a basic type
+	const TypeBasic* type_basic =	left_operand->get_type().cast_to_TypeBasic();
+	if (type_basic == nullptr)
+		throw Error("Type must be a basic type");
+	// copy basic type
+	result_type = *type_basic;
 }
 // init << and >>
 void ShiftOperation::init(CodeBloc* parent_bloc)  {
 	// init left operands
 	left_operand->init(parent_bloc);
-	result_type = left_operand->get_type();
+	// type must ba a basic type
+	const TypeBasic* type_basic = left_operand->get_type().cast_to_TypeBasic();
+	if (type_basic == nullptr)
+		throw Error("Type must be a basic type");
+	// copy basic type
+	result_type = *type_basic;
+
 
 	// right operand must be a constant interger
 	Literal* rigth_litteral = right_operand->cast_to_literal();
@@ -173,7 +164,7 @@ void TestOperation::init(CodeBloc* parent_bloc) {
 	// left and right operand must have the same type
 	if (!left_operand->get_type().is_same_type(right_operand->get_type()))
 		throw Error("Type mismatch");
-	result_type = Type(Type::Native::bit );
+	result_type = TypeBasic( Type::Native::bit );
 }
 
 
@@ -293,7 +284,6 @@ void Program::init_and_check_program_tree(void) {
 std::vector<Connection*> Literal::build_circuit(BuildContext& ctx) {
 	std::vector<Connection*> result;
 
-	auto type = get_type();
 	assert(type.size_in_bit() == value_bits.size());
 	// get a 0 ou 1 connexion for each bit
 	for (int i = 0; i < type.size_in_bit(); i++) {
@@ -314,7 +304,12 @@ UnaryOperation::UnaryOperation(Operator op, Expression* exp) : operation(op), op
 // init
 void UnaryOperation::init(CodeBloc* parent_bloc) {
 	operand->init(parent_bloc);
-	result_type = operand->get_type();
+	// type must ba a basic type
+	const TypeBasic* type_basic = operand->get_type().cast_to_TypeBasic();
+	if (type_basic == nullptr)
+		throw Error("Type must be a basic type");
+	// copy basic type
+	result_type = *type_basic;
 }
 // build the circuit for the binairy expression
 std::vector<Connection*> UnaryOperation::build_circuit(BuildContext& ctx) {
@@ -619,11 +614,11 @@ void Function::build_circuit(class Circuit& circuit) {
 	for (const Parameter& param_i : definition.parameters)
 	{
 		VarBuild var_i(param_i.type, param_i.name);
-		int size = param_i.type.size_in_bit();
+		int size = param_i.type->size_in_bit();
 		var_i.bits.assign(  current_input.begin() + index, 
 							current_input.begin() + index + size) ;
 		variables.push_back(var_i);
-		index += var_i.type.size_in_bit();
+		index += var_i.type->size_in_bit();
 	}
 	
 	// create context
