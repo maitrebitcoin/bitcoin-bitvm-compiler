@@ -101,8 +101,8 @@ public:
 	}
 
 	// get a new variable expresison
-	VariableExpression* new_variable( std::string name) {
-		VariableExpression* new_variable = new VariableExpression( name);
+	Expression* new_variable_expression( std::string name) {
+		Expression_Variable* new_variable = new Expression_Variable( name);
 		expressions.push_back(new_variable);
 		return new_variable;
 	}
@@ -150,7 +150,18 @@ public:
 		statements.push_back(new_declare_and_set_var_statement);
 		return new_declare_and_set_var_statement;
 	}
-
+	// get a new declare struct statement
+	Statement* new_declare_struct_statement(std::string name,CodeBloc* all_members) {
+		Statement_DeclareStruct* new_declare_struct_statement = new Statement_DeclareStruct(get_current_line_number(), name, all_members);
+		statements.push_back(new_declare_struct_statement);
+		return new_declare_struct_statement;
+	}
+	// gst an new struct memeber
+	Expression* new_struct_member(std::string struct_name, std::string membre_name ) {
+		Expression* new_struct_memb = new Expression_StructMember(struct_name, membre_name);
+		expressions.push_back(new_struct_memb);
+		return new_struct_memb;
+	}
 
 
 	// get a new program

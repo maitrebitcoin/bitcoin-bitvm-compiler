@@ -1,0 +1,13 @@
+// test the + operator
+
+struct Header {
+	int a;
+	int b;
+}
+
+byte main(Header st_ab, byte c) 
+{
+	Header st_local;
+	st_local.a = st_abc.a
+	return st_local.a+st_abc.b+c;  
+}

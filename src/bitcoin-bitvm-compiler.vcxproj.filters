@@ -22,52 +22,100 @@
     <ClCompile Include="ParsingContext.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="Program.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="Test.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="LangageAttributes.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="Program.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression_StructMember.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeBloc.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_DeclareVar.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_DeclareStruct.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression_Variable.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeStruct.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Program.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression_StructMember.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
     <ClInclude Include="Bits.h">
-      <Filter>source\header</Filter>
+      <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="Circuit.h">
-      <Filter>source\header</Filter>
+      <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="Compiler.h">
-      <Filter>source\header</Filter>
+      <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="Connection.h">
-      <Filter>source\header</Filter>
+      <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="Error.h">
-      <Filter>source\header</Filter>
+      <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="Gate.h">
-      <Filter>source\header</Filter>
+      <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="LangageGrammar.h">
-      <Filter>source\header</Filter>
-    </ClInclude>
-    <ClInclude Include="ParsingContext.h">
-      <Filter>source\header</Filter>
-    </ClInclude>
-    <ClInclude Include="Program.h">
-      <Filter>source\header</Filter>
-    </ClInclude>
-    <ClInclude Include="TokenId.h">
-      <Filter>source\header</Filter>
-    </ClInclude>
-    <ClInclude Include="Test.h">
-      <Filter>source\header</Filter>
+      <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="LangageAttributes.h">
-      <Filter>source\header</Filter>
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="ParsingContext.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="TokenId.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeBloc.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableDefinition.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeStruct.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_DeclareVar.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildContext.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_DeclareStruct.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression_Variable.h">
+      <Filter>source\Program</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +191,9 @@
     <None Include="sample\test_precedencec.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_struct.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
@@ -151,8 +202,8 @@
     <Filter Include="sample">
       <UniqueIdentifier>{f3a9187d-f6e0-4b11-a012-7fa27ee058c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\header">
-      <UniqueIdentifier>{782b3a38-a7fc-48f1-9ef8-6f19875e988e}</UniqueIdentifier>
+    <Filter Include="source\Program">
+      <UniqueIdentifier>{addf364a-496c-40f2-98dc-ce2b38d12562}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

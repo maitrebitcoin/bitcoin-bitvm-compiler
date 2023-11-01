@@ -4,6 +4,11 @@
 #include <string>
 #include <vector>
 #include <assert.h>	
+#include "Type.h"
+#include "VariableDefinition.h"
+#include "Expression.h"
+#include "Expression_StructMember.h"
+#include "CodeBloc.h"
 
 class Function;
 class CodeBloc;
@@ -13,64 +18,7 @@ class BinaryOperation;
 class Literal;
 class LangageAttributes;
 
-// type of a variable or function. 
-//ex : "bool"
-class Type {
-public:
-	enum class Native {
-		undefined,	// not set/ invalide
-		bit,		// bool
-		int8,		// char  signe char
-		uint8,		// byte / unsigned char
-		int64,		// long long
-		uint64,		// unsigned long long
-		uint256,	// unsigned __int256
-	};
-protected:
-	Native native_type = Native::undefined;
-public:
-	// constructor
-	Type(void) {}
-	Type(Native t) : native_type(t) {}
-	Type(const Type& source ) : native_type(source.native_type) {}
 
-	// return the size in bits of the type
-	int size_in_bit(void) const;
-	// type is defineds ?
-	bool is_defined(void) const { return native_type != Native::undefined; }
-	// type is bool ?
-	bool is_bool(void) const { return native_type == Native::bit; }
-	// type is integer ?
-	bool is_integer(void) const { return native_type == Native::int8 || native_type == Native::uint8; }
-	// compare
-	bool is_same_type(const Type& other) const {
-		return native_type == other.native_type;
-	}
-	Native get_native_type(void) const { return native_type; }
-
-};
-
-// opérandd expression. "a" ,123, or a+b
-class Expression {
-protected:
-	// true if the expression is between parentesis. ex: (a+1)
-	bool has_parentesis = false;
-public:
-	// set if the expression is between parentesis. ex: (a+1)
-	void set_parentesis(bool b) { has_parentesis = b; }
-
-	// get expression type
-	virtual const Type& get_type(void) const = 0;
-	// if the expression is a littrela, return it
-	virtual Literal* cast_to_literal(void) { return nullptr; }
-	// if the expression is a binairy expression, return it
-	virtual BinaryOperation* cast_to_BinaryOperation(void) { return nullptr; }
-
-	// init
-	virtual void init(CodeBloc* parent_bloc) = 0;
-	// build the circuit for the expression
-	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) = 0;
-};
 
 // ex: 123
 class Literal : public Expression {
@@ -106,28 +54,8 @@ protected:
 	// result[0] is the least significant bit, result[7] is the most significant bit
 	std::vector<bool> _get_bits_value_int8(std::string str_val) const;
 };
-class VariableDefinition {
-public:
-	// type of the variable
-	Type var_type;
-	// name of the variable
-	std::string var_name;
-};
 
-class VariableExpression : public VariableDefinition, public Expression {
-public:
-	// constructor
-	VariableExpression(std::string n) {
-		var_type = Type::Native::undefined;
-		var_name = n;
-	}
-	// init
-	virtual void init(CodeBloc* parent_bloc) override;
-	// get Operand type
-	const Type& get_type(void) const { assert(var_type.is_defined()); return var_type; }
-	// build the circuit for the  expression
-	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
-};
+#include "Expression_Variable.h"
 
 // Math expression. ex :"a+2"
 class BinaryOperation : public Expression {
@@ -265,6 +193,9 @@ public:
 	// init a statmenet
 	virtual void init(CodeBloc* parent) {}
 	virtual bool is_return(void) const { return false; }
+	// cast in Statement_DeclareVar
+	virtual class Statement_DeclareVar* cast_to_Statement_DeclareVarr(void) { return nullptr; }
+
 
 	// build the circuit for the return statelebt
 	virtual void build_circuit(BuildContext& ctx) const = 0;
@@ -287,23 +218,9 @@ public:
 	// build the circuit for the return statement
 	virtual void build_circuit(BuildContext& ctx ) const override;
 };
-// int i => declaration of a variable statement
-class Statement_DeclareVar : public Statement {
-protected:
-	// type of the variable
-	Type var_type;
-	// name of the variable
-	std::string var_name;
-public:
-	// constructor
-	Statement_DeclareVar(int line, Type *type, std::string name) : Statement(line), var_type(*type), var_name(name){}
-	// get return type
-	const Type& get_type(void) const { return var_type; }
-	// init a statmenet
-	virtual void init(CodeBloc* parent) override;
-	// build the circuit for the declaration statement
-	virtual void build_circuit(BuildContext& ctx) const override;
-};
+
+#include "Statement_DeclareVar.h"
+
 // set a variable statement
 class Statement_SetVar :  public Statement{
 protected:
@@ -341,43 +258,15 @@ public:
 	virtual void build_circuit(BuildContext& ctx) const override;
 };
 
-class CodeBloc {
-public:
-	// code statements
-	std::vector<Statement*> statements;
-	Function* parent_function = nullptr;
-	// declared local variables
-	std::vector<VariableDefinition> local_variables;
-
-public:
-	// constructor
-	CodeBloc(Statement *first_statement) { statements.push_back(first_statement);  }
-	// add a statement
-	void add_statement(Statement* s) { statements.push_back(s); }
-	// init a bloc
-	void init(Function* parent_function);
-	// get the parent function
-	Function* get_parent_function(void) { return parent_function; }
-	// find a variable by name
-	const Type* find_variable_by_name(std::string name) const;
-	// declare a local variable
-	void declare_local_variable(Type& type, std::string name);
-
-	// get the return statement of the bloc
-	Statement_Return* get_return_statement(void) const;
-
-};
-
+#include "Statement_DeclareStruct.h"
 
 // represents a function, ex : bool main(bool a, bool b) { return a & b; }
 class Function {
 public:
 	// 1 parameters of the function
-	struct Parameter {
-		Type type;
-		std::string name;
+	struct Parameter : VariableDefinition {
 		// constructor
-		Parameter(Type t, std::string n) : type(t), name(n) {}
+		Parameter(Type t, std::string n) : VariableDefinition(t,n) {}
 	};
 	// all the parameters of the function
 	struct AllParameter {
@@ -423,7 +312,7 @@ public:
 	// return the number of bits needed to store the return value
 	int size_in_bit_output(void) const;
 	// find a parameter by name
-	const Type* find_parameter_by_name(std::string name) const;
+	const VariableDefinition* find_parameter_by_name(std::string name) const;
 	// build a circuit that represents the fuidl
 	void build_circuit(class Circuit& circuit);
 

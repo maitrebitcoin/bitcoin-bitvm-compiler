@@ -5,6 +5,7 @@
 #include "Error.h"
 #include "Circuit.h"
 #include "LangageGrammar.h"
+#include "BuildContext.h"
 
 // return the size in bits of a type
 int Type::size_in_bit(void) const
@@ -136,29 +137,6 @@ Function* Program::main_function(void) const {
 void Function::init(void) {
 	body->init(this);
 }
-// init a bloc
-void CodeBloc::init(Function* parent) {
-	// init parent function
-	parent_function = parent;
-	// init statemtents
-	for (Statement* statement_i : statements) {
-		try {
-			statement_i->init(this);
-		}
-		catch (Error& e) {
-			// add the line number
-			e.line_number = statement_i->num_line;
-			throw e;
-		}
-	}
-	// check statements :
-	if (statements.size() == 0)
-		throw Error("Empty function");
-	// last statement must be a return
-	Statement* last_statement = statements.back();
-	if (!last_statement->is_return())
-		throw Error("Last statement must be a return");
-}
 // init a return statmenet
 void Statement_Return::init(CodeBloc* parent_bloc) {
 	// intialize the expression
@@ -207,31 +185,9 @@ void TestOperation::init(CodeBloc* parent_bloc) {
 	if (!left_operand->get_type().is_same_type(right_operand->get_type()))
 		throw Error("Type mismatch");
 	result_type = Type(Type::Native::bit );
-
 }
 
 
-
-// init a statmenet
-void Statement_DeclareVar::init(CodeBloc* parent_bloc) {
-	// if variable namae already used
-	const Type* variable_type = parent_bloc->find_variable_by_name(var_name);
-	if (variable_type != nullptr)
-		throw Error("Variable already declared : ", var_name);
-	// declare the variable type
-	parent_bloc->declare_local_variable(var_type, var_name);
-
-}
-// opérand Variable init
-void VariableExpression::init(CodeBloc* parent_bloc) {
-	// get the variable type by namae
-	const Type* variable_type = parent_bloc->find_variable_by_name(var_name);
-	if (variable_type == nullptr)
-		throw Error("Variable not found", var_name);
-	// set the type
-	assert(variable_type->is_defined());
-	var_type = *variable_type;
-}
 //  assignment statement init
 void Statement_SetVar::init(CodeBloc* parent_bloc) {
 	expression->init(parent_bloc);
@@ -245,6 +201,8 @@ void Statement_DeclareAndSetVar::init(CodeBloc* parent_bloc) {
 	if (!declaration.get_type().is_same_type(affectation.get_type()))
 		throw Error("Type mismatch");
 }
+
+
 // convert the value of the literal to a vector of bits for bool type
 std::vector<bool> Literal::_get_bits_value_bool( std::string str_val ) const {
 	std::vector<bool> result;
@@ -333,43 +291,12 @@ void Literal::init(CodeBloc* parent_bloc) {
 	}
 }
 
-// find a variable by name
-const Type* CodeBloc::find_variable_by_name(std::string var_name) const {
-	// is it a fiunction parameter ?
-	auto function_param = parent_function->find_parameter_by_name(var_name);
-	if (function_param != nullptr)
-		return function_param;
-
-	// is it a local variable ?
-	for (const VariableDefinition& var_i : local_variables)
-	{
-		if (var_i.var_name == var_name)
-			return &var_i.var_type;
-	}
-
-	// not found
-	return nullptr;
-}
-// declare a local variable
-void CodeBloc::declare_local_variable(Type& type, std::string name) {
-	// add the variable to the list
-	local_variables.push_back(VariableDefinition{ type, name });
-}
-
-
-// get the return statement of the bloc
-Statement_Return* CodeBloc::get_return_statement(void) const {
-	// always last in bloc
-	Statement* last_statement = statements.back();
-	return dynamic_cast<Statement_Return*>(last_statement);
-}
-
 // find a parameter by name
-const Type* Function::find_parameter_by_name(std::string name) const {
+const VariableDefinition* Function::find_parameter_by_name(std::string name) const {
 	for (const Parameter& param_i : definition.parameters)
 	{
 		if (param_i.name == name)
-			return &param_i.type;
+			return &param_i;
 	}
 	return nullptr;
 }
@@ -385,69 +312,7 @@ void Program::init_and_check_program_tree(void) {
 	// OK
 }
 
-// var during building
-class VarBuild : public VariableDefinition {
-public:
-	std::vector<Connection*> bits; // curetn vue. emtpy if var not yet assigned
-public:
-	// is the variable assigned ?
-	bool is_set(void) const {
-		return bits.size() > 0;
-	}
-	// set variable value
-	void set_value(std::vector<Connection*>& value) {
-		assert(value.size() == var_type.size_in_bit());
-		// set bits
-		bits = value;
-	}
-};
-class KnownVar : public std::vector<VarBuild> {
-public:
-	// find a variable by name
-	VarBuild* find_by_name(std::string name) {
-		for (VarBuild& var_i : *this)
-		{
-			if (var_i.var_name == name)
- 				return &var_i;
-		}
-		return nullptr;
-	}
-	// declare a new local variable
-	void declare_local_var(Type var_type, std::string var_name) {
-		// TODO
-		VarBuild new_var{ var_type, var_name };
-		push_back(new_var);
-	}
 
-};
-
-
-// context for building the circuit
-class BuildContext {
-
-
-public:
-	Circuit& circuit; // the circuit to build
-	KnownVar& variables; // current known variables
-//	std::vector<Connection*> inputs;  // input bits 
-};
-
-
-// build the circuit for the  expression
-std::vector<Connection*> VariableExpression::build_circuit(BuildContext& ctx) {
-
-	// get the variable type by name
-	VarBuild* var= ctx.variables.find_by_name(var_name);
-	if (var== nullptr)
-		throw Error("Unknonwn variable : ", var_name);
-	// if variable not set
-	if (!var->is_set())
-		throw Error("Uninitialized variable : ", var_name);
-
-	// set outputs to get the value of the variable
-	return var->bits;
-
-}
 
 std::vector<Connection*> Literal::build_circuit(BuildContext& ctx) {
 	std::vector<Connection*> result;
@@ -776,15 +641,6 @@ void Statement_Return::build_circuit( BuildContext& ctx) const {
 }
 
 
-
-// build the circuit for the declaration statement
-void Statement_DeclareVar::build_circuit(BuildContext& ctx) const {
-	// if the variable is already known
-	if (ctx.variables.find_by_name(var_name) != nullptr)
-		throw Error("Variable already declared : ", var_name);
-	// declare the variable
-	ctx.variables.declare_local_var(var_type, var_name );
-}
 // build the circuit for the assignment statement
 void Statement_SetVar::build_circuit(BuildContext& ctx) const {
 	// get the variable type by name
@@ -792,7 +648,7 @@ void Statement_SetVar::build_circuit(BuildContext& ctx) const {
 	if (var == nullptr)
 		throw Error("Unknonwn variable : ", var_name);
 	// check variable type
-	if (!var->var_type.is_same_type( expression->get_type() ) )
+	if (!var->type.is_same_type( expression->get_type() ) )
 		throw Error("Type mismatch : ", var_name);
 
 	// build the R expression
@@ -823,14 +679,12 @@ void Function::build_circuit(class Circuit& circuit) {
 	int index = 0;
 	for (const Parameter& param_i : definition.parameters)
 	{
-		VarBuild var_i;
+		VarBuild var_i(param_i.type, param_i.name);
 		int size = param_i.type.size_in_bit();
 		var_i.bits.assign(  current_input.begin() + index, 
 							current_input.begin() + index + size) ;
-		var_i.var_type	  = param_i.type;
-		var_i.var_name	  = param_i.name;
 		variables.push_back(var_i);
-		index += var_i.var_type.size_in_bit();
+		index += var_i.type.size_in_bit();
 	}
 	
 	// create context

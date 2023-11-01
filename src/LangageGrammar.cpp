@@ -16,6 +16,7 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_RETURN,				"return"},
 		{ TOKEN_TRUE,				"true"},
 		{ TOKEN_FALSE,				"false"},
+		{ TOKEN_STRUCT,				"struct"},
 		{ TOKEN_LEFT_SHIFT,			"<<"},
 		{ TOKEN_RIGHT_SHIFT,		">>"},
 		{ TOKEN_TEST_EQUAL,			"=="},
@@ -115,6 +116,14 @@ RuleDefinition rules_definition[] =
 			result.statement_value = new_declare_and_set_var_statement(p[0].type_value, *p[1].string_value,  p[3].expression_value);
 		}
 	},
+	// strucutre declaration
+	// ex: struct Header { byte zize; bool is_ok; }
+	{ RULE_1_STATEMENT , {TOKEN_STRUCT, TOKEN_IDENTIFIER_STRUCT, RULE_CODEBLOC, ';'} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.statement_value = new_declare_struct_statement(*p[1].string_value, p[2].code_block_value);
+		}
+	},
+			
 
 	// all expressions : a,123,a&b,a-1+b
 	{ RULE_EXPRESSION , {RULE_VARIABLE} ,			[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = p[0].expression_value; } },
@@ -235,7 +244,11 @@ RuleDefinition rules_definition[] =
 			
 	// ex: a
 	{ RULE_VARIABLE , { TOKEN_IDENTIFIER } ,
-		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_variable(*p[0].string_value);  }
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_variable_expression(*p[0].string_value);  }
+	},
+	// ex: struct_header.a
+	{ RULE_VARIABLE , { TOKEN_IDENTIFIER ,'.', TOKEN_IDENTIFIER} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_struct_member(*p[0].string_value, *p[2].string_value);  }
 	},
 	// - literals
 	// ex: 123
