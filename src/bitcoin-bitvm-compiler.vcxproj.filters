@@ -49,6 +49,15 @@
     <ClCompile Include="TypeStruct.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
+    <ClCompile Include="Statement_Return.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_SetVar.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_DeclareAndSetVar.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -115,6 +124,18 @@
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="Expression_Variable.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_SetVar.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_DeclareAndSetVar.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_Return.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement.h">
       <Filter>source\Program</Filter>
     </ClInclude>
   </ItemGroup>

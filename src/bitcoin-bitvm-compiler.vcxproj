@@ -96,8 +96,11 @@
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LangageGrammar.cpp" />
+    <ClCompile Include="Statement_DeclareAndSetVar.cpp" />
     <ClCompile Include="Statement_DeclareStruct.cpp" />
     <ClCompile Include="Statement_DeclareVar.cpp" />
+    <ClCompile Include="Statement_Return.cpp" />
+    <ClCompile Include="Statement_SetVar.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Expression_Variable.cpp" />
     <ClCompile Include="TypeStruct.cpp" />
@@ -117,8 +120,12 @@
     <ClInclude Include="Connection.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="LangageGrammar.h" />
+    <ClInclude Include="Statement.h" />
+    <ClInclude Include="Statement_DeclareAndSetVar.h" />
     <ClInclude Include="Statement_DeclareStruct.h" />
     <ClInclude Include="Statement_DeclareVar.h" />
+    <ClInclude Include="Statement_Return.h" />
+    <ClInclude Include="Statement_SetVar.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="TokenId.h" />
     <ClInclude Include="Type.h" />

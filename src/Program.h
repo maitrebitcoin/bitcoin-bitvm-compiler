@@ -145,7 +145,6 @@ public:
 
 };
 
-
 // Math with 1 operand. ex :"!2"
 class UnaryOperation : public Expression {
 public:
@@ -179,85 +178,11 @@ public:
 	static std::vector<Connection*> build_circuit_negation(BuildContext& ctx, std::vector<Connection*>& inputs);
 };
 
-
-
-// base class for a statement. 
-// ex "v=a+2" or "return a+2;"
-class Statement {
-public:
-	// lgne number in the source code
-	int num_line = 0;
-public:
-	// constructor
-	Statement(int line) : num_line(line) {}
-	// init a statmenet
-	virtual void init(CodeBloc* parent) {}
-	virtual bool is_return(void) const { return false; }
-	// cast in Statement_DeclareVar
-	virtual class Statement_DeclareVar* cast_to_Statement_DeclareVarr(void) { return nullptr; }
-
-
-	// build the circuit for the return statelebt
-	virtual void build_circuit(BuildContext& ctx) const = 0;
-};
-// "return" statement
-class Statement_Return : public Statement {
-protected:
-	// expression to return
-	Expression *expression;
-public:
-	// constructor
-	Statement_Return(int line, Expression* e) : Statement(line), expression(e) {}
-	// init a statmenet
-	virtual void init(CodeBloc* parent) override;
-
-	virtual bool is_return(void) const { return true; }
-	// get return type
-	const Type& get_type(void) const { return expression->get_type(); }
-
-	// build the circuit for the return statement
-	virtual void build_circuit(BuildContext& ctx ) const override;
-};
-
+#include "Statement.h"
+#include "Statement_Return.h"
 #include "Statement_DeclareVar.h"
-
-// set a variable statement
-class Statement_SetVar :  public Statement{
-protected:
-	// name of the variable
-	std::string var_name;
-	Expression* expression;
-public:
-	// constructor
-	Statement_SetVar(int line, std::string name, Expression* op) : Statement(line), var_name(name), expression(op) {}
-	// get return type
-	const Type& get_type(void) const { return expression->get_type(); }
-	// init a statmenet
-	virtual void init(CodeBloc* parent) override;
-	// build the circuit for the declaration statement
-	virtual void build_circuit(BuildContext& ctx) const override;
-};
-// déclare and set a variable statement
-class Statement_DeclareAndSetVar : public Statement  {
-protected:
-	Statement_DeclareVar declaration;
-	Statement_SetVar	 affectation;
-
-public:
-	// constructor
-	Statement_DeclareAndSetVar(int line, Type* type, std::string varname, Expression* expr) :
-		Statement(line),
-		declaration(line, type, varname),
-		affectation{line, varname, expr}
-	{}
-	// get return type
-	const Type& get_type(void) const { return declaration.get_type(); }
-	// init a statmenet
-	virtual void init(CodeBloc* parent) override;
-	// build the circuit for the declaration statement
-	virtual void build_circuit(BuildContext& ctx) const override;
-};
-
+#include "Statement_SetVar.h"
+#include "Statement_DeclareAndSetVar.h"
 #include "Statement_DeclareStruct.h"
 
 // represents a function, ex : bool main(bool a, bool b) { return a & b; }
@@ -317,8 +242,6 @@ public:
 	void build_circuit(class Circuit& circuit);
 
 };
-
-
 
 
 // logical representation of de contract 

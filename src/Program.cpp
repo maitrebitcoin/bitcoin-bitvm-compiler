@@ -137,18 +137,7 @@ Function* Program::main_function(void) const {
 void Function::init(void) {
 	body->init(this);
 }
-// init a return statmenet
-void Statement_Return::init(CodeBloc* parent_bloc) {
-	// intialize the expression
-	expression->init(parent_bloc);
-	// get return type
-	Type returned_type = get_type();
 
-	// check the return type
-	Function* parent_function= parent_bloc->get_parent_function();
-	if (!returned_type.is_same_type( parent_function->get_return_type() ))
-		throw Error("Return type mismatch");
-}
 // init
 void BinaryOperation::init(CodeBloc* parent_bloc) {
 	// init operands
@@ -188,19 +177,6 @@ void TestOperation::init(CodeBloc* parent_bloc) {
 }
 
 
-//  assignment statement init
-void Statement_SetVar::init(CodeBloc* parent_bloc) {
-	expression->init(parent_bloc);
-}
-// declare and set init
-void Statement_DeclareAndSetVar::init(CodeBloc* parent_bloc) {
-	// init set and assign
-	declaration.init(parent_bloc);
-	affectation.init(parent_bloc);
-	// check the type
-	if (!declaration.get_type().is_same_type(affectation.get_type()))
-		throw Error("Type mismatch");
-}
 
 
 // convert the value of the literal to a vector of bits for bool type
@@ -626,43 +602,6 @@ std::vector<Connection*>  TestOperation::build_circuit_equal(BuildContext & ctx,
 	assert(bit_equal_array.size()== 1);
 	result[0] = bit_equal_array[0];
 	return result;
-}
-
-
-// build the circuit for the return statem-ent
-void Statement_Return::build_circuit( BuildContext& ctx) const {
-	
-	// build the expression
-	std::vector<Connection*> outputs  =  expression->build_circuit(ctx);
-	int nb_bit_out = (int)outputs.size();
-	assert(nb_bit_out == get_type().size_in_bit());
-	// connect the output of the expression to the output of the circuit
-	ctx.circuit.set_output(outputs);
-}
-
-
-// build the circuit for the assignment statement
-void Statement_SetVar::build_circuit(BuildContext& ctx) const {
-	// get the variable type by name
-	VarBuild* var = ctx.variables.find_by_name(var_name);
-	if (var == nullptr)
-		throw Error("Unknonwn variable : ", var_name);
-	// check variable type
-	if (!var->type.is_same_type( expression->get_type() ) )
-		throw Error("Type mismatch : ", var_name);
-
-	// build the R expression
-	std::vector<Connection*> expression_value = expression->build_circuit(ctx);
-	// connect the output of the expression to current value of the variable
-	var->set_value(expression_value);
-}
-// build the circuit for the dérale dans set statement
-void Statement_DeclareAndSetVar::build_circuit(BuildContext& ctx) const {
-	// declare the variable
-	declaration.build_circuit(ctx);
-	// set variable value
-	affectation.build_circuit(ctx);
-
 }
 
 
