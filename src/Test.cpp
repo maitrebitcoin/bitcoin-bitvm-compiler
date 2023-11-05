@@ -62,11 +62,16 @@ void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  he
 		bits_expected.push_back(hex_expected_result[0] == '1');
 	else
 		bits_expected = Literal::hex_string_to_bits(hex_expected_result);
-	// set inputs1 & 2
+	// set inputs
 	CRunInputs test_input = circuit.get_run_inputs();
 	test_input.set_byte_value(0, bits_a);
 	if (bits_b.size() > 0)
+	{
 		test_input.set_byte_value(1, bits_b);
+		auto bits_c = Literal::hex_string_to_bits(hex_inputs.substr(4, 2));
+		if (bits_c.size() > 0)
+			test_input.set_byte_value(2, bits_c);
+	}
 	// run the circuit
 	std::vector<Bit> result;
 	try {
@@ -464,9 +469,22 @@ void test_precedence(void) {
 	_test_circuit_hex(result.circuit, "02FF", "10");
 	_test_circuit_hex(result.circuit, "0FFF", "78");
 	_test_circuit_hex(result.circuit, "EEDD", "60");
-
-
 }
+void test_structure(void) {
+	// byte main(Header st_ab, byte c)
+	// return st_ab.b + c; 
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_struct.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.circuit, "000000", "00");
+	_test_circuit_hex(result.circuit, "040102", "03");
+	_test_circuit_hex(result.circuit, "F41135", "46");
+}
+
+
+
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
@@ -492,7 +510,10 @@ void run_all_test(void) {
 	test_equal_byte();			std::cout << " equal byte - PASSED\n";
 	test_notequal_byte();		std::cout << " notequal byte - PASSED\n";
 	test_greater_lower();		std::cout << " greater lower - PASSED\n";
-	test_precedence();			std::cout << " precedence - PASSED\n";
+	test_precedence();			std::cout << " structures - PASSED\n";
+	test_structure();
+
+	();			std::cout << " precedence - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";
