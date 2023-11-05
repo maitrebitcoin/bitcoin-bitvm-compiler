@@ -61,6 +61,12 @@
     <ClCompile Include="Type.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
+    <ClCompile Include="Scope.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="Function.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -139,6 +145,12 @@
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="Statement.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Scope.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Function.h">
       <Filter>source\Program</Filter>
     </ClInclude>
   </ItemGroup>

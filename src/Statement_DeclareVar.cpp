@@ -11,13 +11,21 @@ Statement_DeclareVar::Statement_DeclareVar(int line, Type* type, std::string nam
 
 
 // init a statmenet
-void Statement_DeclareVar::init(CodeBloc* parent_bloc) {
+void Statement_DeclareVar::init(Scope& parent_scope) {
 	// if variable namae already used
-	const VariableDefinition* existing_variable_definition = parent_bloc->find_variable_by_name(name);
+	const VariableDefinition* existing_variable_definition = parent_scope.find_variable_by_name(name);
 	if (existing_variable_definition != nullptr)
 		throw Error("Variable already declared : ", name);
+	// if the type is just a name, get the real type
+	if (!type->is_complete())	{
+		const TypeStruct* real_type = parent_scope.find_struct_by_name(type->get_name());
+		if (real_type == nullptr)
+			throw Error("Unknown type : ", type->get_name());
+		type = const_cast<TypeStruct *>(real_type);
+	}
+
 	// declare the variable type
-	parent_bloc->declare_local_variable(*this);
+	parent_scope.declare_local_variable(*this);
 
 }
 

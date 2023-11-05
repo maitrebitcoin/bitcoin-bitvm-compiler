@@ -30,3 +30,22 @@ int TypeBasic::size_in_bit(void) const
 		return false;
 	return native_type == other_basic->native_type;
 }
+
+ // get type name
+ std::string TypeBasic::get_name(void) const {
+	 switch (native_type)
+	 {
+	 case Type::Native::undefined:
+		 assert(false);
+		 return 0;
+	 case Type::Native::bit:    return "bool";
+	 case Type::Native::int8:   return "byte";
+//	 case Type::Native::uint8:  return ""usigned byte";
+//	 case Type::Native::int64:  return 64;
+//	 case Type::Native::uint64: return 64;
+//	 case Type::Native::uint256:return 256;
+	 default:
+		 assert(false);
+		 return 0;
+	 }
+ }

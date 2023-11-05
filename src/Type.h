@@ -1,6 +1,7 @@
 #pragma once
 
 #include <assert.h>
+#include <string>
 class TypeStruct;
 class TypeBasic;
 
@@ -25,10 +26,14 @@ public:
 	virtual bool is_same_type(const Type& other) const = 0;
 	// type is a basic type (ie not a struct) ?
 	virtual bool is_basic(void) const = 0;
+	// type is complete type (false : only the name is known)
+	virtual bool is_complete(void) const = 0;
 	// type is bool ?
 	virtual bool is_bool(void) const { return false; }
 	// type is integer ?
 	virtual bool is_integer(void) const { return false; }
+	// get type name
+	virtual std::string	get_name(void) const = 0;
 
 	// cast to "TypeBasic"
 	virtual const TypeBasic* cast_to_TypeBasic(void) const { return nullptr; }
@@ -60,8 +65,12 @@ public:
 	virtual bool is_integer(void) const override { return native_type == Native::int8 || native_type == Native::uint8; }
 	// type is a basic type (ie not a struct) ?
 	virtual bool is_basic(void) const { return true; }
+	// type is complete type (false : only the name is known)
+	virtual bool is_complete(void) const { return true; }
 	// compare
 	virtual bool is_same_type(const Type& other) const override;
+	// get type name
+	virtual std::string	get_name(void) const override;
 
 	// get the native type
 	Native get_native_type(void) const { return native_type; }

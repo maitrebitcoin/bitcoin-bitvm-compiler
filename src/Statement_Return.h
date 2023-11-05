@@ -9,7 +9,7 @@ public:
 	// constructor
 	Statement_Return(int line, Expression* e) : Statement(line), expression(e) {}
 	// init a statmenet
-	virtual void init(CodeBloc* parent) override;
+	virtual void init(Scope& parent_scope) override;
 
 	virtual bool is_return(void) const { return true; }
 	// get return type

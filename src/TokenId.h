@@ -7,7 +7,7 @@ enum E_TokenId {
 	TOKEN_IDENTIFIER_FNNAME,   // 259 - function name
 	TOKEN_IDENTIFIER_FNPARAM,  // 260 - in function parmetres only
 	TOKEN_IDENTIFIER,	       // 261 - in function body statement only,
-	TOKEN_IDENTIFIER_LOCALVAR, // 262 - in function body statement only, after a type: local var déclaration
+	TOKEN_IDENTIFIER_DECL	 , // 262 - in function body statement only, after a type: local var déclaration
 	TOKEN_IDENTIFIER_SETVAR,   // 263 - in function body statement only, var name for affectation only.
 	TOKEN_NUMBER,			   // 264
 	TOKEN_RETURN,			   // 265
@@ -16,14 +16,17 @@ enum E_TokenId {
 	TOKEN_LEFT_SHIFT,		   // 268 <<
 	TOKEN_RIGHT_SHIFT,		   // 269 >>
 	TOKEN_TEST_EQUAL,		   // 270 ==
-	TOKEN_TEST_NOTEQUAL,	   // 270 !=
-	TOKEN_TEST_LOWER,		   // 270 <
-	TOKEN_TEST_LOWEROREQ,	   // 270 <=
-	TOKEN_TEST_GREATER,		   // 270 >
-	TOKEN_TEST_GREATEROREQ,	   // 270 >=
-	TOKEN_HEXANUMBER,		   // 271 0xF2
-	TOKEN_STRUCT,			   // 272
-	TOKEN_IDENTIFIER_STRUCT,   // 273
+	TOKEN_TEST_NOTEQUAL,	   // 271 !=
+	TOKEN_TEST_LOWER,		   // 272 <
+	TOKEN_TEST_LOWEROREQ,	   // 273 <=
+	TOKEN_TEST_GREATER,		   // 274 >
+	TOKEN_TEST_GREATEROREQ,	   // 275 >=
+	TOKEN_HEXANUMBER,		   // 276 0xF2
+	TOKEN_KEYWORKD_STRUCT,	   // 277 keyword "struct"
+	TOKEN_DECLARE_STRUCT_NAME, // 278 after "struct" keyword
+	TOKEN_STRUCT_TYPE,		   // 279 qs as type befor a var. ex: "struct b;"
+	TOKEN_USE_STRUCT,		   // 280 before . as in "struct.member"
+	TOKEN_USE_STRUCT_MEMBER,   // 281 after . as in "struct.member"
 
 };
 // grammar elements

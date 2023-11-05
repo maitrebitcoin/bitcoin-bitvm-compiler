@@ -5,14 +5,15 @@
 #include "Circuit.h"
 
 // init a return statmenet
-void Statement_Return::init(CodeBloc* parent_bloc) {
+void Statement_Return::init(Scope& parent_scope) {
 	// intialize the expression
-	expression->init(parent_bloc);
+	expression->init(parent_scope);
 	// get return type
 	const Type& returned_type = get_type();
 
 	// check the return type
-	Function* parent_function = parent_bloc->get_parent_function();
+	Function* parent_function = parent_scope.get_parent_function();
+	assert(parent_function != nullptr); // not allowed in global scope
 	if (!returned_type.is_same_type(parent_function->get_return_type()))
 		throw Error("Return type mismatch");
 }

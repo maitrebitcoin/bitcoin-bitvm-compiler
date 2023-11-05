@@ -56,7 +56,7 @@ bool Compiler::_compile_build_tree(std::istream& source_code_stream, Error& erro
 			break;
 		case ResultforLine::syntaxError:
 			// compilation failed
-			error_out.message     = "syntax error : " + lexer.get_source_code_current_line(); 
+			error_out.message     = "syntax error : " + lexer.get_source_code_current_line();  
 			error_out.line_number = lexer.get_current_line_number();
 			return false;
 		case ResultforLine::endOfCode:
@@ -89,6 +89,12 @@ void Compiler::_init_grammar()
 
 	// 1sr rule is the start rule
 	grammar_rules[0].is_root = true;
+	// and all other rules with same id 
+	for (int i = 1; i < grammar_rules.size(); i++) {
+		if (grammar_rules[i].rule_id == grammar_rules[0].rule_id)
+			grammar_rules[i].is_root = true;
+	}
+
 
 	// init terminal flag
 	for (GrammarRule& a_rule : grammar_rules) {
@@ -394,17 +400,19 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 
 	// check if the string star wiht of of the known token
 	for (TokenDefinition definition : token_definition) {
-		// if thhe definition has a rule, check it
-		if (definition.condtion != nullptr) {
-			// if the condition is not met, continue
-			if (!definition.condtion())
-				continue;
-		}
 
 		// ex "bool"
 		if (definition.token_value != nullptr) {
 			// check if the string start with the token
 			if (code_in_out.compare(0, strlen(definition.token_value), definition.token_value) == 0) {
+				// if thhe definition has a rule, check it
+				if (definition.condition != nullptr) {
+					// if the condition is not met, continue
+					char nextt_char = code_in_out.substr(strlen(definition.token_value),1)[0];
+					if (!definition.condition(nextt_char))
+						continue;
+				}
+
 				// remove the token from the string
 				if (option == ReadOption::remove)
 					code_in_out.erase(0, strlen(definition.token_value));
@@ -423,6 +431,14 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 				std::string match_string = regex_match[0];
 				// check if the string start with the matched part in the regexp 
 				if (match_string.size() > 0 && code_in_out.compare(0, match_string.size(), match_string) == 0) {
+					// if thhe definition has a rule, check it
+					if (definition.condition != nullptr) {
+						// if the condition is not met, continue
+						char nextt_char = code_in_out.substr(match_string.size(), 1)[0];
+						if (!definition.condition(nextt_char))
+							continue;
+					}
+
 					// remove the token from the string
 					if (option == ReadOption::remove)
 						code_in_out.erase(0, match_string.size());

@@ -2,11 +2,12 @@
 #include "Program.h"
 #include "Error.h"
 #include "BuildContext.h"
+#include "Scope.h"
 
 // opérand Variable init
-void Expression_Variable::init(CodeBloc* parent_bloc) {
+void Expression_Variable::init(Scope& parent_scope) {
 	// get the variable type by namae
-	const VariableDefinition* variable_defintion = parent_bloc->find_variable_by_name(name);
+	const VariableDefinition* variable_defintion = parent_scope.find_variable_by_name(name);
 	if (variable_defintion == nullptr)
 		throw Error("Variable not found", name);
 	// set the type

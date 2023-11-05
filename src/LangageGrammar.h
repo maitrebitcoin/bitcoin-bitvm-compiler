@@ -54,6 +54,13 @@ public:
 		Types.push_back(new_type);
 		return new_type;
 	}
+	// get an new user type
+	Type* new_type_user_defined(std::string name) {
+		IncompleteType* new_type = new IncompleteType(name);
+		Types.push_back(new_type);
+		return new_type;
+	}
+
 	// get a new function parameter
 	Function::Parameter* new_function_parameter(Type* type, std::string name) {
 		Function::Parameter* new_parameter = new Function::Parameter(type, name);

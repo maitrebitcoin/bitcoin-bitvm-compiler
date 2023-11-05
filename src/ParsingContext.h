@@ -5,7 +5,10 @@ class CToken;
 //  parsing context
 class ParsingContext {
 protected:
+	int  opened_bracket = 0;
 	bool in_body = false;
+	bool in_declare_struct = false; // in a struct declaration
+	bool in_use_struct = false; // in struct.membeer
 	bool in_fn_param = false;
 	bool in_decl_localvar = false;
 	bool in_set_var_possible = false;
@@ -21,10 +24,12 @@ public:
 protected:
 	// called when '{' is found
 	void open_bracket(void) {
+		opened_bracket++;
 		in_body = true;
 		in_set_var_possible= true;
 	}
 	void close_bracket(void) {
-		in_body = true;
+		opened_bracket--;
+		in_body = (opened_bracket > 0);
 	}
 };

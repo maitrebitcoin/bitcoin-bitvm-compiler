@@ -9,6 +9,7 @@
 #include "Expression.h"
 #include "Expression_StructMember.h"
 #include "CodeBloc.h"
+#include "Scope.h"
 
 class Function;
 class CodeBloc;
@@ -33,7 +34,7 @@ public:
 	// constructor
 	Literal(TypeBasic t, std::string v) : type(t), value_str(v) {}
 	// init
-	virtual void init(CodeBloc* parent_bloc) override;
+	virtual void init(Scope& parent_scope) override;
 	// get Operand type
 	virtual const Type& get_type(void) const override  { return  type; }
 	// if the expression is a littrela, return it
@@ -96,7 +97,7 @@ public:
 	// retrun the new root of the expression
 	BinaryOperation* reorg_for_precedence( LangageAttributes& language);
 	// init
-	virtual void init(CodeBloc* parent_bloc) override;
+	virtual void init(Scope& parent_scope) override;
 	// true is the expression has a higher precedence than the othe expression
 	bool has_higher_precedence(const BinaryOperation& other_expression, LangageAttributes& language) const;
 	// get expression type
@@ -124,7 +125,7 @@ public:
 	// constructor
 	ShiftOperation(Operator op, Expression* left, Expression* right) : BinaryOperation(op, left, right) {};
 	// init
-	virtual void init(CodeBloc* parent_bloc) override;
+	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 };
@@ -135,7 +136,7 @@ public:
 	// constructor
 	TestOperation(Operator op, Expression* left, Expression* right) : BinaryOperation(op, left, right) {};
 	// init
-	virtual void init(CodeBloc* parent_bloc) override;
+	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the binairy expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 	// build the circuit for the "==" expression
@@ -166,7 +167,7 @@ public:
 	// constructor
 	UnaryOperation(Operator op, Expression* exp);
 	// init
-	virtual void init(CodeBloc* parent_bloc) override;
+	virtual void init(Scope& parent_scope) override;
 	// get expression type
 	virtual const Type& get_type(void) const override { return result_type; }
 	// build the circuit for the binairy expression
@@ -184,71 +185,18 @@ public:
 #include "Statement_SetVar.h"
 #include "Statement_DeclareAndSetVar.h"
 #include "Statement_DeclareStruct.h"
-
-// represents a function, ex : bool main(bool a, bool b) { return a & b; }
-class Function {
-public:
-	// 1 parameters of the function
-	struct Parameter : VariableDefinition {
-		// constructor
-		Parameter(Type* t, std::string n) : VariableDefinition(t,n) {}
-	};
-	// all the parameters of the function
-	struct AllParameter {
-		std::vector<Parameter> parameters;
-		// constructor : init with 1 parameter
-		AllParameter(Parameter& p0) {
-			parameters.push_back(p0); 
-		}
-		// add 1 parameter
-		void add(Parameter& p) {
-			parameters.push_back(p);
-		}
-	};
-	// Definition of the function
-	struct Definition {
-		// name of the function
-		std::string name;
-		// return type of the function
-		Type* return_type;
-		// parameters of the function
-		std::vector<Parameter> parameters;
-		// constructor
-		Definition(Type* t, std::string n, Function::AllParameter* all_params);
-	};
-
-protected:
-	// definiton of the function
-	Definition definition;
-	// body of the function
-	CodeBloc *body;
-
-public:
-	// constructor
-	Function(Definition* def, CodeBloc* body);
-	// init a function
-	void init(void);
-	// get the name of the function
-	std::string get_name(void) const { return definition.name; }
-	// get the return type of the function
-	const Type &get_return_type(void) const { return *definition.return_type; }
-	// return the number of bits needed for the input parameters
-	int size_in_bit_input(void) const;
-	// return the number of bits needed to store the return value
-	int size_in_bit_output(void) const;
-	// find a parameter by name
-	const VariableDefinition* find_parameter_by_name(std::string name) const;
-	// build a circuit that represents the fuidl
-	void build_circuit(class Circuit& circuit);
-
-};
-
+#include "Function.h"
+#include "Scope.h"
 
 // logical representation of de contract 
-class Program {
+class Program : public Scope {
+	// structs definitions
+	CodeBloc *struct_definitions;
 	// body of the function
 	std::vector<Function*> functions;
 public:
+	// add structures to the program as bloc before the main function
+	void add_struct_definition(CodeBloc* bloc);
 	// add a function to the program
 	void add_function(Function* f) ;
 	// get a function by name
@@ -257,6 +205,7 @@ public:
 	Function* main_function(void) const;
 	// init program tree, phase 2 of compilation
 	void init_and_check_program_tree(void);
+
 
 	// build a circuit that represents the program
 	void build_circuit(class Circuit &circuit_out);

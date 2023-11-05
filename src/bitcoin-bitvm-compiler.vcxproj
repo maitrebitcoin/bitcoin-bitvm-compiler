@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClCompile Include="CodeBloc.cpp" />
     <ClCompile Include="Expression_StructMember.cpp" />
+    <ClCompile Include="Function.cpp" />
     <ClCompile Include="LangageAttributes.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ParsingContext.cpp" />
@@ -96,6 +97,7 @@
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LangageGrammar.cpp" />
+    <ClCompile Include="Scope.cpp" />
     <ClCompile Include="Statement_DeclareAndSetVar.cpp" />
     <ClCompile Include="Statement_DeclareStruct.cpp" />
     <ClCompile Include="Statement_DeclareVar.cpp" />
@@ -113,6 +115,7 @@
     <ClInclude Include="Error.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="Expression_StructMember.h" />
+    <ClInclude Include="Function.h" />
     <ClInclude Include="LangageAttributes.h" />
     <ClInclude Include="ParsingContext.h" />
     <ClInclude Include="Program.h" />
@@ -121,6 +124,7 @@
     <ClInclude Include="Connection.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="LangageGrammar.h" />
+    <ClInclude Include="Scope.h" />
     <ClInclude Include="Statement.h" />
     <ClInclude Include="Statement_DeclareAndSetVar.h" />
     <ClInclude Include="Statement_DeclareStruct.h" />

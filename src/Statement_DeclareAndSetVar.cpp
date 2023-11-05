@@ -4,10 +4,10 @@
 #include "BuildContext.h"
 
 // declare and set init
-void Statement_DeclareAndSetVar::init(CodeBloc* parent_bloc) {
+void Statement_DeclareAndSetVar::init(Scope& parent_scope) {
 	// init set and assign
-	declaration.init(parent_bloc);
-	affectation.init(parent_bloc);
+	declaration.init(parent_scope);
+	affectation.init(parent_scope);
 	// check the type
 	if (!declaration.get_type().is_same_type(affectation.get_type()))
 		throw Error("Type mismatch");

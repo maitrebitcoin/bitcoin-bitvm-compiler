@@ -15,8 +15,17 @@ void ParsingContext::on_new_token(const CToken& token)
 {
 	if (token.type == '{')
 		open_bracket();
-	if (token.type == '}')
+	if (token.type == '}') {
 		close_bracket();
+		in_declare_struct = false;
+	}
+	if (token.type == TOKEN_KEYWORKD_STRUCT)
+		in_declare_struct = true;
+	if (token.type == TOKEN_USE_STRUCT)
+		in_use_struct = true;
+	else if (token.type != '.' && token.type != TOKEN_USE_STRUCT_MEMBER)
+		in_use_struct = false;
+
 	// in function declaration
 	if (!in_body)
 	{
@@ -35,7 +44,7 @@ void ParsingContext::on_new_token(const CToken& token)
 			in_set_var_possible = false;
 		}
 		// for "bool b=a" case :
-		if (token.type == TOKEN_IDENTIFIER_LOCALVAR ) {
+		if (token.type == TOKEN_IDENTIFIER_DECL) {
 			in_decl_localvar   = false;
 		}
 		// end of statement

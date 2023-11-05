@@ -1,20 +1,13 @@
 #pragma once
 
-#include <vector>
-#include "VariableDefinition.h"
-#include "TypeStruct.h"
+#include "Scope.h"
 class Statement;
 class Function;
 
-class CodeBloc {
+class CodeBloc : public Scope {
 public:
 	// code statements
 	std::vector<Statement*> statements;
-	Function* parent_function = nullptr;
-	// declared local variables
-	std::vector<VariableDefinition> local_variables;
-	// declared struct
-	std::vector<TypeStruct> know_types;
 
 public:
 	// constructor
@@ -22,18 +15,7 @@ public:
 	// add a statement
 	void add_statement(Statement* s) { statements.push_back(s); }
 	// init a bloc
-	void init(Function* parent_function);
-	// get the parent function
-	Function* get_parent_function(void) { return parent_function; }
-	// find a variable by name
-	const VariableDefinition* find_variable_by_name(std::string name) const;
-	// declare a local variable
-	void declare_local_variable(const VariableDefinition& def);
-	// find a struct type by name
-	const TypeStruct* find_struct_by_name(std::string name) const;
-	// declare a type struct
-	void declare_struct(const TypeStruct& struct_type) { know_types.push_back(struct_type); }
-
+	void init( Scope& global_scope,  Function* parent_function);
 
 	// get the return statement of the bloc
 	class Statement_Return* get_return_statement(void) const;

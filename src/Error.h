@@ -22,7 +22,7 @@ public:
 		if (function_name != "")
 			res += function_name + "() :\n";
 		if (file_name != "")
-			res += file_name + "(" + std::to_string(line_number) + ") : " + message;
+			res += file_name + "(" + std::to_string(line_number+1) + ") : " + message;
 		else
 			res += message;
 		return res;

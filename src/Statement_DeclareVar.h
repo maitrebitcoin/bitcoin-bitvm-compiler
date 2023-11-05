@@ -12,7 +12,7 @@ public:
 	// get return type
 	const Type& get_type(void) const { return *type; }
 	// init a statmenet
-	virtual void init(CodeBloc* parent) override;
+	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the declaration statement
 	virtual void build_circuit(BuildContext& ctx) const override;
 };

@@ -7,31 +7,6 @@
 #include "LangageGrammar.h"
 #include "BuildContext.h"
 
-// return the number of bits needed for the input parameters
-int Function::size_in_bit_input(void) const
-{
-	// addd the size of each parameter
-	int nb_bit = 0;
-	for (Parameter param_i : definition.parameters)
-		nb_bit += param_i.type->size_in_bit();
-	return nb_bit;
-}
-// return the number of bits needed to store the return value
-int Function::size_in_bit_output(void) const {
-	// size of the return type
-	return definition.return_type->size_in_bit();
-}
-
-// Function Definition constructor
-Function::Definition::Definition(Type* type, std::string function_name, Function::AllParameter* all_params)
-	: return_type(type)
-	, name(function_name)
-{
-	assert(function_name.size() > 0);
-	// copy the parameters
-	for (Parameter param_i : all_params->parameters)
-		parameters.push_back(param_i);
-}
 
 // constructor for BinaryOperation
 BinaryOperation::BinaryOperation(Operator op, Expression* left, Expression* right)
@@ -88,6 +63,19 @@ Function::Function(Definition* def, CodeBloc* fn_body)
 	: definition(*def) 
 	, body(fn_body) {
 }
+// add structures to the program as bloc before the main function
+void Program::add_struct_definition(CodeBloc* bloc ) {
+	// check that there are only struct definitions
+	for (Statement* statement : bloc->statements)
+	{
+		// if the instruction is not a struct definition
+		if (statement->cast_to_Statement_DeclareStruct() == nullptr)
+			throw Error("Only struct definitions are allowed before functions");
+	}
+	// keep the bloc
+	struct_definitions = bloc;
+
+}
 
 
 // add a function to the program
@@ -113,16 +101,12 @@ Function* Program::find_function_by_name(std::string name) const  {
 Function* Program::main_function(void) const {
 	return find_function_by_name("main");
 }
-// init a function
-void Function::init(void) {
-	body->init(this);
-}
 
 // init
-void BinaryOperation::init(CodeBloc* parent_bloc) {
+void BinaryOperation::init(Scope& parent_scope) {
 	// init operands
-	left_operand->init(parent_bloc);
-	right_operand->init(parent_bloc);
+	left_operand->init(parent_scope);
+	right_operand->init(parent_scope);
 	// left and right operand must have the same type
 	if (!left_operand->get_type().is_same_type(right_operand->get_type()))
 		throw Error("Type mismatch");
@@ -134,9 +118,9 @@ void BinaryOperation::init(CodeBloc* parent_bloc) {
 	result_type = *type_basic;
 }
 // init << and >>
-void ShiftOperation::init(CodeBloc* parent_bloc)  {
+void ShiftOperation::init(Scope& parent_scope)  {
 	// init left operands
-	left_operand->init(parent_bloc);
+	left_operand->init(parent_scope);
 	// type must ba a basic type
 	const TypeBasic* type_basic = left_operand->get_type().cast_to_TypeBasic();
 	if (type_basic == nullptr)
@@ -157,10 +141,10 @@ void ShiftOperation::init(CodeBloc* parent_bloc)  {
 		throw Error("Shift value must be positive");
 }
 // init '=='
-void TestOperation::init(CodeBloc* parent_bloc) {
+void TestOperation::init(Scope& parent_scope) {
 	// init operands
-	left_operand->init(parent_bloc);
-	right_operand->init(parent_bloc);
+	left_operand->init(parent_scope);
+	right_operand->init(parent_scope);
 	// left and right operand must have the same type
 	if (!left_operand->get_type().is_same_type(right_operand->get_type()))
 		throw Error("Type mismatch");
@@ -244,7 +228,7 @@ std::vector<bool> Literal::hex_string_to_bits(std::string hex_string) {
 }
 
 // lietral init
-void Literal::init(CodeBloc* parent_bloc) {
+void Literal::init(Scope& ) {
 	switch (type.get_native_type())
 	{ 
 		case Type::Native::bit:
@@ -270,9 +254,16 @@ const VariableDefinition* Function::find_parameter_by_name(std::string name) con
 
 // init program tree, phase 2 of compilation
 void Program::init_and_check_program_tree(void) {
+	// init struct
+	if (struct_definitions != nullptr)
+	{
+		for (Statement* statement_struct : struct_definitions->statements)
+			statement_struct->init(*this);
+	}
+
 	// init  check  functions
 	for (Function* f : functions)
-		f->init();
+		f->init(*this);
 	// check main function
 	if (main_function() == nullptr)
 		throw Error("No main function");
@@ -302,8 +293,8 @@ UnaryOperation::UnaryOperation(Operator op, Expression* exp) : operation(op), op
 	assert(operand != nullptr);
 }
 // init
-void UnaryOperation::init(CodeBloc* parent_bloc) {
-	operand->init(parent_bloc);
+void UnaryOperation::init(Scope &parent_scope) {
+	operand->init(parent_scope);
 	// type must ba a basic type
 	const TypeBasic* type_basic = operand->get_type().cast_to_TypeBasic();
 	if (type_basic == nullptr)

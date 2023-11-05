@@ -6,6 +6,7 @@ class BinaryOperation;
 class CodeBloc;
 class BuildContext;
 class Connection;
+class Scope;
 
 
 // opérandd expression. "a" ,123, or a+b
@@ -25,7 +26,7 @@ public:
 	// get expression type
 	virtual const Type& get_type(void) const = 0;
 	// init
-	virtual void init(CodeBloc* parent_bloc) = 0;
+	virtual void init(Scope& parent_scope) = 0;
 	// build the circuit for the expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) = 0;
 };

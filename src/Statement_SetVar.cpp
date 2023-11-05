@@ -4,8 +4,8 @@
 #include "BuildContext.h"
 
 //  assignment statement init
-void Statement_SetVar::init(CodeBloc* parent_bloc) {
-	expression->init(parent_bloc);
+void Statement_SetVar::init(Scope& parent_scope) {
+	expression->init(parent_scope);
 }
 
 // build the circuit for the assignment statement

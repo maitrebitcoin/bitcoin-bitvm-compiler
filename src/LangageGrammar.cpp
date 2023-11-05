@@ -1,4 +1,5 @@
 
+#include <string>
 #include "LangageGrammar.h"
 #include "Compiler.h"
 #include "TokenId.h"
@@ -7,7 +8,8 @@
 
 
 // token definition (lexer)
-static const char *REGEXP_IDENTIFIER = "[a-zA-Z_][a-zA-Z0-9_]*"; // ex : a, a1, a_1, _a1
+static const char *REGEXP_IDENTIFIER = "[a-z][a-zA-Z0-9_]*"; // ex : a, a1, a_1, _a1
+static const char * REGEXP_USERTYPE = "[A-Z_][a-zA-Z0-9_]*"; // ex : Header, Bloc, ...
 std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 	TokenDefinition token_definition[] =
 	{
@@ -16,7 +18,7 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_RETURN,				"return"},
 		{ TOKEN_TRUE,				"true"},
 		{ TOKEN_FALSE,				"false"},
-		{ TOKEN_STRUCT,				"struct"},
+		{ TOKEN_KEYWORKD_STRUCT,	"struct"},
 		{ TOKEN_LEFT_SHIFT,			"<<"},
 		{ TOKEN_RIGHT_SHIFT,		">>"},
 		{ TOKEN_TEST_EQUAL,			"=="},
@@ -25,11 +27,15 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_TEST_LOWER,			"<"},
 		{ TOKEN_TEST_GREATEROREQ,	">="},
 		{ TOKEN_TEST_GREATER,		">"},
-		{ TOKEN_IDENTIFIER_FNNAME,	nullptr, REGEXP_IDENTIFIER, [this]() {return !in_body && !in_fn_param; }},
-		{ TOKEN_IDENTIFIER_FNPARAM,	nullptr, REGEXP_IDENTIFIER, [this]() {return !in_body && in_fn_param; }},
-		{ TOKEN_IDENTIFIER_SETVAR  ,nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && in_set_var_possible;}},
-		{ TOKEN_IDENTIFIER,			nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && !in_decl_localvar ; }},
-		{ TOKEN_IDENTIFIER_LOCALVAR,nullptr, REGEXP_IDENTIFIER, [this]() {return in_body && in_decl_localvar ;  }},
+		{ TOKEN_IDENTIFIER_FNNAME,	nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return !in_body && !in_fn_param && !in_declare_struct; }},
+		{ TOKEN_IDENTIFIER_FNPARAM,	nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return !in_body && in_fn_param; }},
+		{ TOKEN_IDENTIFIER_SETVAR  ,nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return in_body && in_set_var_possible;}},
+		{ TOKEN_IDENTIFIER,			nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return (in_body && !in_decl_localvar) && next_char != '.' && !in_use_struct; }},
+		{ TOKEN_IDENTIFIER_DECL,	nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return (in_body && in_decl_localvar);   }},
+		{ TOKEN_DECLARE_STRUCT_NAME,nullptr, REGEXP_USERTYPE,	 [this](char next_char) {return in_declare_struct;  }},
+		{ TOKEN_USE_STRUCT,			nullptr, REGEXP_IDENTIFIER,  [this](char next_char) {return next_char == '.'; } },
+		{ TOKEN_USE_STRUCT_MEMBER,	nullptr, REGEXP_IDENTIFIER,  [this](char next_char) {return in_use_struct; } },
+		{ TOKEN_STRUCT_TYPE,		nullptr, REGEXP_USERTYPE,    [this](char next_char) {return next_char != '.' && !in_declare_struct; } },
 		{ TOKEN_HEXANUMBER,			nullptr, "0x[0-9A-Fa-f]*"},
 		{ TOKEN_NUMBER,				nullptr, "[0-9]*"},
 	};
@@ -41,6 +47,15 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 RuleDefinition rules_definition[] =
 {
+	// struct + 1 function
+	{ RULE_PROGRAM, { RULE_N_STATEMENTS, RULE_FUNCTION },
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.program_value = new_program();
+			result.program_value->add_struct_definition(p[0].code_block_value);
+			result.program_value->add_function(p[1].function_value);
+		}
+	},
+	// just 1 function
 	{ RULE_PROGRAM, { RULE_FUNCTION }, 
 		[this](TokenValue& result, std::vector<TokenValue> p) { 
 			result.program_value = new_program(); 
@@ -97,7 +112,7 @@ RuleDefinition rules_definition[] =
 	},
 	// variable declaration
 	// ex: int c;
-	{ RULE_1_STATEMENT , {RULE_TYPE, TOKEN_IDENTIFIER_LOCALVAR, ';'} ,
+	{ RULE_1_STATEMENT , {RULE_TYPE, TOKEN_IDENTIFIER_DECL, ';'} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_declare_var_statement(p[0].type_value, *p[1].string_value);
 		}
@@ -111,14 +126,14 @@ RuleDefinition rules_definition[] =
 	},
 	// variable declaration ands affectation
 	// ex: bool a = b+c;
-	{ RULE_1_STATEMENT , {RULE_TYPE, TOKEN_IDENTIFIER_LOCALVAR, '=', RULE_EXPRESSION, ';'} ,
+	{ RULE_1_STATEMENT , {RULE_TYPE, TOKEN_IDENTIFIER_DECL, '=', RULE_EXPRESSION, ';'} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_declare_and_set_var_statement(p[0].type_value, *p[1].string_value,  p[3].expression_value);
 		}
 	},
 	// strucutre declaration
 	// ex: struct Header { byte zize; bool is_ok; }
-	{ RULE_1_STATEMENT , {TOKEN_STRUCT, TOKEN_IDENTIFIER_STRUCT, RULE_CODEBLOC, ';'} ,
+	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_STRUCT, TOKEN_DECLARE_STRUCT_NAME, RULE_CODEBLOC, ';'} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_declare_struct_statement(*p[1].string_value, p[2].code_block_value);
 		}
@@ -247,7 +262,7 @@ RuleDefinition rules_definition[] =
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_variable_expression(*p[0].string_value);  }
 	},
 	// ex: struct_header.a
-	{ RULE_VARIABLE , { TOKEN_IDENTIFIER ,'.', TOKEN_IDENTIFIER} ,
+	{ RULE_VARIABLE , { TOKEN_USE_STRUCT ,'.', TOKEN_USE_STRUCT_MEMBER} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_struct_member(*p[0].string_value, *p[2].string_value);  }
 	},
 	// - literals
@@ -272,9 +287,13 @@ RuleDefinition rules_definition[] =
 	{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,
 		[this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::bit);  }
 	},
-		// byte
+	// byte
 	{ RULE_TYPE , { TOKEN_TYPE_BYTE } ,
 		[this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::int8);  }
+	},
+	// use type
+	{ RULE_TYPE , { TOKEN_STRUCT_TYPE } ,
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.type_value = new_type_user_defined(*p[0].string_value);  }
 	},
 };
 	int nb_grammar_rules = sizeof(rules_definition) / sizeof(rules_definition[0]);

@@ -37,7 +37,7 @@ struct TokenDefinition {
 	TokenId	    token_type;
 	const char* token_value;
 	const char* regex;
-	std::function< bool(void)> condtion; // for conditionnal tokens
+	std::function< bool(char next_char)> condition; // for conditionnal tokens
 };
 
 class ObjetKeeper;

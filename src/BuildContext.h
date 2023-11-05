@@ -2,6 +2,7 @@
 
 class Circuit;
 class KnownVar;
+class Connection;
 
 // context for building the circuit
 class BuildContext {
