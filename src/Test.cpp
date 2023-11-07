@@ -54,9 +54,7 @@ void _test_circuit(Circuit& circuit, const char* inputs, const char* expected_re
 // test 1 circuit, hex inputs
 //<input_01> : ex : "01"
 void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  hex_expected_result) {
-	// convert hex string to bits
-	auto bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0,2));
-	auto bits_b = Literal::hex_string_to_bits(hex_inputs.substr(2,2));
+	//auto bits_b = Literal::hex_string_to_bits(hex_inputs.substr(2,2));
 	std::vector<bool>  bits_expected;
 	if (hex_expected_result.size()==1) // bool
 		bits_expected.push_back(hex_expected_result[0] == '1');
@@ -64,14 +62,37 @@ void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  he
 		bits_expected = Literal::hex_string_to_bits(hex_expected_result);
 	// set inputs
 	CRunInputs test_input = circuit.get_run_inputs();
-	test_input.set_byte_value(0, bits_a);
-	if (bits_b.size() > 0)
-	{
-		test_input.set_byte_value(1, bits_b);
-		auto bits_c = Literal::hex_string_to_bits(hex_inputs.substr(4, 2));
-		if (bits_c.size() > 0)
-			test_input.set_byte_value(2, bits_c);
+	int i = 0;
+	// convert hex string to bits
+	int nb_bytes_in = (int)( hex_inputs.size() * 4);
+	if (nb_bytes_in == 8) { // 8 bitd
+		auto _8bits_in = Literal::hex_string_to_bits(hex_inputs);
+		test_input.set_int8_value(0, _8bits_in);
 	}
+	else if (nb_bytes_in == 16) { // 2*8 bitd
+		auto _8bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0, 2));
+		auto _8bits_b = Literal::hex_string_to_bits(hex_inputs.substr(2, 2));
+		test_input.set_int8_value(0, _8bits_a);
+		test_input.set_int8_value(1, _8bits_b);
+	}
+	else if (nb_bytes_in == 24) { // 3*8 bitd
+		auto _8bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0, 2));
+		auto _8bits_b = Literal::hex_string_to_bits(hex_inputs.substr(2, 2));
+		auto _8bits_c = Literal::hex_string_to_bits(hex_inputs.substr(4, 2));
+		test_input.set_int8_value(0, _8bits_a);
+		test_input.set_int8_value(1, _8bits_b);
+		test_input.set_int8_value(2, _8bits_c);
+	}
+	else if (nb_bytes_in == 64) { // 2*32 bitd
+		auto _32bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0, 8));
+		auto _32bits_b = Literal::hex_string_to_bits(hex_inputs.substr(8, 8));
+		test_input.set_int32_value(0, _32bits_a);
+		test_input.set_int32_value(1, _32bits_b);
+	}
+	else {
+		assert(false);
+	}
+
 	// run the circuit
 	std::vector<Bit> result;
 	try {
@@ -185,9 +206,9 @@ void test_local_var_and_set(void) {
 	_test_circuit(result.circuit, "10", "1");
 	_test_circuit(result.circuit, "11", "0");
 }
-void test_byte(void) {
+void test_int8(void) {
 	// ccmpile the circuit
-	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_byte.bvc");
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_int8.bvc");
 	if (!result.ok) {
 		test_failed(result.error.message);
 	}
@@ -199,6 +220,24 @@ void test_byte(void) {
 	_test_circuit_hex(result.circuit, "AB11", "01");
 	_test_circuit_hex(result.circuit, "77FC", "74");
 }
+void test_int32(void) {
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_int32.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit : a & b
+	_test_circuit_hex(result.circuit, "1122334500000001", "00000001");
+	_test_circuit_hex(result.circuit, "FFFFFFFFFFFFFFFF", "FFFFFFFF");
+	_test_circuit_hex(result.circuit, "0000000000000000", "00000000");
+	_test_circuit_hex(result.circuit, "000000FF00000000", "00000000");
+	_test_circuit_hex(result.circuit, "123400AB12340011", "12340001");
+	_test_circuit_hex(result.circuit, "77000000FC000000", "74000000");
+	_test_circuit_hex(result.circuit, "0077000000FC0000", "00740000");
+	_test_circuit_hex(result.circuit, "000077000000FC00", "00007400");
+	_test_circuit_hex(result.circuit, "00000077000000FC", "00000074");
+}
+
 void test_literal(void) {
 	// ccmpile the circuit
 	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_literal.bvc");
@@ -341,9 +380,9 @@ void test_shit_right(void) {
 	_test_circuit_hex(result.circuit, "9D", "13");
 	_test_circuit_hex(result.circuit, "FF", "1F");
 }
-void test_equal_byte(void) {
+void test_equal_int8(void) {
 	// ccmpile the circuit : res = ~(a&b)-(a+b);
-	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_equal_byte.bvc");
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_equal_int8.bvc");
 	if (!result.ok) {
 		test_failed(result.error.message);
 	}
@@ -363,9 +402,9 @@ void test_equal_byte(void) {
 	_test_circuit_hex(result.circuit, "FEFF", "0");
 	_test_circuit_hex(result.circuit, "FFFE", "0");
 }
-void test_notequal_byte(void) {
+void test_notequal_int8(void) {
 	// ccmpile the circuit : res = ~(a&b)-(a+b);
-	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_notequal_byte.bvc");
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_notequal_int8.bvc");
 	if (!result.ok) {
 		test_failed(result.error.message);
 	}
@@ -471,7 +510,7 @@ void test_precedence(void) {
 	_test_circuit_hex(result.circuit, "EEDD", "60");
 }
 void test_structure(void) {
-	// byte main(Header st_ab, byte c)
+	// int8 main(Header st_ab, int8 c)
 	// return st_ab.b + c; 
 	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_struct.bvc");
 	if (!result.ok) {
@@ -498,7 +537,8 @@ void run_all_test(void) {
 	// test basic langage consctuctions and operators
 	test_local_var();			std::cout << " local var - PASSED\n";
 	test_local_var_and_set();	std::cout << " local set var & set - PASSED\n";
-	test_byte();				std::cout << " byte - PASSED\n";
+	test_int8();				std::cout << " int8 - PASSED\n";
+	test_int32();				std::cout << " int33 - PASSED\n";
 	test_literal();				std::cout << " literal - PASSED\n";
 	test_addition();			std::cout << " addition - PASSED\n";
 	test_negate();				std::cout << " negate - PASSED\n";
@@ -507,13 +547,11 @@ void run_all_test(void) {
 	test_parenthesis();			std::cout << " parenthesis - PASSED\n";
 	test_shit_left();			std::cout << " shit left - PASSED\n";
 	test_shit_right();			std::cout << " shit right - PASSED\n";
-	test_equal_byte();			std::cout << " equal byte - PASSED\n";
-	test_notequal_byte();		std::cout << " notequal byte - PASSED\n";
+	test_equal_int8();			std::cout << " equal int8 - PASSED\n";
+	test_notequal_int8();		std::cout << " notequal int8 - PASSED\n";
 	test_greater_lower();		std::cout << " greater lower - PASSED\n";
-	test_precedence();			std::cout << " structures - PASSED\n";
-	test_structure();
-
-	();			std::cout << " precedence - PASSED\n";
+	test_precedence();			std::cout << " precedence - PASSED\n";  
+	test_structure();		    std::cout << " structures - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

@@ -12,11 +12,14 @@ public:
 	enum class Native {
 		undefined,	// not set/ invalide
 		bit,		// bool
-		int8,		// char  signe char
-		uint8,		// byte / unsigned char
-		int64,		// long long
-		uint64,		// unsigned long long
-		uint256,	// unsigned __int256
+		int8,		// signed 8 bits integer
+		uint8,		// unsigned 8 bits integer
+		int32,		// signed 32 bits integer
+		uint32,		// 
+		int64,		// signed 64 bits integer
+		uint64,		// 
+		int256,		// igned 256 bits integer / hash
+		uint256,	// 
 		user_struct,// user defined structure type
 	};
 

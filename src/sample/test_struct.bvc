@@ -1,13 +1,13 @@
 // test struct usage
 
 struct Header {
-	byte a;
-	byte b;
+	int8 a;
+	int8 b;
 };
 
-byte main(Header st_ab, byte c) 
+int8 main(Header st_ab, int8 c) 
 {
-	byte d;
+	int8 d;
 	d = st_ab.b;
 	return st_ab.b + c; 
 }

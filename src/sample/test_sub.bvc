@@ -1,5 +1,5 @@
 // test the a-b operator
-byte main(byte a,byte b) 
+int8 main(int8 a,int8 b) 
 {
 	return a-b; 
 }

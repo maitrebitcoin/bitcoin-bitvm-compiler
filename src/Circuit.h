@@ -100,7 +100,7 @@ public:
 		(*this)[numvar].set_value(b);
 	}
 	// set the value of a 8 bit var
-	void set_byte_value(int numvar, std::vector<bool> bits) {
+	void set_int8_value(int numvar, std::vector<bool> bits) {
 		assert(numvar * 8 < (int)this->size());
 		assert(bits.size() == 8);
 		// set 8 bitsd of the value
@@ -108,5 +108,13 @@ public:
 			set_bit_value(numvar * 8 + i, bits[i]);
 		}
 	}
-
+	// set the value of a 32 bit var
+	void set_int32_value(int numvar, std::vector<bool> bits) {
+		assert(numvar * 8 < (int)this->size());
+		assert(bits.size() == 32);
+		// set 8 bitsd of the value
+		for (int i = 0; i < 32; i++) {
+			set_bit_value(numvar * 32 + i, bits[i]);
+		}
+	}
 };

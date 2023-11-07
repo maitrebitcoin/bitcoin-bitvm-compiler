@@ -1,5 +1,5 @@
 // test the <<  operator
-byte main(byte a) 
+int8 main(int8 a) 
 {
 	return (a>>3)|0; 
 }

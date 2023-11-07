@@ -11,11 +11,14 @@ int TypeBasic::size_in_bit(void) const
 	case Type::Native::undefined:
 		assert(false);
 		return 0;
-	case Type::Native::bit:    return 1;
-	case Type::Native::int8:   return 8;
-	case Type::Native::uint8:  return 8;
-	case Type::Native::int64:  return 64;
-	case Type::Native::uint64: return 64;
+	case Type::Native::bit:    return   1;
+	case Type::Native::int8:   return   8;
+	case Type::Native::uint8:  return   8;
+	case Type::Native::int32:  return  32;
+	case Type::Native::uint32: return  32;
+	case Type::Native::int64:  return  64;
+	case Type::Native::uint64: return  64;
+	case Type::Native::int256: return 256;
 	case Type::Native::uint256:return 256;
 	default:
 		assert(false);
@@ -36,16 +39,17 @@ int TypeBasic::size_in_bit(void) const
 	 switch (native_type)
 	 {
 	 case Type::Native::undefined:
-		 assert(false);
-		 return 0;
-	 case Type::Native::bit:    return "bool";
-	 case Type::Native::int8:   return "byte";
-//	 case Type::Native::uint8:  return ""usigned byte";
-//	 case Type::Native::int64:  return 64;
-//	 case Type::Native::uint64: return 64;
-//	 case Type::Native::uint256:return 256;
 	 default:
 		 assert(false);
-		 return 0;
+		 return "unknown";
+	 case Type::Native::bit:      return "bool";
+	 case Type::Native::int8:     return "int8";
+	 case Type::Native::uint8:    return "uint8";
+	 case Type::Native::int32:    return "int32";
+	 case Type::Native::uint32:   return "uint32";
+	 case Type::Native::int64:    return "int64";
+	 case Type::Native::uint64:   return "uint64";
+	 case Type::Native::int256:   return "int256";
+	 case Type::Native::uint256:  return "uint256";
 	 }
  }

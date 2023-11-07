@@ -1,0 +1,6 @@
+// test the int32 native type
+int32 main(int32 a,int32 b) 
+{
+	int32 local_a_and_b = a & b;
+	return local_a_and_b; 
+}

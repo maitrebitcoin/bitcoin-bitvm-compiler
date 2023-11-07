@@ -38,8 +38,8 @@ void ParsingContext::on_new_token(const CToken& token)
 	if (in_body)
 	{
 		// in declation of type in body
-		if (  (token.type == TOKEN_TYPE_BOOL)
-			||(token.type == TOKEN_TYPE_BYTE)) {
+		if (is_token_type(token.type)) // frorm TOKEN_TYPE_BOOL to TOKEN_TYPE_UINT256
+		{
 			in_decl_localvar    = true;
 			in_set_var_possible = false;
 		}

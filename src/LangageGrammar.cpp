@@ -13,8 +13,17 @@ static const char * REGEXP_USERTYPE = "[A-Z_][a-zA-Z0-9_]*"; // ex : Header, Blo
 std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 	TokenDefinition token_definition[] =
 	{
+		// types
 		{ TOKEN_TYPE_BOOL,			"bool"},
-		{ TOKEN_TYPE_BYTE,			"byte"},	
+		{ TOKEN_TYPE_INT8,			"int8"},
+		{ TOKEN_TYPE_UINT8,			"uint8"},
+		{ TOKEN_TYPE_INT32,			"int32"},
+		{ TOKEN_TYPE_UINT32,		"uint32"},
+		{ TOKEN_TYPE_INT64,			"int32"},
+		{ TOKEN_TYPE_UINT64,		"uint64"},
+		{ TOKEN_TYPE_INT256,		"int256"},
+		{ TOKEN_TYPE_UINT256,		"uint256"},
+		// keyword
 		{ TOKEN_RETURN,				"return"},
 		{ TOKEN_TRUE,				"true"},
 		{ TOKEN_FALSE,				"false"},
@@ -283,14 +292,14 @@ RuleDefinition rules_definition[] =
 			[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_literal(Type::Native::bit, *p[0].string_value);  }
 	},
 
-	// bool
-	{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,
-		[this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::bit);  }
-	},
-	// byte
-	{ RULE_TYPE , { TOKEN_TYPE_BYTE } ,
-		[this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::int8);  }
-	},
+	// types: bool, int8, int16, int32, int64, uint8, uint16, uint32, uint64, ..
+	{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,	  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::bit);    }},
+	{ RULE_TYPE , { TOKEN_TYPE_INT8 } ,	  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::int8);   }},
+	{ RULE_TYPE , { TOKEN_TYPE_UINT8 },	  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::uint8);  }},
+	{ RULE_TYPE , { TOKEN_TYPE_INT32 },	  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::int32);  }},
+	{ RULE_TYPE , { TOKEN_TYPE_UINT32 },  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::uint32); }},
+	{ RULE_TYPE , { TOKEN_TYPE_INT256 },  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::int256); }},
+	{ RULE_TYPE , { TOKEN_TYPE_UINT256 }, [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::uint256);}},
 	// use type
 	{ RULE_TYPE , { TOKEN_STRUCT_TYPE } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.type_value = new_type_user_defined(*p[0].string_value);  }

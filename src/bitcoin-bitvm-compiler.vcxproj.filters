@@ -67,6 +67,9 @@
     <ClCompile Include="Function.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
+    <ClCompile Include="BinaryOperation.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -153,12 +156,15 @@
     <ClInclude Include="Function.h">
       <Filter>source\Program</Filter>
     </ClInclude>
+    <ClInclude Include="BinaryOperation.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="sample\test_and.bvc">
       <Filter>sample</Filter>
     </None>
-    <None Include="sample\test_byte.bvc">
+    <None Include="sample\test_int8.bvc">
       <Filter>sample</Filter>
     </None>
     <None Include="sample\test_declare_and_set.bvc">
@@ -206,10 +212,10 @@
     <None Include="sample\test_equal_bool.bvc">
       <Filter>sample</Filter>
     </None>
-    <None Include="sample\test_equal_byte.bvc">
+    <None Include="sample\test_equal_int8.bvc">
       <Filter>sample</Filter>
     </None>
-    <None Include="sample\test_notequal_byte.bvc">
+    <None Include="sample\test_notequal_int8.bvc">
       <Filter>sample</Filter>
     </None>
     <None Include="sample\test_greater.bvc">
@@ -228,6 +234,9 @@
       <Filter>sample</Filter>
     </None>
     <None Include="sample\test_struct.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_int32.bvc">
       <Filter>sample</Filter>
     </None>
   </ItemGroup>

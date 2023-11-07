@@ -1,8 +1,8 @@
 // test literals
-byte main(byte a) 
+int8 main(int8 a) 
 {
 	bool b=true;
-	byte c=31;
-	byte local_a_modulo32 = a & 0x1F;
+	int8 c=31;
+	int8 local_a_modulo32 = a & 0x1F;
 	return local_a_modulo32; 
 }

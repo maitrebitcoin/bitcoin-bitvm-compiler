@@ -1,0 +1,6 @@
+// test the int8 native type
+int8 main(int8 a,int8 b) 
+{
+	int8 local_a_and_b = a & b;
+	return local_a_and_b; 
+}

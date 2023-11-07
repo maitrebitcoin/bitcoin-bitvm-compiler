@@ -85,6 +85,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BinaryOperation.cpp" />
     <ClCompile Include="CodeBloc.cpp" />
     <ClCompile Include="Expression_StructMember.cpp" />
     <ClCompile Include="Function.cpp" />
@@ -109,6 +110,7 @@
     <ClCompile Include="TypeStruct.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BinaryOperation.h" />
     <ClInclude Include="Bits.h" />
     <ClInclude Include="BuildContext.h" />
     <ClInclude Include="CodeBloc.h" />
@@ -142,11 +144,12 @@
     <None Include="sample\hello_word.bvc" />
     <None Include="sample\test_add.bvc" />
     <None Include="sample\test_and.bvc" />
-    <None Include="sample\test_byte.bvc" />
+    <None Include="sample\test_int32.bvc" />
+    <None Include="sample\test_int8.bvc" />
     <None Include="sample\test_complement.bvc" />
     <None Include="sample\test_declare_and_set.bvc" />
     <None Include="sample\test_equal_bool.bvc" />
-    <None Include="sample\test_equal_byte.bvc" />
+    <None Include="sample\test_equal_int8.bvc" />
     <None Include="sample\test_greater.bvc" />
     <None Include="sample\test_greater_or_equal.bvc" />
     <None Include="sample\test_literal.bvc" />
@@ -155,7 +158,7 @@
     <None Include="sample\test_lower_or_equal.bvc" />
     <None Include="sample\test_negate.bvc" />
     <None Include="sample\test_not.bvc" />
-    <None Include="sample\test_notequal_byte.bvc" />
+    <None Include="sample\test_notequal_int8.bvc" />
     <None Include="sample\test_or.bvc" />
     <None Include="sample\test_parenthesis.bvc" />
     <None Include="sample\test_precedencec.bvc" />

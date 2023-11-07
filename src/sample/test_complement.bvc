@@ -1,5 +1,5 @@
 // test the complement operator : ~
-byte main(byte a) 
+int8 main(int8 a) 
 {
 	return ~a; 
 }

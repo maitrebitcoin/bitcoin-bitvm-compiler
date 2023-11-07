@@ -3,32 +3,41 @@
 // token elements (lexer)
 enum E_TokenId {
 	TOKEN_TYPE_BOOL			  = 257,
-	TOKEN_TYPE_BYTE,		   // 258
-	TOKEN_IDENTIFIER_FNNAME,   // 259 - function name
-	TOKEN_IDENTIFIER_FNPARAM,  // 260 - in function parmetres only
-	TOKEN_IDENTIFIER,	       // 261 - in function body statement only,
-	TOKEN_IDENTIFIER_DECL	 , // 262 - in function body statement only, after a type: local var déclaration
-	TOKEN_IDENTIFIER_SETVAR,   // 263 - in function body statement only, var name for affectation only.
-	TOKEN_NUMBER,			   // 264
-	TOKEN_RETURN,			   // 265
-	TOKEN_TRUE,				   // 266 true
-	TOKEN_FALSE,			   // 267 false
-	TOKEN_LEFT_SHIFT,		   // 268 <<
-	TOKEN_RIGHT_SHIFT,		   // 269 >>
-	TOKEN_TEST_EQUAL,		   // 270 ==
-	TOKEN_TEST_NOTEQUAL,	   // 271 !=
-	TOKEN_TEST_LOWER,		   // 272 <
-	TOKEN_TEST_LOWEROREQ,	   // 273 <=
-	TOKEN_TEST_GREATER,		   // 274 >
-	TOKEN_TEST_GREATEROREQ,	   // 275 >=
-	TOKEN_HEXANUMBER,		   // 276 0xF2
-	TOKEN_KEYWORKD_STRUCT,	   // 277 keyword "struct"
-	TOKEN_DECLARE_STRUCT_NAME, // 278 after "struct" keyword
-	TOKEN_STRUCT_TYPE,		   // 279 qs as type befor a var. ex: "struct b;"
-	TOKEN_USE_STRUCT,		   // 280 before . as in "struct.member"
-	TOKEN_USE_STRUCT_MEMBER,   // 281 after . as in "struct.member"
+	TOKEN_TYPE_INT8,		   //  signed 8 bits integer
+	TOKEN_TYPE_UINT8,		   // 
+	TOKEN_TYPE_INT32,		   //  signed 32 bits integer
+	TOKEN_TYPE_UINT32,		   // 
+	TOKEN_TYPE_INT64,		   //  signed 64 bits integer
+	TOKEN_TYPE_UINT64,		   // 
+	TOKEN_TYPE_INT256,		   //  signed 256 bits integer / hash
+	TOKEN_TYPE_UINT256,		   // 
+	TOKEN_IDENTIFIER_FNNAME,   //  - function name
+	TOKEN_IDENTIFIER_FNPARAM,  //  - in function parmetres only
+	TOKEN_IDENTIFIER,	       //  - in function body statement only,
+	TOKEN_IDENTIFIER_DECL	 , //  - in function body statement only, after a type: local var déclaration
+	TOKEN_IDENTIFIER_SETVAR,   //  - in function body statement only, var name for affectation only.
+	TOKEN_NUMBER,			   // 
+	TOKEN_RETURN,			   // 
+	TOKEN_TRUE,				   //  true
+	TOKEN_FALSE,			   //  false
+	TOKEN_LEFT_SHIFT,		   //  <<
+	TOKEN_RIGHT_SHIFT,		   //  >>
+	TOKEN_TEST_EQUAL,		   //  ==
+	TOKEN_TEST_NOTEQUAL,	   //  !=
+	TOKEN_TEST_LOWER,		   //  <
+	TOKEN_TEST_LOWEROREQ,	   //  <=
+	TOKEN_TEST_GREATER,		   //  >
+	TOKEN_TEST_GREATEROREQ,	   //  >=
+	TOKEN_HEXANUMBER,		   //  0xF2
+	TOKEN_KEYWORKD_STRUCT,	   //  keyword "struct"
+	TOKEN_DECLARE_STRUCT_NAME, //  after "struct" keyword
+	TOKEN_STRUCT_TYPE,		   //  qs as type befor a var. ex: "struct b;"
+	TOKEN_USE_STRUCT,		   //  before . as in "struct.member"
+	TOKEN_USE_STRUCT_MEMBER,   //  after . as in "struct.member"
 
 };
+#define is_token_type(t) (t>=TOKEN_TYPE_BOOL && t<=TOKEN_TYPE_UINT256)
+
 // grammar elements
 enum E_RuleId {
 	RULE_FUNCTION				= 1000,

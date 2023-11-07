@@ -1,6 +1,6 @@
 // test the ( ) in expressions
-byte main(byte a,byte b) 
+int8 main(int8 a,int8 b) 
 {
-	byte c = ~(a&b)-(a+b);
+	int8 c = ~(a&b)-(a+b);
 	return c; 
 }

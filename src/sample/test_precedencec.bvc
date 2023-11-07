@@ -1,5 +1,5 @@
 // test the operator precedence
-byte main(byte a,byte b) 
+int8 main(int8 a,int8 b) 
 {
 	// should evaluates has (a*8)&(b/2)
 	return (a << 3 & b >> 1); 

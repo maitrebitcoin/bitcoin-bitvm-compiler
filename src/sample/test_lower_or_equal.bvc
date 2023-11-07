@@ -1,5 +1,5 @@
 // test the <= operator 
-bool main(byte a,byte b) 
+bool main(int8 a,int8 b) 
 {
 	return a<=b; 
 }
