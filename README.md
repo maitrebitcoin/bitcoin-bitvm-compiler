@@ -6,9 +6,9 @@ Generate a logical circuit for BitVM Bitcoin from a C like source code
 Examples :
 ```c
 // simple test program
-byte main(byte a,byte b) 
+int8 main(int8 a, int8 b) 
 {
-	byte local_a_and_b = a & b;
+	int8 local_a_and_b = a & b;
 	return local_a_and_b; 
 }
 ```
