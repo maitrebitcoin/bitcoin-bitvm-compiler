@@ -239,6 +239,9 @@
     <None Include="sample\test_int32.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_int64.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">

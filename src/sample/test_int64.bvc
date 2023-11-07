@@ -1,0 +1,6 @@
+// test the int64 native type
+int64 main(int64 a,int64 b) 
+{
+	int64 local_a_and_b = a & b;
+	return local_a_and_b; 
+}

@@ -117,4 +117,13 @@ public:
 			set_bit_value(numvar * 32 + i, bits[i]);
 		}
 	}
+	// set the value of a 64 bit var
+	void set_int64_value(int numvar, std::vector<bool> bits) {
+		assert(numvar * 8 < (int)this->size());
+		assert(bits.size() == 64);
+		// set 8 bitsd of the value
+		for (int i = 0; i < 64; i++) {
+			set_bit_value(numvar * 64 + i, bits[i]);
+		}
+	}
 };

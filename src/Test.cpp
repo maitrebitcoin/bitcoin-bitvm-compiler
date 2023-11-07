@@ -89,6 +89,12 @@ void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  he
 		test_input.set_int32_value(0, _32bits_a);
 		test_input.set_int32_value(1, _32bits_b);
 	}
+	else if (nb_bytes_in == 128) { // 2*64 bitd
+		auto _64bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0, 16));
+		auto _64bits_b = Literal::hex_string_to_bits(hex_inputs.substr(16,16));
+		test_input.set_int64_value(0, _64bits_a);
+		test_input.set_int64_value(1, _64bits_b);
+	}
 	else {
 		assert(false);
 	}
@@ -236,6 +242,24 @@ void test_int32(void) {
 	_test_circuit_hex(result.circuit, "0077000000FC0000", "00740000");
 	_test_circuit_hex(result.circuit, "000077000000FC00", "00007400");
 	_test_circuit_hex(result.circuit, "00000077000000FC", "00000074");
+}
+void test_int64(void) {
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_int64.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit : a & b
+	_test_circuit_hex(result.circuit, "11223344556677850000000000000001", "0000000000000001");
+	_test_circuit_hex(result.circuit, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", "FFFFFFFFFFFFFFFF");
+	_test_circuit_hex(result.circuit, "00000000000000000000000000000000", "0000000000000000");
+	_test_circuit_hex(result.circuit, "00000000000000FF0000000000000000", "0000000000000000");
+	_test_circuit_hex(result.circuit, "123400AB000000001234001100000000", "1234000100000000");
+	_test_circuit_hex(result.circuit, "00000000123400AB0000000012340011", "0000000012340001");
+	_test_circuit_hex(result.circuit, "000000007700000000000000FC000000", "0000000074000000");
+	_test_circuit_hex(result.circuit, "007700000000000000FC000000000000", "0074000000000000");
+	_test_circuit_hex(result.circuit, "0000000000007700000000000000FC00", "0000000000007400");
+
 }
 
 void test_literal(void) {
@@ -538,7 +562,8 @@ void run_all_test(void) {
 	test_local_var();			std::cout << " local var - PASSED\n";
 	test_local_var_and_set();	std::cout << " local set var & set - PASSED\n";
 	test_int8();				std::cout << " int8 - PASSED\n";
-	test_int32();				std::cout << " int33 - PASSED\n";
+	test_int32();				std::cout << " int32 - PASSED\n";
+	test_int64();				std::cout << " int64 - PASSED\n";
 	test_literal();				std::cout << " literal - PASSED\n";
 	test_addition();			std::cout << " addition - PASSED\n";
 	test_negate();				std::cout << " negate - PASSED\n";

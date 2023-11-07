@@ -19,7 +19,7 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_TYPE_UINT8,			"uint8"},
 		{ TOKEN_TYPE_INT32,			"int32"},
 		{ TOKEN_TYPE_UINT32,		"uint32"},
-		{ TOKEN_TYPE_INT64,			"int32"},
+		{ TOKEN_TYPE_INT64,			"int64"},
 		{ TOKEN_TYPE_UINT64,		"uint64"},
 		{ TOKEN_TYPE_INT256,		"int256"},
 		{ TOKEN_TYPE_UINT256,		"uint256"},
@@ -298,6 +298,8 @@ RuleDefinition rules_definition[] =
 	{ RULE_TYPE , { TOKEN_TYPE_UINT8 },	  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::uint8);  }},
 	{ RULE_TYPE , { TOKEN_TYPE_INT32 },	  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::int32);  }},
 	{ RULE_TYPE , { TOKEN_TYPE_UINT32 },  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::uint32); }},
+	{ RULE_TYPE , { TOKEN_TYPE_INT64 },	  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::int64);  }},
+	{ RULE_TYPE , { TOKEN_TYPE_UINT64 },  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::uint64); }},
 	{ RULE_TYPE , { TOKEN_TYPE_INT256 },  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::int256); }},
 	{ RULE_TYPE , { TOKEN_TYPE_UINT256 }, [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::uint256);}},
 	// use type
