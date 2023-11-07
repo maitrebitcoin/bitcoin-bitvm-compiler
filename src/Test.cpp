@@ -95,6 +95,13 @@ void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  he
 		test_input.set_int64_value(0, _64bits_a);
 		test_input.set_int64_value(1, _64bits_b);
 	}
+	else if (nb_bytes_in == 512) { // 2*256 bitd
+		auto _256bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0, 64));
+		auto _256bits_b = Literal::hex_string_to_bits(hex_inputs.substr(64,64));
+		test_input.set_int256_value(0, _256bits_a);
+		test_input.set_int256_value(1, _256bits_b);
+	}
+
 	else {
 		assert(false);
 	}
@@ -259,6 +266,31 @@ void test_int64(void) {
 	_test_circuit_hex(result.circuit, "000000007700000000000000FC000000", "0000000074000000");
 	_test_circuit_hex(result.circuit, "007700000000000000FC000000000000", "0074000000000000");
 	_test_circuit_hex(result.circuit, "0000000000007700000000000000FC00", "0000000000007400");
+
+}
+void test_int256(void) {
+	// ccmpile the circuit
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_int256.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit : a & b
+	_test_circuit_hex(result.circuit, "1122334455667785000000000000000000000000000000000000000000000001"
+									  "00000000000000000000007005005000D0000000000000000000000000000001", 
+									  "0000000000000000000000000000000000000000000000000000000000000001" ); 
+	_test_circuit_hex(result.circuit, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+									  "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+									  "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+	_test_circuit_hex(result.circuit, "007700000000000000FC00000000000000007777000000000444000000000047"
+									  "FFFFFFFFFFFFFFFFFF0FFFFFFFFFFFFFFFF0000FFF00FFFF000FFFF00FFFFFFF",
+									  "0077000000000000000C00000000000000000007000000000004000000000047");
+	_test_circuit_hex(result.circuit, "0000000000000000000000000000000000000000000000000000000000000000"
+									  "0000000000000000000000000000000000000000000000000000000000000000",
+									  "0000000000000000000000000000000000000000000000000000000000000000");
+	_test_circuit_hex(result.circuit, "00FF000000000000000000000000000000000000000000000000000000000000"
+									  "00FF000000000000000000000000000000000000000000000000000000000000",
+									  "00FF000000000000000000000000000000000000000000000000000000000000");
+
 
 }
 
@@ -564,6 +596,7 @@ void run_all_test(void) {
 	test_int8();				std::cout << " int8 - PASSED\n";
 	test_int32();				std::cout << " int32 - PASSED\n";
 	test_int64();				std::cout << " int64 - PASSED\n";
+	test_int256();				std::cout << " int256 - PASSED\n";
 	test_literal();				std::cout << " literal - PASSED\n";
 	test_addition();			std::cout << " addition - PASSED\n";
 	test_negate();				std::cout << " negate - PASSED\n";

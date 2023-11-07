@@ -126,4 +126,13 @@ public:
 			set_bit_value(numvar * 64 + i, bits[i]);
 		}
 	}
+	// set the value of a 256 bit var
+	void set_int256_value(int numvar, std::vector<bool> bits) {
+		assert(numvar * 8 < (int)this->size());
+		assert(bits.size() == 256);
+		// set 8 bitsd of the value
+		for (int i = 0; i < 256; i++) {
+			set_bit_value(numvar * 256 + i, bits[i]);
+		}
+	}
 };

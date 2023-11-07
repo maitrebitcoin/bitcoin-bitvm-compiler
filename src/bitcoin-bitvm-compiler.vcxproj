@@ -144,6 +144,7 @@
     <None Include="sample\hello_word.bvc" />
     <None Include="sample\test_add.bvc" />
     <None Include="sample\test_and.bvc" />
+    <None Include="sample\test_int256.bvc" />
     <None Include="sample\test_int32.bvc" />
     <None Include="sample\test_int64.bvc" />
     <None Include="sample\test_int8.bvc" />
