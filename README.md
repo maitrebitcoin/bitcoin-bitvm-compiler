@@ -3,7 +3,8 @@
 Generate a logical circuit for BitVM Bitcoin from a C like source code
 
 
-Examples :
+## Example :
+
 ```c
 // simple test program
 int8 main(int8 a, int8 b) 
@@ -42,7 +43,7 @@ Output :
 
 ```
 
-# testing
+## Testing
 
 The circuit can be tested with -run 
 ex:
@@ -72,5 +73,4 @@ Bits are in low endian (x86 format)
 - basic function stdlib (sha256, shnor,... )
 - linux : create a makefile
 - check for unused inputs instead of a "no more gates" error
-- command line option to test the generated circuit
 - optimise the generated circuit
