@@ -72,5 +72,6 @@ Bits are in low endian (x86 format)
 - loop statement
 - basic function stdlib (sha256, shnor,... )
 - linux : create a makefile
+- wasm support and browser demo site
 - check for unused inputs instead of a "no more gates" error
 - optimise the generated circuit
