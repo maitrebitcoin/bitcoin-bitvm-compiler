@@ -26,6 +26,8 @@ public:
 	virtual bool is_same_type(const Type& other) const override { assert(false); return false; }
 	// get type name
 	virtual std::string	get_name(void) const override { return name; }
+	// get a copy of the type
+	virtual Type* get_copy(void) const override { assert(false); return nullptr; } // non copiable
 
 };
 
@@ -61,6 +63,8 @@ public:
 		int offest_in_bit = 0;
 	};
 	Member get_member_by_name(const std::string& name) const;
+	// get a copy of the type
+	virtual Type* get_copy(void) const override { return new TypeStruct(*this); }
 
 
 };

@@ -70,6 +70,9 @@
     <ClCompile Include="BinaryOperation.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
+    <ClCompile Include="Literal.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -157,6 +160,12 @@
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="BinaryOperation.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Literal.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceInputsMap.h">
       <Filter>source\Program</Filter>
     </ClInclude>
   </ItemGroup>

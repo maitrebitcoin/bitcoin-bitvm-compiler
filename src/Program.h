@@ -19,43 +19,7 @@ class BinaryOperation;
 class Literal;
 class LangageAttributes;
 
-
-
-// ex: 123
-class Literal : public Expression {
-public:
-	// type of the literal
-	TypeBasic type;
-	// value of the literal is string forme
-	std::string value_str;
-	// value of the literal in individuals bits
-	std::vector<bool> value_bits;
-public:
-	// constructor
-	Literal(TypeBasic t, std::string v) : type(t), value_str(v) {}
-	// init
-	virtual void init(Scope& parent_scope) override;
-	// get Operand type
-	virtual const Type& get_type(void) const override  { return  type; }
-	// if the expression is a littrela, return it
-	virtual Literal* cast_to_literal(void) override  { return this; }
-	// value of the literal has int. only for int type
-	int get_int_value(void) const;
-
-	// build the circuit for the  expression
-	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
-
-	// convert hex string of any size to array of bits in low endian
-	static std::vector<bool> hex_string_to_bits(std::string hex_string);
-protected:
-	// convert the value of the literal to a vector of bits for bool type
-	std::vector<bool> _get_bits_value_bool(std::string str_val) const;
-	// convert the value of the literal to a vector of bits for byte type
-	// convert to bits in low endian (x86 format)
-	// result[0] is the least significant bit, result[7] is the most significant bit
-	std::vector<bool> _get_bits_value_int8(std::string str_val) const;
-};
-
+#include "Literal.h"
 #include "Expression_Variable.h"
 #include "BinaryOperation.h"
 
@@ -139,6 +103,7 @@ class Program : public Scope {
 	// body of the function
 	std::vector<Function*> functions;
 public:
+
 	// add structures to the program as bloc before the main function
 	void add_struct_definition(CodeBloc* bloc);
 	// add a function to the program

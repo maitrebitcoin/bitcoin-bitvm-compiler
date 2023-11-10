@@ -37,6 +37,8 @@ public:
 	virtual bool is_integer(void) const { return false; }
 	// get type name
 	virtual std::string	get_name(void) const = 0;
+	// get a copy of the type
+	virtual Type* get_copy(void) const = 0;
 
 	// cast to "TypeBasic"
 	virtual const TypeBasic* cast_to_TypeBasic(void) const { return nullptr; }
@@ -74,6 +76,8 @@ public:
 	virtual bool is_same_type(const Type& other) const override;
 	// get type name
 	virtual std::string	get_name(void) const override;
+	// get a copy of the type
+	virtual Type* get_copy(void) const override { return new TypeBasic(*this); }
 
 	// get the native type
 	Native get_native_type(void) const { return native_type; }

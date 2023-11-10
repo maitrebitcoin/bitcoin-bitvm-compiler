@@ -3,6 +3,15 @@
 #include "CodeBloc.h"
 #include "Error.h"
 
+// function constructor
+Function::Function(Definition* def, CodeBloc* fn_body)
+	: definition(*def)
+	, body(fn_body) {
+}
+Function::~Function() {
+
+}
+
 // init a function
 void Function::init(Scope& parent_scope) {
 
@@ -45,4 +54,43 @@ Function::Definition::Definition(Type* type, std::string function_name, Function
 	// copy the parameters
 	for (Parameter param_i : all_params->parameters)
 		parameters.push_back(param_i);
+}
+
+
+#include <map>
+class FunctionInputsMap : public InterfaceInputsMap
+{
+public:
+	std::map<std::string, InterfaceInputsMap::Info> map;
+public:
+	// get a parameter info by name
+	virtual Info find_by_name(std::string name) const override {
+		InterfaceInputsMap::Info param_info;
+		auto it = map.find(name);
+		if (it == map.end()) {
+			param_info.found = false;
+			return param_info;
+		}
+		else {
+			return it->second; 
+		}
+	}
+};
+// get a interface n InterfaceInputsMap 
+InterfaceInputsMap* Function::getInterfaceInputsMap(void) const
+{
+	FunctionInputsMap * new_input_map = new FunctionInputsMap();
+	// init map
+	int offset_in_bit = 0;
+	for (Parameter param_i : definition.parameters) {
+		// int param info in map
+		InterfaceInputsMap::Info param_info;
+		param_info.found = true;
+		param_info.type = param_i.type->get_copy();
+		param_info.offset_in_bit = offset_in_bit;
+		new_input_map->map[param_i.name] = param_info;
+		// update offset
+		offset_in_bit += param_i.type->size_in_bit();
+	}
+	return new_input_map;
 }

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "VariableDefinition.h"
+#include "InterfaceInputsMap.h"
 class CodeBloc;
 class Scope;
 
@@ -48,6 +49,7 @@ protected:
 public:
 	// constructor
 	Function(Definition* def, CodeBloc* body);
+	~Function();
 	// init a function
 	void init(Scope& global_scope);
 	// get the name of the function
@@ -63,5 +65,8 @@ public:
 	// build a circuit that represents the fuidl
 	void build_circuit(class Circuit& circuit);
 
+	// get a interface n InterfaceInputsMap 
+	InterfaceInputsMap* getInterfaceInputsMap(void) const;
+	
 };
 

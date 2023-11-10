@@ -1,10 +1,11 @@
 // Gates.cpp
 // Implementation of the Circuit class.
 
-#include "Circuit.h"
+
 #include <iostream>  
 #include <sstream>  
-
+#include "Circuit.h"
+#include "Literal.h"
 
 // constructor
 Circuit::Circuit(void) {
@@ -12,12 +13,14 @@ Circuit::Circuit(void) {
 
 
 // set the numbre of bits inputs of the circuit
-void Circuit::set_inputs(int bit_count) {
+void Circuit::set_inputs(int bit_count, InputsMap map) {
 	assert(!is_fully_constructed);
 	for (int i = 0; i < bit_count; i++) {
 		Connection* input_i = new Connection();
 		inputs.push_back(input_i);
-}}
+	}
+	correspondance_inputs = map;
+}
 
 // set connections ouput
 void Circuit::set_output(std::vector<Connection*> new_outputs)
@@ -77,12 +80,42 @@ std::vector< Gate*> Circuit::_get_computable_gate(void) const {
 	return computable_gates;
 }
 
+// init the value of a variable
+void CRunInputs::set_varaible_value(std::string name, std::string value) {
+
+	assert(correspondance_inputs != nullptr);
+	// look for the variable
+	auto info_var = correspondance_inputs->find_by_name(name);
+	if (!info_var.found)
+		throw Error("Unknown variable name", name);
+	// get the type of the variable
+	Type *type = info_var.type;
+	// muet be a basic type 
+	if (!type->is_basic())
+		throw Error("Not a basic type", name);
+	Type::Native native_type = type->cast_to_TypeBasic()->get_native_type();
+	
+	// convert the value to  array of bit
+	std::vector<bool> bits = Literal::get_bools_from_value_str(native_type, value);
+	int nb_bit = type->size_in_bit();
+	assert(nb_bit== bits.size());
+
+	// set x bits of the value
+	for (int i = 0; i < nb_bit; i++) {
+		set_bit_value(info_var.offset_in_bit + i, bits[i]);
+	}
+
+}
+
+
 // get inout of the circuit. to set values before running it
 CRunInputs Circuit::get_run_inputs(void) const {
 	assert(is_fully_constructed);
 	CRunInputs result;
-	result.init((int)inputs.size());
+	result.init((int)inputs.size(), correspondance_inputs);
 	return std::move(result);
+
+	
 }
 
 

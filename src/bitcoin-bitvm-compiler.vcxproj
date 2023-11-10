@@ -90,6 +90,7 @@
     <ClCompile Include="Expression_StructMember.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="LangageAttributes.cpp" />
+    <ClCompile Include="Literal.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ParsingContext.cpp" />
     <ClCompile Include="Program.cpp" />
@@ -118,7 +119,9 @@
     <ClInclude Include="Expression.h" />
     <ClInclude Include="Expression_StructMember.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="InterfaceInputsMap.h" />
     <ClInclude Include="LangageAttributes.h" />
+    <ClInclude Include="Literal.h" />
     <ClInclude Include="ParsingContext.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="Circuit.h" />

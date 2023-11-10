@@ -3,12 +3,15 @@
 #include "Bits.h"
 #include "Gate.h"
 #include "Error.h"
-
+#include "Function.h"
+#include "InterfaceInputsMap.h"
 
 class Gate;
 class Circuit;
 class CRunInputs;
 
+
+using InputsMap = InterfaceInputsMap*;
 
 // represents a virtual circuit
 class Circuit {
@@ -27,13 +30,16 @@ private:
 	// set to true when the circuit is connot be modified anymore
 	bool is_fully_constructed = false;
 
+	// map for input correspondance 
+	InputsMap correspondance_inputs = nullptr;
+
 public:
 
 	// constructor
 	Circuit(void);
 
 	// set the nimbre of bits inputs of the circuit
-	void set_inputs(int bit_count);
+	void set_inputs(int bit_count, InputsMap input_map);
 	// add a gate into the circuit
 	void add_gate(Gate* gate);
 	// set all connections ouput
@@ -82,17 +88,25 @@ class CRunInputs : public std::vector <Bit>
 {
 	friend Circuit;
 
+protected:
+	// map for inoput correspondance 
+	InputsMap correspondance_inputs = nullptr;
+
 private:
 	// construstor, for Circuit only
 	CRunInputs(void) {};
 	// init inpute
-	void init(int nb_bit) {
+	void init(int nb_bit, InputsMap _inputs) {
 		// init the vector
 		for (int i = 0; i < nb_bit; i++)
 			this->push_back(Bit());
+		correspondance_inputs = _inputs;
 	}
 
 public:
+	// init the value of a variable
+	void set_varaible_value(std::string name, std::string value);
+
 	// set a 1 bit value
 	void set_bit_value(int numvar, bool b) {
 		assert(numvar < (int)this->size());
@@ -103,7 +117,7 @@ public:
 	void set_int8_value(int numvar, std::vector<bool> bits) {
 		assert(numvar * 8 < (int)this->size());
 		assert(bits.size() == 8);
-		// set 8 bitsd of the value
+		// set 8 bits of the value
 		for (int i = 0; i < 8; i++)	{
 			set_bit_value(numvar * 8 + i, bits[i]);
 		}

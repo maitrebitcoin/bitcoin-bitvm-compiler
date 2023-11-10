@@ -13,12 +13,12 @@ int8 main(int8 a, int8 b)
 }
 ```
 
-generate :
+Generate the cirucuit with :
 ```
-    bitvmcompiler.exe source.bvc export.txt
+ bitvmcompiler.exe source.bvc export.txt
 ```
 
-output : 
+Output : 
 ```
 16 16
 16 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
@@ -40,6 +40,19 @@ output :
 1 30 1 7 15 NAND
 1 31 1 30 30 NAND
 
+```
+
+# testing
+
+The circuit can be tested with -run 
+ex:
+```Batchfile
+ bitvmcompiler.exe test_int8.bvc -run a=0x73,b=0x5F
+```
+Output : 
+```
+Running with : a=0x73,b=0x5F
+Simulation result : 0x53
 ```
 
 Tested and build with Visual Studio 2022

@@ -53,3 +53,4 @@ int TypeBasic::size_in_bit(void) const
 	 case Type::Native::uint256:  return "uint256";
 	 }
  }
+

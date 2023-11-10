@@ -9,11 +9,7 @@
 
 
 
-// function constructor
-Function::Function(Definition* def, CodeBloc* fn_body)
-	: definition(*def) 
-	, body(fn_body) {
-}
+
 // add structures to the program as bloc before the main function
 void Program::add_struct_definition(CodeBloc* bloc ) {
 	// check that there are only struct definitions
@@ -105,93 +101,6 @@ void TestOperation::init(Scope& parent_scope) {
 
 
 
-// convert the value of the literal to a vector of bits for bool type
-std::vector<bool> Literal::_get_bits_value_bool( std::string str_val ) const {
-	std::vector<bool> result;
-	if (str_val == "true")
-		result = { true };
-	else if (str_val == "false")
-		result = { false };
-	else
-		throw Error("Invalid boolean value : ", str_val);
-	return result;
-}
-// value of the literal has int. only for int type
-int Literal::get_int_value(void) const
-{
-	assert(get_type().is_integer());
-
-	// if the is hexa. ex :"0xED"
-	if (value_str.size() > 2 && value_str[0] == '0' && value_str[1] == 'x')
-		return std::stoi(value_str, nullptr, 16);
-	// value is decimal ex; "123"
-	return std::stoi(value_str); 
-}
-
-
-// convert the value of the literal to a vector of bits for byte type
-// convert to bits in low endian (x86 format)
-// result[0] is the least significant bit, result[7] is the most significant bit
-std::vector<bool> Literal::_get_bits_value_int8(std::string str_val) const {
-	std::vector<bool> result;
-	// conver to integer
-	int value_int8 = get_int_value();
-	// value must be in 8bit signed range
-	if (value_int8 > 127 || value_int8 < -128)
-		throw Error("Invalid signed 8 bit value : ", str_val);
-
-	// convert to bits in low endian (x86 format)
-	for (int i = 0; i < 8; i++)
-	{
-		bool b= value_int8 & 1;
-		result.push_back(b);
-		value_int8 >>= 1;
-	}
-	return result;
-}
-// convert hex string to array of bits in low endian
-std::vector<bool> Literal::hex_string_to_bits(std::string hex_string) {
-	// for eah char in hex string, starting from the end
-	std::vector<bool> result;
-	for (int i = (int)hex_string.size() - 1; i >= 0; i--)
-	{
-		// get the char
-		char c = hex_string[i];
-		// convert to int
-		int value = 0;
-		if (c >= '0' && c <= '9')
-			value = c - '0';
-		else if (c >= 'a' && c <= 'f')
-			value = c - 'a' + 10;
-		else if (c >= 'A' && c <= 'F')
-			value = c - 'A' + 10;
-		else
-			throw Error("Invalid hex string : ", hex_string);
-		// convert to bits le
-		for (int j = 0; j < 4; j++)
-		{
-			bool b = value & 1;
-			result.push_back(b);
-			value >>= 1;
-		}
-	}
-	return result;
-}
-
-// lietral init
-void Literal::init(Scope& ) {
-	switch (type.get_native_type())
-	{ 
-		case Type::Native::bit:
-			value_bits = _get_bits_value_bool(value_str);
-			break;
-		case Type::Native::int8:
-			value_bits = _get_bits_value_int8(value_str);
-			break;
-		default:
-			throw Error("Invalid literal type");
-	}
-}
 
 // find a parameter by name
 const VariableDefinition* Function::find_parameter_by_name(std::string name) const {
@@ -462,7 +371,8 @@ std::vector<Connection*>  TestOperation::build_circuit_equal(BuildContext & ctx,
 void Function::build_circuit(class Circuit& circuit) {
 	// declare inputs
 	int nb_bits_in = size_in_bit_input();
-	circuit.set_inputs(nb_bits_in);
+	InterfaceInputsMap* input_map = getInterfaceInputsMap();
+	circuit.set_inputs(nb_bits_in, input_map);
 	// get input
 	std::vector<Connection*> current_input = circuit.getInputs();
 	
