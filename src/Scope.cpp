@@ -2,6 +2,20 @@
 #include "Scope.h"
 #include "Function.h"
 
+
+// create a new child scope
+Scope* Scope::create_child_scope(void) {
+	// create a new empty scope
+	Scope* child_scope = new Scope();
+	
+	// parenting
+	child_scope->parent_scope = this;
+	child_scope->parent_function = this->parent_function;
+
+	return child_scope;
+
+}
+
 // declare a local variable
 void Scope::declare_local_variable(const VariableDefinition& def) {
 	// add the variable to the list
@@ -23,6 +37,10 @@ const VariableDefinition* Scope::find_variable_by_name(std::string var_name) con
 		if (var_i.name == var_name)
 			return &var_i;
 	}
+	// louk in the parent scope
+	if (parent_scope != nullptr)
+		return parent_scope->find_variable_by_name(var_name);
+
 	// not found
 	return nullptr;
 }
@@ -34,6 +52,10 @@ const TypeStruct* Scope::find_struct_by_name(std::string name) const {
 			return &struct_i;
 	}
 	// search the parent
+	if (parent_scope != nullptr)
+		return parent_scope->find_struct_by_name(name);
+	
+	// look in the parent scope
 	if (parent_scope != nullptr)
 		return parent_scope->find_struct_by_name(name);
 	

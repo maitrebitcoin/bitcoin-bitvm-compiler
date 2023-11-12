@@ -13,9 +13,9 @@ Statement_Return* CodeBloc::get_return_statement(void) const {
 }
 
 // init a bloc
-void CodeBloc::init(Scope& parent_scp, Function* parent_fn) {
+void CodeBloc::init(Scope& parent_scp) {
 	// init parent function in the scope
-	parent_function = parent_fn;
+	parent_function = parent_scp.get_parent_function();
 	parent_scope	= &parent_scp;
 
 	// init statemtents

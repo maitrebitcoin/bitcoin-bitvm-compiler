@@ -45,6 +45,8 @@ protected:
 	Definition definition;
 	// body of the function
 	CodeBloc* body;
+	// scope of the function
+	Scope* function_scope=nullptr;
 
 public:
 	// constructor

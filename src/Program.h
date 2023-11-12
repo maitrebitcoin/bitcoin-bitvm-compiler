@@ -93,6 +93,7 @@ public:
 #include "Statement_SetVar.h"
 #include "Statement_DeclareAndSetVar.h"
 #include "Statement_DeclareStruct.h"
+#include "Statement_If.h"
 #include "Function.h"
 #include "Scope.h"
 

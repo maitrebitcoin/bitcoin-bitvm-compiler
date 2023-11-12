@@ -73,6 +73,9 @@
     <ClCompile Include="Literal.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
+    <ClCompile Include="Statement_If.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -166,6 +169,9 @@
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="InterfaceInputsMap.h">
+      <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_If.h">
       <Filter>source\Program</Filter>
     </ClInclude>
   </ItemGroup>

@@ -23,6 +23,8 @@ public:
 
 
 public:
+	// create a new child scope
+	Scope* create_child_scope(void);
 
 	// find a variable by name
 	const VariableDefinition* find_variable_by_name(std::string name) const;

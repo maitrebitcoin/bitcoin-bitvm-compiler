@@ -15,7 +15,7 @@ public:
 	// add a statement
 	void add_statement(Statement* s) { statements.push_back(s); }
 	// init a bloc
-	void init( Scope& global_scope,  Function* parent_function);
+	void init( Scope& global_scope);
 
 	// get the return statement of the bloc
 	class Statement_Return* get_return_statement(void) const;

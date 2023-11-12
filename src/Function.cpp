@@ -9,11 +9,16 @@ Function::Function(Definition* def, CodeBloc* fn_body)
 	, body(fn_body) {
 }
 Function::~Function() {
-
+	if (function_scope!=nullptr)
+		delete function_scope;
 }
 
 // init a function
 void Function::init(Scope& parent_scope) {
+
+	// create a new scope for the function
+	function_scope = parent_scope.create_child_scope();
+	function_scope->parent_function = this;
 
 	// init parameters typer
 	for (Parameter& param : definition.parameters) {
@@ -26,7 +31,8 @@ void Function::init(Scope& parent_scope) {
 		}
 	}
 	
-	body->init(parent_scope, this);
+	// init bodu
+	body->init(*function_scope);
 }
 
 

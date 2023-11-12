@@ -103,6 +103,7 @@
     <ClCompile Include="Statement_DeclareAndSetVar.cpp" />
     <ClCompile Include="Statement_DeclareStruct.cpp" />
     <ClCompile Include="Statement_DeclareVar.cpp" />
+    <ClCompile Include="Statement_If.cpp" />
     <ClCompile Include="Statement_Return.cpp" />
     <ClCompile Include="Statement_SetVar.cpp" />
     <ClCompile Include="Test.cpp" />
@@ -134,6 +135,7 @@
     <ClInclude Include="Statement_DeclareAndSetVar.h" />
     <ClInclude Include="Statement_DeclareStruct.h" />
     <ClInclude Include="Statement_DeclareVar.h" />
+    <ClInclude Include="Statement_If.h" />
     <ClInclude Include="Statement_Return.h" />
     <ClInclude Include="Statement_SetVar.h" />
     <ClInclude Include="Test.h" />
