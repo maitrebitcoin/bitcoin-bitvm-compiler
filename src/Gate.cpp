@@ -114,3 +114,19 @@ std::array<Connection*, 2> Gate_ADDC::add_to_circuit(Circuit& circuit, std::arra
 	return { add_c_addab[0], c_out[0] };
 }
 
+
+// add the gate into the circuir
+std::array<Connection*, 0> Gate_IF::add_to_circuit(Circuit& circuit, std::array<Connection*, 1>& _input)
+{
+	circuit.add_gate(this);
+	set_inputs(_input);
+	// no raal output
+	std::array<Connection*, 0> output_void = {};
+	return output_void;
+
+}
+// compute the output of the IF_ gate
+void Gate_IF::compute(void)
+{
+	throw Error("gate IF is not computable");
+}

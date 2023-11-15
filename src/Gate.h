@@ -116,6 +116,24 @@ public:
 	virtual std::string get_export_type(void) const override { return "NAND"; }
 
 };
+// sépcial gate : If
+// jump to other cirucuit depending on the value of the input
+class Circuit;
+class Gate_IF : public T_BasiceGate<1, 0>
+{
+public:
+	Circuit* circuit_if_true = nullptr;
+	Circuit* circuit_if_false = nullptr;
+public:
+	Gate_IF(Circuit* if_true, Circuit* if_false) : circuit_if_true(if_true), circuit_if_false(if_false) {}
+	// compute the output of the NAND gate
+	virtual void compute(void) override;
+	// add the gate into the circuir
+	virtual std::array<Connection*, 0> add_to_circuit(Circuit& circuit, std::array<Connection*, 1>& _input) override;
+	// export name of the gate. ex : "NAND"
+	virtual std::string get_export_type(void) const override { return "IF"; }
+
+};
 
 class UnaryGate : public T_CompositeeGate<1, 1> {};
 // r = !a

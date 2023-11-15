@@ -76,6 +76,9 @@
     <ClCompile Include="Statement_If.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
+    <ClCompile Include="BuildContext.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -258,6 +261,9 @@
       <Filter>sample</Filter>
     </None>
     <None Include="sample\test_int256.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_if.bvc">
       <Filter>sample</Filter>
     </None>
   </ItemGroup>

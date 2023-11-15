@@ -28,6 +28,7 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_TRUE,				"true"},
 		{ TOKEN_FALSE,				"false"},
 		{ TOKEN_KEYWORKD_STRUCT,	"struct"},
+		{ TOKEN_KEYWORKD_IF,		"if"},
 		{ TOKEN_LEFT_SHIFT,			"<<"},
 		{ TOKEN_RIGHT_SHIFT,		">>"},
 		{ TOKEN_TEST_EQUAL,			"=="},
@@ -145,6 +146,13 @@ RuleDefinition rules_definition[] =
 	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_STRUCT, TOKEN_DECLARE_STRUCT_NAME, RULE_CODEBLOC, ';'} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_declare_struct_statement(*p[1].string_value, p[2].code_block_value);
+		}
+	},
+	// if (a) {code}
+	// ex: struct Header { byte zize; bool is_ok; }
+	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_IF, RULE_EXPRESSION, RULE_CODEBLOC} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.statement_value = new_if_statement(p[1].expression_value, p[2].code_block_value);
 		}
 	},
 			

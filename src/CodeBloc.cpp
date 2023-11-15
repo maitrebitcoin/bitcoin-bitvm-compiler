@@ -37,3 +37,24 @@ void CodeBloc::init(Scope& parent_scp) {
 	if (!last_statement->is_return())
 		throw Error("Last statement must be a return");
 }
+
+
+// build a circuit that represents the bloc
+void CodeBloc::build_circuit(BuildContext& ctx) {
+
+	// build the statements before "return"
+	for (int i = 0; i < statements.size() - 1; i++) {
+		Statement* statement = statements[i];
+		try {
+			statement->build_circuit(ctx);
+		}
+		catch (Error& e) {
+			//add info to the error
+			e.line_number = statement->num_line;
+			throw e;
+		}
+	}
+	// last statement : return 
+	Statement_Return* return_statement = get_return_statement();
+	return_statement->build_circuit(ctx);
+}

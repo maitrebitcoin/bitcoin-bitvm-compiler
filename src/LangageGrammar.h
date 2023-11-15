@@ -163,6 +163,13 @@ public:
 		statements.push_back(new_declare_struct_statement);
 		return new_declare_struct_statement;
 	}
+	// get a new if statement
+	Statement* new_if_statement(Expression* condition, CodeBloc* if_code, CodeBloc* else_code = nullptr) {
+		Statement_If* new_if_statement = new Statement_If(get_current_line_number(), condition, if_code, else_code);
+		statements.push_back(new_if_statement);
+		return new_if_statement;
+	}
+
 	// gst an new struct memeber
 	Expression* new_struct_member(std::string struct_name, std::string membre_name ) {
 		Expression* new_struct_memb = new Expression_StructMember(struct_name, membre_name);

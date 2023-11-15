@@ -3,6 +3,7 @@
 #include "Scope.h"
 class Statement;
 class Function;
+class BuildContext;
 
 class CodeBloc : public Scope {
 public:
@@ -16,7 +17,8 @@ public:
 	void add_statement(Statement* s) { statements.push_back(s); }
 	// init a bloc
 	void init( Scope& global_scope);
-
+	// build a circuit that represents the bloc
+	void build_circuit(BuildContext& ctx);
 	// get the return statement of the bloc
 	class Statement_Return* get_return_statement(void) const;
 

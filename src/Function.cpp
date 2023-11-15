@@ -2,6 +2,8 @@
 #include "Function.h"
 #include "CodeBloc.h"
 #include "Error.h"
+#include "Circuit.h"
+#include "BuildContext.h"
 
 // function constructor
 Function::Function(Definition* def, CodeBloc* fn_body)
@@ -61,6 +63,45 @@ Function::Definition::Definition(Type* type, std::string function_name, Function
 	for (Parameter param_i : all_params->parameters)
 		parameters.push_back(param_i);
 }
+
+
+// build a circuit that represents the fuidl
+void Function::build_circuit(class Circuit& circuit) {
+	// declare inputs
+	int nb_bits_in = size_in_bit_input();
+	InterfaceInputsMap* input_map = getInterfaceInputsMap();
+	circuit.set_inputs(nb_bits_in, input_map);
+	// get input
+	std::vector<Connection*> current_input = circuit.getInputs();
+
+	// init known variables
+	KnownVar variables;
+	int index = 0;
+	for (const Parameter& param_i : definition.parameters)
+	{
+		VarBuild var_i(param_i.type, param_i.name);
+		int size = param_i.type->size_in_bit();
+		var_i.bits.assign(current_input.begin() + index,
+			current_input.begin() + index + size);
+		variables.push_back(var_i);
+		index += var_i.type->size_in_bit();
+	}
+
+	// create context
+	BuildContext ctx{ circuit, variables };
+
+	// build the body
+	try {
+		body->build_circuit(ctx);
+	}
+	catch (Error& e) {
+		//add fucntion name info to the error
+		e.function_name = definition.name;
+		throw e;
+	}
+
+}
+
 
 
 #include <map>

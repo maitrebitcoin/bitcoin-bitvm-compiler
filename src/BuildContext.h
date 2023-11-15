@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include "VariableDefinition.h"
+
 class Circuit;
 class KnownVar;
 class Connection;
@@ -10,8 +13,16 @@ class BuildContext {
 
 public:
 	Circuit& circuit; // the circuit to build
-	KnownVar& variables; // current known variables
-	//	std::vector<Connection*> inputs;  // input bits 
+	std::vector<Circuit*> sub_circuits; // sub circuits created pour if/loop/prorcedure
+	KnownVar& variables; // current known variables in the current scope
+
+public:
+	// constructor
+	BuildContext(Circuit& c, KnownVar& vars) : circuit(c), variables(vars) { }
+
+	// get a new sub circuit
+	Circuit& get_new_sub_circuit(void);
+
 };
 
 

@@ -367,49 +367,6 @@ std::vector<Connection*>  TestOperation::build_circuit_equal(BuildContext & ctx,
 }
 
 
-// build a circuit that represents the fuidl
-void Function::build_circuit(class Circuit& circuit) {
-	// declare inputs
-	int nb_bits_in = size_in_bit_input();
-	InterfaceInputsMap* input_map = getInterfaceInputsMap();
-	circuit.set_inputs(nb_bits_in, input_map);
-	// get input
-	std::vector<Connection*> current_input = circuit.getInputs();
-	
-	// init known variables
-	KnownVar variables;
-	int index = 0;
-	for (const Parameter& param_i : definition.parameters)
-	{
-		VarBuild var_i(param_i.type, param_i.name);
-		int size = param_i.type->size_in_bit();
-		var_i.bits.assign(  current_input.begin() + index, 
-							current_input.begin() + index + size) ;
-		variables.push_back(var_i);
-		index += var_i.type->size_in_bit();
-	}
-	
-	// create context
-	BuildContext ctx{ circuit, variables };
-
-	// build the body
-	for (int i=0;i< body->statements.size()-1;i++) {
-		Statement* statement = body->statements[i];
-		try {
-			statement->build_circuit(ctx);
-		}
-		catch (Error& e) {
-			//add info to the error
-			e.line_number   = statement->num_line;
-			e.function_name = definition.name;
-			throw e;
-		}
-	}
-	// las statement : return 
-	Statement_Return* return_statement =  body->get_return_statement();
-	return_statement->build_circuit(ctx);
-}
-
 // build a circuit that represents the program
 void Program::build_circuit(class Circuit& circuit_to_build) {
 

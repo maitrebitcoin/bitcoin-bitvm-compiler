@@ -1,0 +1,9 @@
+// test the int8 native type
+int8 main(int8 a) 
+{
+	if (a<10)
+	{
+		return 0; 
+	}
+	return a+1; 
+}
