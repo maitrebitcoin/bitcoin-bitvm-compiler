@@ -1,4 +1,7 @@
 
+
+
+#include <map>
 #include "Function.h"
 #include "CodeBloc.h"
 #include "Error.h"
@@ -114,16 +117,13 @@ void Function::build_circuit(BuildContext &ctx) {
 
 }
 
-
-
-#include <map>
 class FunctionInputsMap : public InterfaceInputsMap
 {
 public:
 	std::map<std::string, InterfaceInputsMap::Info> map;
 public:
 	// get a parameter info by name
-	virtual Info find_by_name(std::string name) const override {
+	virtual Info find_info_by_name(std::string name) const override {
 		InterfaceInputsMap::Info param_info;
 		auto it = map.find(name);
 		if (it == map.end()) {

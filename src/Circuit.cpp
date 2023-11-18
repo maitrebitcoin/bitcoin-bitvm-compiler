@@ -84,7 +84,7 @@ void CRunInputs::set_varaible_value(std::string name, std::string value) {
 
 	assert(correspondance_inputs != nullptr);
 	// look for the variable
-	auto info_var = correspondance_inputs->find_by_name(name);
+	auto info_var = correspondance_inputs->find_info_by_name(name);
 	if (!info_var.found)
 		throw Error("Unknown variable name", name);
 	// get the type of the variable

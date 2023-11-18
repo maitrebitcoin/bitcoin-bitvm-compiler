@@ -13,5 +13,5 @@ public:
 		Type* type=nullptr;
 	};
 	// get a parameter info by name
-	virtual Info find_by_name(std::string name) const = 0;
+	virtual Info find_info_by_name(std::string name) const = 0;
 };
