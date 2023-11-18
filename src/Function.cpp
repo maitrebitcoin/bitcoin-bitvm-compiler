@@ -65,6 +65,17 @@ Function::Definition::Definition(Type* type, std::string function_name, Function
 }
 
 
+// find a parameter by name
+const VariableDefinition* Function::find_parameter_by_name(std::string name) const {
+	for (const Parameter& param_i : definition.parameters)
+	{
+		if (param_i.name == name)
+			return &param_i;
+	}
+	return nullptr;
+}
+
+
 // build a circuit that represents the fuidl
 void Function::build_circuit(BuildContext &ctx) {
 	// declare inputs

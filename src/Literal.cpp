@@ -1,6 +1,7 @@
 
 #include "Program.h"
 #include "Error.h"
+#include "Circuit.h"
 
 
 // lietral init
@@ -218,3 +219,26 @@ uint64_t Literal::_get_uint64_value(std::string str_val) {
 }
 
 
+//--- IVariableToConnexion implentation :
+// get all the required connexion for the variable
+std::vector<Connection*> Literal::get_var_connexion(BuildContext& ctx) {
+	// same as build_circuit
+	return build_circuit(ctx);
+}
+
+
+std::vector<Connection*> Literal::build_circuit(BuildContext& ctx) {
+	std::vector<Connection*> result;
+
+	assert(type.size_in_bit() == value_bits.size());
+	// get a 0 ou 1 connexion for each bit
+	for (int i = 0; i < type.size_in_bit(); i++) {
+		// get the bit value
+		bool b = value_bits[i];
+		// get literal value as a vector of bits
+		Connection* connection_to_0or1 = ctx.circuit.get_literal_values(b);
+		result.push_back(connection_to_0or1);
+	}
+
+	return result;
+}

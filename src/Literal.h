@@ -3,7 +3,7 @@
 #include "Expression.h"
 
 // ex: 123
-class Literal : public Expression {
+class Literal : public Expression, public IVariableToConnexion {
 public:
 	// type of the literal
 	TypeBasic type;
@@ -15,7 +15,10 @@ public:
 	// constructor
 	Literal(TypeBasic t, std::string v) : type(t), value_str(v) {}
 	// visit all variables used in the Expression
-	virtual void visit_all_used_variable(std::function<void(IVariableToConnexion& var2cnx)> visitor) override {};
+	virtual void visit_all_used_variable(std::function<void(IVariableToConnexion& var2cnx)> visitor) override { visitor(*this); }
+	// -- implementation of IVariableToConnexion
+	// get all the required connexion for the variable
+	virtual std::vector<Connection*> get_var_connexion(BuildContext& ctx) override;
 	// get Operand type
 	virtual const Type& get_type(void) const override { return  type; }
 	// if the expression is a littrela, return it

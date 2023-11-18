@@ -85,6 +85,9 @@
     <ClCompile Include="Literal.cpp">
       <Filter>source\Program\Expression</Filter>
     </ClCompile>
+    <ClCompile Include="UnaryOperation.cpp">
+      <Filter>source\Program\Expression</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">

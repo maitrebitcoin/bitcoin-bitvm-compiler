@@ -129,6 +129,7 @@ public:
 	std::vector<Connection*> input_for_circuit;
 
 public:
+
 	Gate_IF(Circuit* if_true, Circuit* if_false) : circuit_if_true(if_true), circuit_if_false(if_false) {}
 	// declare a new input for the gate : to be used by the circuit if_true and/or circuit_if_false
 	void add_input(Connection* input);

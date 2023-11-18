@@ -113,6 +113,7 @@
     <ClCompile Include="TestOperation.cpp" />
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="TypeStruct.cpp" />
+    <ClCompile Include="UnaryOperation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryOperation.h" />
