@@ -39,6 +39,20 @@ void Statement_If::init(Scope& parent_scope) {
 	bloc_if_false->init(parent_scope);
 }
 
+// add ircuits inputs requirements from a bloc
+void Statement_If::_add_all_bloc_input(BuildContext& ctx, CodeBloc* code_bloc, Gate_IF* gate  ) const {
+	
+	// visite all variables used in the bloc
+	code_bloc->visit_all_used_variable([&](IVariableToConnexion& var2cnx) {
+		// get var connexion
+		std::vector<Connection *> var_inputs = var2cnx.get_var_connexion(ctx);
+		// copy all inputs
+		for (Connection* input : var_inputs)
+			gate->add_input(input);
+		});
+
+}
+
 // build the circuit for the return statement
 void Statement_If::build_circuit(BuildContext& ctx) const
 {
@@ -66,16 +80,12 @@ void Statement_If::build_circuit(BuildContext& ctx) const
 	Gate_IF * gate_if = new Gate_IF(&circuit_if_true, &circuit_if_false);
 	// add the gate to the circuit
 	std::array<Connection*, 1> input_1_bit = { expression_value[0] };
-	std::array<Connection*, 0> void_result = gate_if->add_to_circuit(ctx.circuit, input_1_bit);
+	std::array<Connection*, 0> void_result =
+		gate_if->add_to_circuit(ctx.circuit, input_1_bit);
 
 	// set the input of the circuit : union of the 2 circuits inputs requirements
-	std::vector<Connection*>  inputs1 = circuit_if_true.getInputs();
-	std::vector<Connection*>  inputs0 = circuit_if_false.getInputs();
-	for (Connection* input : inputs1)
-		gate_if->add_input(input);
-	for (Connection* input : inputs0)
-		gate_if->add_input(input);
-
+	_add_all_bloc_input(ctx, bloc_if_true, gate_if);
+	_add_all_bloc_input(ctx, bloc_if_false, gate_if);
 
 	// tell the ciruit outupt sizz, without real connexion.
 	// the real output will be from or circuit_if_true ou ctx_if_false

@@ -101,6 +101,7 @@
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="LangageGrammar.cpp" />
     <ClCompile Include="Scope.cpp" />
+    <ClCompile Include="ShiftOperation.cpp" />
     <ClCompile Include="Statement_DeclareAndSetVar.cpp" />
     <ClCompile Include="Statement_DeclareStruct.cpp" />
     <ClCompile Include="Statement_DeclareVar.cpp" />
@@ -109,6 +110,7 @@
     <ClCompile Include="Statement_SetVar.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Expression_Variable.cpp" />
+    <ClCompile Include="TestOperation.cpp" />
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="TypeStruct.cpp" />
   </ItemGroup>
@@ -132,6 +134,7 @@
     <ClInclude Include="Gate.h" />
     <ClInclude Include="LangageGrammar.h" />
     <ClInclude Include="Scope.h" />
+    <ClInclude Include="ShiftOperation.h" />
     <ClInclude Include="Statement.h" />
     <ClInclude Include="Statement_DeclareAndSetVar.h" />
     <ClInclude Include="Statement_DeclareStruct.h" />
@@ -140,9 +143,11 @@
     <ClInclude Include="Statement_Return.h" />
     <ClInclude Include="Statement_SetVar.h" />
     <ClInclude Include="Test.h" />
+    <ClInclude Include="TestOperation.h" />
     <ClInclude Include="TokenId.h" />
     <ClInclude Include="Type.h" />
     <ClInclude Include="TypeStruct.h" />
+    <ClInclude Include="UnaryOperation.h" />
     <ClInclude Include="VariableDefinition.h" />
     <ClInclude Include="Expression_Variable.h" />
   </ItemGroup>

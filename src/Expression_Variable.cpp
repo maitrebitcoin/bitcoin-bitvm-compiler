@@ -15,6 +15,21 @@ void Expression_Variable::init(Scope& parent_scope) {
 	type = variable_defintion->type;
 }
 
+//--- IVariableToConnexion implentation :
+// get all the required connexion for the variable
+std::vector<Connection*> Expression_Variable::get_var_connexion(BuildContext& ctx) {
+	// get the variable type by name
+	VarBuild* var = ctx.variables.find_by_name(name);
+	if (var == nullptr)
+		return {};
+	// if variable not set
+	if (!var->is_set())
+		return {};
+	// return linked inputs
+	return var->bits;
+}
+
+
 // build the circuit for the  expression
 std::vector<Connection*> Expression_Variable::build_circuit(BuildContext& ctx) {
 

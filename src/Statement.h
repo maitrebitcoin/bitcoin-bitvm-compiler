@@ -21,6 +21,8 @@ public:
 	virtual class Statement_DeclareVar* cast_to_Statement_DeclareVarr(void) { return nullptr; }
 	// cast to Statement_DeclareStruct
 	virtual class Statement_DeclareStruct* cast_to_Statement_DeclareStruct(void)  { return nullptr; }
+	// visit all expression ueed in the statement
+	virtual void visit_Expression(std::function<void(Expression& expr)> visitor) const = 0;
 
 	// build the circuit for the return statelebt
 	virtual void build_circuit(BuildContext& ctx) const = 0;

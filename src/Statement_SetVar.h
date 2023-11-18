@@ -11,6 +11,8 @@ public:
 	Statement_SetVar(int line, std::string name, Expression* op) : Statement(line), var_name(name), expression(op) {}
 	// get return type
 	const Type& get_type(void) const { return expression->get_type(); }
+	// visit all expression ueed in the statement
+	virtual void visit_Expression(std::function<void(Expression& expr)> visitor) const override { visitor(*expression); }
 	// init a statmenet
 	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the declaration statement

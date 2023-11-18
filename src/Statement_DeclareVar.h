@@ -11,6 +11,8 @@ public:
 	virtual Statement_DeclareVar* cast_to_Statement_DeclareVarr(void) override { return this; }
 	// get return type
 	const Type& get_type(void) const { return *type; }
+	// visit all expression ueed in the statement
+	virtual void visit_Expression(std::function<void(Expression& expr)> visitor) const override {}
 	// init a statmenet
 	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the declaration statement

@@ -31,9 +31,6 @@
     <ClCompile Include="Program.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
-    <ClCompile Include="Expression_StructMember.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
     <ClCompile Include="CodeBloc.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
@@ -41,9 +38,6 @@
       <Filter>source\Program</Filter>
     </ClCompile>
     <ClCompile Include="Statement_DeclareStruct.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
-    <ClCompile Include="Expression_Variable.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
     <ClCompile Include="TypeStruct.cpp">
@@ -67,24 +61,33 @@
     <ClCompile Include="Function.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
-    <ClCompile Include="BinaryOperation.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
-    <ClCompile Include="Literal.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
     <ClCompile Include="Statement_If.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
     <ClCompile Include="BuildContext.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
+    <ClCompile Include="BinaryOperation.cpp">
+      <Filter>source\Program\Expression</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression_StructMember.cpp">
+      <Filter>source\Program\Expression</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression_Variable.cpp">
+      <Filter>source\Program\Expression</Filter>
+    </ClCompile>
+    <ClCompile Include="TestOperation.cpp">
+      <Filter>source\Program\Expression</Filter>
+    </ClCompile>
+    <ClCompile Include="ShiftOperation.cpp">
+      <Filter>source\Program\Expression</Filter>
+    </ClCompile>
+    <ClCompile Include="Literal.cpp">
+      <Filter>source\Program\Expression</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Expression_StructMember.h">
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="Type.h">
@@ -123,9 +126,6 @@
     <ClInclude Include="TokenId.h">
       <Filter>source</Filter>
     </ClInclude>
-    <ClInclude Include="Expression.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
     <ClInclude Include="CodeBloc.h">
       <Filter>source\Program</Filter>
     </ClInclude>
@@ -142,9 +142,6 @@
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="Statement_DeclareStruct.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Expression_Variable.h">
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="Statement_SetVar.h">
@@ -165,17 +162,35 @@
     <ClInclude Include="Function.h">
       <Filter>source\Program</Filter>
     </ClInclude>
-    <ClInclude Include="BinaryOperation.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Literal.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
     <ClInclude Include="InterfaceInputsMap.h">
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="Statement_If.h">
       <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryOperation.h">
+      <Filter>source\Program\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression.h">
+      <Filter>source\Program\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression_StructMember.h">
+      <Filter>source\Program\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression_Variable.h">
+      <Filter>source\Program\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="UnaryOperation.h">
+      <Filter>source\Program\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="ShiftOperation.h">
+      <Filter>source\Program\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="TestOperation.h">
+      <Filter>source\Program\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="Literal.h">
+      <Filter>source\Program\Expression</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +291,9 @@
     </Filter>
     <Filter Include="source\Program">
       <UniqueIdentifier>{addf364a-496c-40f2-98dc-ce2b38d12562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Program\Expression">
+      <UniqueIdentifier>{e3d47858-3045-4d4d-810c-4eda9c9514da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

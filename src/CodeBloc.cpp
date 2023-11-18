@@ -73,6 +73,21 @@ void CodeBloc::_reorganize_bloc_if_statement(void) {
 
 	}
 }
+// visit all variables used in the bloc
+void CodeBloc::visit_all_used_variable(std::function<void(IVariableToConnexion& var2cnx)> visitor)
+{
+	
+	for (Statement* statement_i : statements) {
+		// visit expressions in the statement
+		statement_i->visit_Expression([&](Expression& expression) {
+			// visite variables in the expression
+			expression.visit_all_used_variable([&](IVariableToConnexion& var2cnx) {
+				// call the visitor
+				visitor(var2cnx);
+			});
+		});
+	}//for
+}
 
 // build a circuit that represents the bloc
 void CodeBloc::build_circuit(BuildContext& ctx) {

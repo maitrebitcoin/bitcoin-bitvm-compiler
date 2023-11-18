@@ -39,6 +39,8 @@ public:
 	// reorg epxresion tree to ensure operator precedence
 	// retrun the new root of the expression
 	BinaryOperation* reorg_for_precedence(LangageAttributes& language);
+	// visit all variables used in the Expression
+	virtual void visit_all_used_variable(std::function<void(IVariableToConnexion& var2cnx)> visitor)  override;
 	// init
 	virtual void init(Scope& parent_scope) override;
 	// true is the expression has a higher precedence than the othe expression

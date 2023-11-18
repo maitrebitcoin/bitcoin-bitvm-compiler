@@ -1,12 +1,22 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 class Literal;
 class BinaryOperation;
 class CodeBloc;
 class BuildContext;
 class Connection;
 class Scope;
+class Expression_Variable;
+
+// generiqc interfac for visit_all_used_variable
+class IVariableToConnexion {
+public:
+	// get all the required connexion for the variable
+	virtual std::vector<Connection*> get_var_connexion(BuildContext& ctx) = 0;
+};
+
 
 
 // opérandd expression. "a" ,123, or a+b
@@ -25,6 +35,9 @@ public:
 
 	// get expression type
 	virtual const Type& get_type(void) const = 0;
+	// visit all variables used in the Expression
+	virtual void visit_all_used_variable(std::function<void(IVariableToConnexion& var2cnx)> visitor)  = 0;
+
 	// init
 	virtual void init(Scope& parent_scope) = 0;
 	// build the circuit for the expression

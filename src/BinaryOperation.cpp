@@ -9,10 +9,19 @@
 
 // constructor for BinaryOperation
 BinaryOperation::BinaryOperation(Operator op, Expression* left, Expression* right)
-	: operation(op), left_operand(left), right_operand(right) {
+	: operation(op)
+	, left_operand(left)
+	, right_operand(right) {
 	//	TODO
 	// build the expression for debug purposes
 }
+
+// visit all variables used in the Expression
+void BinaryOperation::visit_all_used_variable(std::function<void(IVariableToConnexion& var2cnx)> visitor) {
+	left_operand->visit_all_used_variable(visitor);
+	right_operand->visit_all_used_variable(visitor);
+}
+
 // reorg epxresion tree to ensure operator precedence
 // ex: "a + b * c" must be calculad as "a + (b * c)"
 // retrun the new root of the expression
@@ -57,6 +66,21 @@ bool BinaryOperation::has_higher_precedence(const BinaryOperation& other_express
 }
 
 
+// init
+void BinaryOperation::init(Scope& parent_scope) {
+	// init operands
+	left_operand->init(parent_scope);
+	right_operand->init(parent_scope);
+	// left and right operand must have the same type
+	if (!left_operand->get_type().is_same_type(right_operand->get_type()))
+		throw Error("Type mismatch");
+	// type must ba a basic type
+	const TypeBasic* type_basic = left_operand->get_type().cast_to_TypeBasic();
+	if (type_basic == nullptr)
+		throw Error("Type must be a basic type");
+	// copy basic type
+	result_type = *type_basic;
+}
 
 // build the circuit for the binairy expression
 std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {

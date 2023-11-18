@@ -1,9 +1,12 @@
 #pragma once
 
+#include <functional>
 #include "Scope.h"
 class Statement;
 class Function;
 class BuildContext;
+class Expression_Variable;
+class IVariableToConnexion;
 
 class CodeBloc : public Scope {
 public:
@@ -22,6 +25,8 @@ public:
 	void build_circuit(BuildContext& ctx);
 	// get the return statement of the bloc
 	class Statement_Return* get_return_statement(void) const;
+	// visit all variables connexion used in the bloc
+	void visit_all_used_variable(std::function<void(IVariableToConnexion& var2cnx)>);
 
 protected:
 	// reoorganize the bloc in case of "If"

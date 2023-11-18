@@ -14,8 +14,8 @@ public:
 public:
 	// constructor
 	Literal(TypeBasic t, std::string v) : type(t), value_str(v) {}
-	// init
-	virtual void init(Scope& parent_scope) override;
+	// visit all variables used in the Expression
+	virtual void visit_all_used_variable(std::function<void(IVariableToConnexion& var2cnx)> visitor) override {};
 	// get Operand type
 	virtual const Type& get_type(void) const override { return  type; }
 	// if the expression is a littrela, return it
@@ -26,6 +26,8 @@ public:
 	static int64_t _get_int64_value(std::string str_val);
 	static uint64_t _get_uint64_value(std::string str_val);
 
+	// init
+	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the  expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 
