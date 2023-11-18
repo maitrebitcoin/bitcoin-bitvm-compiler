@@ -125,6 +125,23 @@ std::array<Connection*, 0> Gate_IF::add_to_circuit(Circuit& circuit, std::array<
 	return output_void;
 
 }
+
+// declare a new input for the gate : to be used by the circuit if_true and/or circuit_if_false
+void Gate_IF::add_input(Connection* input) {
+	
+	// do not add the same input twice
+	for (int i = 0; i < input_for_circuit.size(); i++) {
+		if (input_for_circuit[i] == input) {
+			return;
+		}
+	}
+	// add the input
+	input_for_circuit.push_back(input);
+
+}
+
+
+
 // compute the output of the IF_ gate
 void Gate_IF::compute(void)
 {

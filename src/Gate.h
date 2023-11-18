@@ -126,8 +126,13 @@ class Gate_IF : public T_BasiceGate<1, 0>
 public:
 	Circuit* circuit_if_true = nullptr;
 	Circuit* circuit_if_false = nullptr;
+	std::vector<Connection*> input_for_circuit;
+
 public:
 	Gate_IF(Circuit* if_true, Circuit* if_false) : circuit_if_true(if_true), circuit_if_false(if_false) {}
+	// declare a new input for the gate : to be used by the circuit if_true and/or circuit_if_false
+	void add_input(Connection* input);
+
 	// compute the output of the If  gate : error if called
 	virtual void compute(void) override;
 	// compute the output of the If gate : one of the sub cirusit 

@@ -68,6 +68,15 @@ void Statement_If::build_circuit(BuildContext& ctx) const
 	std::array<Connection*, 1> input_1_bit = { expression_value[0] };
 	std::array<Connection*, 0> void_result = gate_if->add_to_circuit(ctx.circuit, input_1_bit);
 
+	// set the input of the circuit : union of the 2 circuits inputs requirements
+	std::vector<Connection*>  inputs1 = circuit_if_true.getInputs();
+	std::vector<Connection*>  inputs0 = circuit_if_false.getInputs();
+	for (Connection* input : inputs1)
+		gate_if->add_input(input);
+	for (Connection* input : inputs0)
+		gate_if->add_input(input);
+
+
 	// tell the ciruit outupt sizz, without real connexion.
 	// the real output will be from or circuit_if_true ou ctx_if_false
 	NbBit nb_bit_out = circuit_if_true.nb_bits_output();
