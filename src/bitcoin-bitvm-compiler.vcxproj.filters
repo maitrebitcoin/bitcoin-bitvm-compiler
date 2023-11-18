@@ -10,9 +10,6 @@
     <ClCompile Include="Connection.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="Gate.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="LangageGrammar.cpp">
       <Filter>source</Filter>
     </ClCompile>
@@ -88,6 +85,12 @@
     <ClCompile Include="UnaryOperation.cpp">
       <Filter>source\Program\Expression</Filter>
     </ClCompile>
+    <ClCompile Include="CompositedGate.cpp">
+      <Filter>source\Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="TapScriptGate.cpp">
+      <Filter>source\Gate</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -109,9 +112,6 @@
       <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="Error.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Gate.h">
       <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="LangageGrammar.h">
@@ -194,6 +194,18 @@
     </ClInclude>
     <ClInclude Include="Literal.h">
       <Filter>source\Program\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate.h">
+      <Filter>source\Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="IGate.h">
+      <Filter>source\Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="TapScriptGate.h">
+      <Filter>source\Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="CompositedGate.h">
+      <Filter>source\Gate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -297,6 +309,9 @@
     </Filter>
     <Filter Include="source\Program\Expression">
       <UniqueIdentifier>{e3d47858-3045-4d4d-810c-4eda9c9514da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Gate">
+      <UniqueIdentifier>{80ae73cc-a57d-4408-a379-407f0433c82d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

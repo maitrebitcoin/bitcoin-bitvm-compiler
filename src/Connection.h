@@ -3,16 +3,16 @@
 #include <vector>
 #include <assert.h>
 #include "Bits.h"
-class Gate;
+class TapScriptGate;
 
 
 // represents a connection in the circuit betwen 2 gates
 class Connection {
 public:
 	// gates that set the bit value
-	Gate* gate_out = nullptr;
+	TapScriptGate* gate_out = nullptr;
 	// gates that use the bit value a their input
-	std::vector<Gate*> tab_gate_in;
+	std::vector<TapScriptGate*> tab_gate_in;
 	// set if this is an output of the circuit
 	bool is_output = false;
 	int  n_ouput_index = 0;

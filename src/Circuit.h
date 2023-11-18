@@ -6,7 +6,7 @@
 #include "Function.h"
 #include "InterfaceInputsMap.h"
 
-class Gate;
+class TapScriptGate;
 class Circuit;
 class CRunInputs;
 
@@ -22,7 +22,7 @@ private:
 	// inputs in the circuit
 	std::vector<Connection*>  inputs;
 	// gates in the circuit
-	std::vector<Gate*> gates;
+	std::vector<TapScriptGate*> gates;
 	// ouputs of the circuit
 	std::vector<Connection*>  outputs;
 	// if the circuit have sub circuits (If statement for exemple), set the output size only
@@ -47,7 +47,7 @@ public:
 	// set the nimbre of bits inputs of the circuit
 	void set_inputs(int bit_count, InputsMap input_map);
 	// add a gate into the circuit
-	void add_gate(Gate* gate);
+	void add_gate(TapScriptGate* gate);
 	// set all connections ouput
 	void set_output(std::vector<Connection*> new_outputs);
 	// a get connection for a litteral values
@@ -89,8 +89,8 @@ public:
 	Stats get_stats(void) const;
 
 protected:
-	// get all garbes that have calculated inputes
-	std::vector< Gate*> _get_computable_gate(void) const;
+	// get all gates that have calculated inputes
+	std::vector<TapScriptGate*> _get_computable_gate(void) const;
 
 };
 

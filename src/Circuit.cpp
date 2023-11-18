@@ -41,7 +41,7 @@ void Circuit::set_output(std::vector<Connection*> new_outputs)
 
 
 // add a gate and its connexions into the circuit
-void Circuit::add_gate(Gate* gate) {
+void Circuit::add_gate(TapScriptGate* gate) {
 	assert(!is_fully_constructed);
 	// add the gate to the circuit
 	gates.push_back(gate);
@@ -67,11 +67,10 @@ bool Circuit::is_using_litteral_values(void) const {
 		|| literals01[1] != nullptr; 
 }
 
-
 // get all gartes that have calculated inputes but have not been run yet
-std::vector< Gate*> Circuit::_get_computable_gate(void) const {
-	std::vector< Gate*> computable_gates;
-	for (Gate* gate : gates) {
+std::vector<TapScriptGate*> Circuit::_get_computable_gate(void) const {
+	std::vector<TapScriptGate*> computable_gates;
+	for (TapScriptGate* gate : gates) {
 		if (    gate->all_inputs_calculated() 
 			&& !gate->is_computed) {
 			computable_gates.push_back(gate);
@@ -148,12 +147,12 @@ std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
 	while (true)
 	{
 		// get gates that have calculated intpus
-		std::vector< Gate*> gate_to_run = _get_computable_gate();
+		std::vector<TapScriptGate*> gate_to_run = _get_computable_gate();
 		// if no more gates to run, error
 		if (gate_to_run.size() == 0) 
 			throw Error( "internal error : no more gates" );
 		// run all the gates
-		for (Gate* gate : gate_to_run) {
+		for (TapScriptGate* gate : gate_to_run) {
 			// special case If gate
 			if (gate->cast_to_IF()) {
 				assert(_get_computable_gate().size() == 1);
@@ -192,7 +191,7 @@ std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
 // reset the circuit gate before a new run
 void Circuit::reset(void) const
 {
-	for (Gate* gate : gates) {
+	for (TapScriptGate* gate : gates) {
 		gate->is_computed = false;
 	}
 	for (Connection* connection_i : connections) {
@@ -284,7 +283,7 @@ void Circuit::export_to_stream(std::ostream& out) const {
 	}
 	
 	// Gates
-	for (Gate* gate_i : gates) {
+	for (TapScriptGate* gate_i : gates) {
 		out << "\n";
 		// # inputs 
 		auto outs = gate_i->get_outputs();

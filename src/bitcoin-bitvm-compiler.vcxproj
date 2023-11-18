@@ -98,7 +98,7 @@
     <ClCompile Include="Circuit.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="Connection.cpp" />
-    <ClCompile Include="Gate.cpp" />
+    <ClCompile Include="CompositedGate.cpp" />
     <ClCompile Include="LangageGrammar.cpp" />
     <ClCompile Include="Scope.cpp" />
     <ClCompile Include="ShiftOperation.cpp" />
@@ -108,6 +108,7 @@
     <ClCompile Include="Statement_If.cpp" />
     <ClCompile Include="Statement_Return.cpp" />
     <ClCompile Include="Statement_SetVar.cpp" />
+    <ClCompile Include="TapScriptGate.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Expression_Variable.cpp" />
     <ClCompile Include="TestOperation.cpp" />
@@ -120,10 +121,12 @@
     <ClInclude Include="Bits.h" />
     <ClInclude Include="BuildContext.h" />
     <ClInclude Include="CodeBloc.h" />
+    <ClInclude Include="CompositedGate.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="Expression_StructMember.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="IGate.h" />
     <ClInclude Include="InterfaceInputsMap.h" />
     <ClInclude Include="LangageAttributes.h" />
     <ClInclude Include="Literal.h" />
@@ -143,6 +146,7 @@
     <ClInclude Include="Statement_If.h" />
     <ClInclude Include="Statement_Return.h" />
     <ClInclude Include="Statement_SetVar.h" />
+    <ClInclude Include="TapScriptGate.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="TestOperation.h" />
     <ClInclude Include="TokenId.h" />
