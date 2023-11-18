@@ -12,6 +12,7 @@ class CRunInputs;
 
 
 using InputsMap = InterfaceInputsMap*;
+using NbBit = int;
 
 // represents a virtual circuit
 class Circuit {
@@ -24,6 +25,9 @@ private:
 	std::vector<Gate*> gates;
 	// ouputs of the circuit
 	std::vector<Connection*>  outputs;
+	// if the circuit have sub circuits (If statement for exemple), set the output size only
+	NbBit output_size_child = 0;
+
 	// connections in the circuit
 	std::vector<Connection*> connections;
 	// litteral values : 0 an 1
@@ -53,8 +57,10 @@ public:
 	// is the circuit usign litteral values ?
 	bool is_using_litteral_values(void) const;
 
+	// if the circuit have sub circuits (If statement for exemple), set the output size only
+	void set_output_size_child(NbBit size) { output_size_child = size; }
 	// size in bits of the output
-	int nb_bits_output(void) const { return (int)outputs.size(); }
+	NbBit nb_bits_output(void) const;
 
 	// get inout of the circuit. to set values before running it
 	CRunInputs get_run_inputs(void) const;
@@ -91,13 +97,14 @@ protected:
 class CRunInputs : public std::vector <Bit>
 {
 	friend Circuit;
+	friend Gate_IF;
 
 protected:
 	// map for inoput correspondance 
 	InputsMap correspondance_inputs = nullptr;
 
 private:
-	// construstor, for Circuit only
+	// construstor, for Circuit ad gate_If only
 	CRunInputs(void) {};
 	// init inpute
 	void init(int nb_bit, InputsMap _inputs) {

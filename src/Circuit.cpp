@@ -118,6 +118,18 @@ CRunInputs Circuit::get_run_inputs(void) const {
 	
 }
 
+// size in bits of the output
+NbBit Circuit::nb_bits_output(void) const 
+{
+	// if the size comme from a sub circuit
+	if (output_size_child != 0)
+	{
+		assert(outputs.size() == 0);
+		return output_size_child;
+	}
+	return (NbBit)outputs.size();
+}
+
 
 // run the circuit
 std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
@@ -140,8 +152,16 @@ std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
 		// if no more gates to run, error
 		if (gate_to_run.size() == 0) 
 			throw Error( "internal error : no more gates" );
-		// run the gates
+		// run all the gates
 		for (Gate* gate : gate_to_run) {
+			// special case If gate
+			if (gate->cast_to_IF()) {
+				assert(_get_computable_gate().size() == 1);
+				// run the if gate : a sub progrma depending on the value of the condition
+				Gate_IF* gate_if = gate->cast_to_IF();
+				return gate_if->compute_if();
+			}
+			// ruy the gate
 			gate->compute();
 			assert(gate->is_computed);
 		}

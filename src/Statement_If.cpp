@@ -3,6 +3,7 @@
 #include "Program.h"
 #include "Error.h"
 #include "Gate.h"
+#include "Circuit.h"
 
 
 // constructor
@@ -67,7 +68,15 @@ void Statement_If::build_circuit(BuildContext& ctx) const
 	std::array<Connection*, 1> input_1_bit = { expression_value[0] };
 	std::array<Connection*, 0> void_result = gate_if->add_to_circuit(ctx.circuit, input_1_bit);
 
+	// tell the ciruit outupt sizz, without real connexion.
+	// the real output will be from or circuit_if_true ou ctx_if_false
+	NbBit nb_bit_out = circuit_if_true.nb_bits_output();
+	// the 2 circuits must have the same output size
+	if (nb_bit_out != circuit_if_false.nb_bits_output())
+		throw Error("If : 2 Return statements with different size");
 
+	// connect the output of the expression to the output of the circuit
+	ctx.circuit.set_output_size_child(nb_bit_out);
 }
 
 

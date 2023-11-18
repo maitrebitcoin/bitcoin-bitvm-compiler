@@ -27,6 +27,8 @@ public:
 	virtual std::vector<Connection*> get_outputs(void) const = 0;
 	// export name of the gate. ex : "NAND"
 	virtual std::string get_export_type(void) const = 0;
+	// cast to special if Gate
+	virtual	class Gate_IF* cast_to_IF(void) { return nullptr; }
 
 };
 
@@ -126,12 +128,16 @@ public:
 	Circuit* circuit_if_false = nullptr;
 public:
 	Gate_IF(Circuit* if_true, Circuit* if_false) : circuit_if_true(if_true), circuit_if_false(if_false) {}
-	// compute the output of the NAND gate
+	// compute the output of the If  gate : error if called
 	virtual void compute(void) override;
+	// compute the output of the If gate : one of the sub cirusit 
+	std::vector<Bit> compute_if(void) const;
 	// add the gate into the circuir
 	virtual std::array<Connection*, 0> add_to_circuit(Circuit& circuit, std::array<Connection*, 1>& _input) override;
 	// export name of the gate. ex : "NAND"
 	virtual std::string get_export_type(void) const override { return "IF"; }
+	// cast to special if Gate
+	virtual	class Gate_IF* cast_to_IF(void) { return this; }
 
 };
 
