@@ -69,6 +69,10 @@ public:
 	// declare a new input for the gate : to be used by the circuit if_true and/or circuit_if_false
 	void add_input(Connection* input);
 
+	// IGate redefinition
+	// get the inputs of the gate
+	virtual std::vector<Connection*> get_inputs(void) const override;
+
 	// compute the output of the If  gate : error if called
 	virtual void compute(void) override;
 	// compute the output of the If gate : one of the sub cirusit 

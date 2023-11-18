@@ -21,6 +21,19 @@ std::array<Connection*, 1> Gate_NAND::add_to_circuit(Circuit& circuit, std::arra
 
 // --- IF ----
 
+// IGate redefinition
+// get the inputs of the gate
+std::vector<Connection*> Gate_IF::get_inputs(void) const {
+	// IF gate need 1 input or the condition and MAX<B0,B1> inputs for the 2 possible sub circuits
+	// the first input is the condition
+	std::vector<Connection*> connections(input.begin(), input.end());
+	// add the inputs of the 2 sub circuits
+	for (Connection* cnx : input_for_circuit)
+		connections.push_back(cnx);
+	// return the inputs
+	return std::move(connections);
+}
+
 // compute the output of the IF_ gate
 void Gate_IF::compute(void)
 {
