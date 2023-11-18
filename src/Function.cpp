@@ -66,16 +66,16 @@ Function::Definition::Definition(Type* type, std::string function_name, Function
 
 
 // build a circuit that represents the fuidl
-void Function::build_circuit(class Circuit& circuit) {
+void Function::build_circuit(BuildContext &ctx) {
 	// declare inputs
 	int nb_bits_in = size_in_bit_input();
 	InterfaceInputsMap* input_map = getInterfaceInputsMap();
-	circuit.set_inputs(nb_bits_in, input_map);
+	ctx.circuit.set_inputs(nb_bits_in, input_map);
 	// get input
-	std::vector<Connection*> current_input = circuit.getInputs();
+	std::vector<Connection*> current_input = ctx.circuit.getInputs();
 
 	// init known variables
-	KnownVar variables;
+	KnownVar& variables = ctx.variables;
 	int index = 0;
 	for (const Parameter& param_i : definition.parameters)
 	{
@@ -87,8 +87,9 @@ void Function::build_circuit(class Circuit& circuit) {
 		index += var_i.type->size_in_bit();
 	}
 
-	// create context
-	BuildContext ctx{ circuit, variables };
+	// init context variables
+	ctx.variables = variables;
+	//BuildContext ctx{ circuit, variables };
 
 	// build the body
 	try {

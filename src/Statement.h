@@ -13,7 +13,10 @@ public:
 	Statement(int line) : num_line(line) {}
 	// init a statmenet
 	virtual void init(Scope& parent_scope) {}
-	virtual bool is_return(void) const { return false; }
+	// cast in Statement_Return
+	virtual class Statement_Return* cast_to_Statement_Return(void) { return nullptr; }
+	// cast in Statement_If
+	virtual class Statement_If* cast_to_Statement_If(void) { return nullptr; }
 	// cast in Statement_DeclareVar
 	virtual class Statement_DeclareVar* cast_to_Statement_DeclareVarr(void) { return nullptr; }
 	// cast to Statement_DeclareStruct

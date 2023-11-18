@@ -183,7 +183,7 @@ void Circuit::reset(void) const
 	}
 }
 // init gates and connections ID
-void Circuit::init_id(void) 
+void Circuit::init_id_gates_and_connexions(void)
 {
 	// give an ID to all gates and all connections
 	for (int i = 0; i < gates.size(); i++) {

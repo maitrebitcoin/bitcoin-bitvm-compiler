@@ -14,9 +14,13 @@ protected:
 public:
 	// constructor
 	Statement_If(int line, Expression* condidtion, CodeBloc* if_true, CodeBloc* if_false);
+	// cast in Statement_If
+	virtual class Statement_If* cast_to_Statement_If(void) override  { return this; }
+	// setthe bloc executed if  expression if true
+	void setElseBloc( CodeBloc*  bloc_else) { bloc_if_false = bloc_else; }
+
 	// init if statmenet
 	virtual void init(Scope& parent_scope) override;
-
 	// build the circuit for the return statement
 	virtual void build_circuit(BuildContext& ctx) const override;
 };

@@ -27,12 +27,15 @@ void Statement_If::init(Scope& parent_scope) {
 	if (!expresrion_type.is_bool())
 		throw Error("If condition must be boolean");
 
+	// both blocs must exists
+	if (bloc_if_true == nullptr)
+		throw Error("Internal error : if (true) bloc is null");
+	if (bloc_if_false == nullptr)
+		throw Error("Internal error : if (false) bloc is null");
 
 	// init blocs of code
-	if (bloc_if_true != nullptr)
-		bloc_if_true->init(parent_scope);
-	if (bloc_if_false != nullptr)
-		bloc_if_false->init(parent_scope);
+	bloc_if_true->init(parent_scope);
+	bloc_if_false->init(parent_scope);
 }
 
 // build the circuit for the return statement

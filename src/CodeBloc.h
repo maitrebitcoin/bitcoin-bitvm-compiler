@@ -11,8 +11,9 @@ public:
 	std::vector<Statement*> statements;
 
 public:
-	// constructor
-	CodeBloc(Statement* first_statement) { statements.push_back(first_statement); }
+	// constructors
+	CodeBloc(void) {} // code reorg  for if statement
+	CodeBloc(Statement* first_statement) { statements.push_back(first_statement); } // parsing
 	// add a statement
 	void add_statement(Statement* s) { statements.push_back(s); }
 	// init a bloc
@@ -22,4 +23,7 @@ public:
 	// get the return statement of the bloc
 	class Statement_Return* get_return_statement(void) const;
 
+protected:
+	// reoorganize the bloc in case of "If"
+	void _reorganize_bloc_if_statement(void);
 };

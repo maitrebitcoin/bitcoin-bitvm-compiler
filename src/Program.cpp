@@ -368,14 +368,19 @@ std::vector<Connection*>  TestOperation::build_circuit_equal(BuildContext & ctx,
 
 
 // build a circuit that represents the program
-void Program::build_circuit(class Circuit& circuit_to_build) {
+void Program::build_circuit(BuildContext& build_context) {
 
 	// getk main function
 	Function& fn_main = *main_function();
 
 	// build the circuit for the main function
-	fn_main.build_circuit(circuit_to_build);
-	
-	// init id for alla gates ands connections
-	circuit_to_build.init_id();
+	fn_main.build_circuit(build_context);
+
+	// init id for all gates and connections of all circuits
+	int id_circuit = 20000; // start a 20000 for debug purposes
+	build_context.visit_circuits([&](Circuit& circuit) {
+		circuit.set_id(id_circuit);
+		circuit.init_id_gates_and_connexions();
+		id_circuit++;
+	});
 }

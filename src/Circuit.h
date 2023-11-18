@@ -16,6 +16,8 @@ using InputsMap = InterfaceInputsMap*;
 // represents a virtual circuit
 class Circuit {
 private:
+	// circuit id
+	int id = 0;
 	// inputs in the circuit
 	std::vector<Connection*>  inputs;
 	// gates in the circuit
@@ -60,8 +62,10 @@ public:
 	std::vector<Bit> run(const CRunInputs& inputs) const;
 	// reset the circuit gate before a new run
 	void reset(void) const;
+	// set id fro the ciruit
+	void set_id(int id) { this->id = id; }
 	// init gates and connections ID
-	void init_id(void);
+	void init_id_gates_and_connexions(void);
 
 	// export to a string
 	std::string export_to_string(void) const;

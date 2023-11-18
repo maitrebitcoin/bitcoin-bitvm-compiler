@@ -118,6 +118,6 @@ public:
 
 
 	// build a circuit that represents the program
-	void build_circuit(class Circuit &circuit_out);
+	void build_circuit(class BuildContext &build_context);
 };
 

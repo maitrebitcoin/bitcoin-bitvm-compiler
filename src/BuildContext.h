@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 #include "VariableDefinition.h"
 
 class Circuit;
@@ -19,6 +20,9 @@ public:
 public:
 	// constructor
 	BuildContext(Circuit& c, KnownVar& vars) : circuit(c), variables(vars) { }
+
+	// visit all the circuits
+	void visit_circuits(std::function<void (Circuit&)> fnVisit);
 
 	// get a new sub circuit
 	Circuit& get_new_sub_circuit(void);

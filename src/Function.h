@@ -6,7 +6,7 @@
 #include "InterfaceInputsMap.h"
 class CodeBloc;
 class Scope;
-
+class BuildContext;
 
 // represents a function, ex : bool main(bool a, bool b) { return a & b; }
 class Function {
@@ -65,7 +65,7 @@ public:
 	// find a parameter by name
 	const VariableDefinition* find_parameter_by_name(std::string name) const;
 	// build a circuit that represents the fuidl
-	void build_circuit(class Circuit& circuit);
+	void build_circuit(BuildContext& ctx);
 
 	// get a interface n InterfaceInputsMap 
 	InterfaceInputsMap* getInterfaceInputsMap(void) const;

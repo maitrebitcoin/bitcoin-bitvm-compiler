@@ -528,9 +528,12 @@ Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 	Program& program = compiler.get_programm();
 
 	// build the circuit
-	Circuit circuit_ok;
+	Circuit c;
+	KnownVar v;
+	BuildContext build_context(c,v);
+	//Circuit circuit_ok;
 	try {
-		program.build_circuit(circuit_ok);
+		program.build_circuit(build_context);
 	}
 	catch (Error& build_error) {
 		build_error.file_name = file_name;
@@ -538,6 +541,6 @@ Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 	}
 	// success
 	Error no_error;
-	return std::move(Result{ true, std::move(circuit_ok), no_error });
+	return std::move(Result{ true, std::move(build_context.circuit), no_error });
 
 }
