@@ -89,26 +89,26 @@ void Statement_If::build_circuit(BuildContext& ctx) const
 	if (bloc_if_false == nullptr)
 		throw Error("Internal error : if (false) bloc is null");
 
-	// creat 2 circuits :
-	// true case
+	// create 2 new sub-circuits 
 	Circuit& circuit_if_true = ctx.get_new_sub_circuit();
+	Circuit& circuit_if_false = ctx.get_new_sub_circuit();;
+	// créate a new gate IF
+	Gate_IF* gate_if = new Gate_IF(&circuit_if_true, &circuit_if_false);
+
+	// true case
 	BuildContext ctx_if_true(circuit_if_true, ctx.variables);
+	_add_all_bloc_input(ctx_if_true, true, gate_if);
 	bloc_if_true->build_circuit(ctx_if_true);
 	// false case
-	Circuit& circuit_if_false = ctx.get_new_sub_circuit();;
 	BuildContext ctx_if_false( circuit_if_false, ctx.variables);
+	_add_all_bloc_input(ctx_if_false, false, gate_if);
 	bloc_if_false->build_circuit(ctx_if_false);
 
-	// créate a new gate IF
-	Gate_IF * gate_if = new Gate_IF(&circuit_if_true, &circuit_if_false);
 	// add the gate to the circuit
 	std::array<Connection*, 1> input_1_bit = { expression_value[0] };
 	std::array<Connection*, 0> void_result =
-		gate_if->add_to_circuit(ctx.circuit, input_1_bit);
+	gate_if->add_to_circuit(ctx.circuit, input_1_bit);
 
-	// set the input of the circuit : union of the 2 circuits inputs requirements
-	_add_all_bloc_input(ctx, true, gate_if);
-	_add_all_bloc_input(ctx, false, gate_if);
 
 	// tell the ciruit outupt sizz, without real connexion.
 	// the real output will be from or circuit_if_true ou ctx_if_false

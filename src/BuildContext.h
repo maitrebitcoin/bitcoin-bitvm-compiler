@@ -5,7 +5,7 @@
 #include "VariableDefinition.h"
 
 class Circuit;
-class KnownVar;
+class ScopeVariables;
 class Connection;
 
 // context for building the circuit
@@ -15,11 +15,11 @@ class BuildContext {
 public:
 	Circuit& circuit; // the circuit to build
 	std::vector<Circuit*> sub_circuits; // sub circuits created pour if/loop/prorcedure
-	KnownVar& variables; // current known variables in the current scope
+	ScopeVariables& variables; // current known variables in the current scope
 
 public:
 	// constructor
-	BuildContext(Circuit& c, KnownVar& vars) : circuit(c), variables(vars) { }
+	BuildContext(Circuit& c, ScopeVariables& vars) : circuit(c), variables(vars) { }
 
 	// visit all the circuits
 	void visit_circuits(std::function<void (Circuit&)> fnVisit);
@@ -30,13 +30,13 @@ public:
 };
 
 
-// var during building
-class VarBuild : public VariableDefinition {
+// var during building, valid in a scope
+class ScopeVariable : public VariableDefinition {
 public:
 	std::vector<Connection*> bits; // curetn vue. emtpy if var not yet assigned
 public:
 	// constructor
-	VarBuild(Type* t, std::string n) : VariableDefinition(t, n) { }
+	ScopeVariable(Type* t, std::string n) : VariableDefinition(t, n) { }
 
 	// is the variable assigned ?
 	bool is_set(void) const {
@@ -49,17 +49,17 @@ public:
 		bits = value;
 	}
 	// it the var is a struct, get the member by name
-	VarBuild* find_member_by_name(std::string name) {
+	ScopeVariable* find_member_by_name(std::string name) {
 		assert(false);// TODO
 		return nullptr;
 	}
 
 };
-class KnownVar : public std::vector<VarBuild> {
+class ScopeVariables : public std::vector<ScopeVariable> {
 public:
 	// find a variable by name
-	VarBuild* find_by_name(std::string name) {
-		for (VarBuild& var_i : *this)
+	ScopeVariable* find_by_name(std::string name) {
+		for (ScopeVariable& var_i : *this)
 		{
 			if (var_i.name == name)
 				return &var_i;
@@ -69,7 +69,7 @@ public:
 	// declare a new local variable
 	void declare_local_var(Type* var_type, std::string var_name) {
 		// TODO
-		VarBuild new_var{ var_type, var_name };
+		ScopeVariable new_var{ var_type, var_name };
 		push_back(new_var);
 	}
 

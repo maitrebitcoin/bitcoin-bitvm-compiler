@@ -19,7 +19,7 @@ void Expression_Variable::init(Scope& parent_scope) {
 std::vector<Connection*> Expression_Variable::build_circuit(BuildContext& ctx) {
 
 	// get the variable type by name
-	VarBuild* var = ctx.variables.find_by_name(name);
+	ScopeVariable* var = ctx.variables.find_by_name(name);
 	if (var == nullptr)
 		throw Error("Unknonwn variable : ", name);
 	// if variable not set

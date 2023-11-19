@@ -50,7 +50,7 @@ void Expression_StructMember::init(Scope& parent_scope) {
 // build the circuit for the expression
 std::vector<Connection*> Expression_StructMember::build_circuit(BuildContext& ctx) {
 	// get the parent variable type by name
-	VarBuild* var = ctx.variables.find_by_name(parent_name);
+	ScopeVariable* var = ctx.variables.find_by_name(parent_name);
 	if (var == nullptr)
 		throw Error("Unknonwn variable : ", parent_name);
 	// if variable not set

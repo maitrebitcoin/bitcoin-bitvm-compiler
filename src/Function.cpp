@@ -89,11 +89,11 @@ void Function::build_circuit(BuildContext &ctx) {
 	std::vector<Connection*> current_input = ctx.circuit.getInputs();
 
 	// init known variables
-	KnownVar& variables = ctx.variables;
+	ScopeVariables& variables = ctx.variables;
 	int index = 0;
 	for (const Parameter& param_i : definition.parameters)
 	{
-		VarBuild var_i(param_i.type, param_i.name);
+		ScopeVariable var_i(param_i.type, param_i.name);
 		int size = param_i.type->size_in_bit();
 		var_i.bits.assign(current_input.begin() + index,
 			current_input.begin() + index + size);

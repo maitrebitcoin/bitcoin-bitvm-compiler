@@ -529,8 +529,8 @@ Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 
 	// build the circuit
 	Circuit c;
-	KnownVar v;
-	BuildContext build_context(c,v);
+	ScopeVariables vars;
+	BuildContext build_context(c,vars);
 	//Circuit circuit_ok;
 	try {
 		program.build_circuit(build_context);

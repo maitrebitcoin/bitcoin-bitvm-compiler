@@ -11,7 +11,7 @@ void Statement_SetVar::init(Scope& parent_scope) {
 // build the circuit for the assignment statement
 void Statement_SetVar::build_circuit(BuildContext& ctx) const {
 	// get the variable type by name
-	VarBuild* var = ctx.variables.find_by_name(var_name);
+	ScopeVariable* var = ctx.variables.find_by_name(var_name);
 	if (var == nullptr)
 		throw Error("Unknonwn variable : ", var_name);
 	// check variable type
