@@ -28,6 +28,6 @@ public:
 
 protected:
 	// add ircuits inputs requirements from a bloc to a IF gat
-	void _add_all_bloc_input(BuildContext& ctx, CodeBloc* code_bloc, class Gate_IF* gate) const;
+	void _add_all_bloc_input(BuildContext& ctx, bool bloc_side, class Gate_IF* gate) const;
 };
 

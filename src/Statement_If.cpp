@@ -40,16 +40,39 @@ void Statement_If::init(Scope& parent_scope) {
 }
 
 // add ircuits inputs requirements from a bloc
-void Statement_If::_add_all_bloc_input(BuildContext& ctx, CodeBloc* code_bloc, Gate_IF* gate  ) const {
+void Statement_If::_add_all_bloc_input(BuildContext& ctx, bool bloc_side, Gate_IF* gate  ) const {
 	
-	// visite all variables used in the bloc
-	code_bloc->visit_all_used_variable([&](IVariableToConnexion& var2cnx) {
-		// get var connexion
-		std::vector<Connection *> var_inputs = var2cnx.get_var_connexion(ctx);
-		// copy all inputs
-		for (Connection* input : var_inputs)
-			gate->add_input(input);
-		});
+	class Visitor : public IVisitExpression {
+	protected:
+		BuildContext& ctx;
+		bool bloc_side;
+		Gate_IF* gate;
+
+	public:
+		// constructor
+		Visitor(BuildContext& c, bool b, Gate_IF* g) : ctx(c), bloc_side(b), gate(g) {}
+
+		// -- IVisitExpression implemebtatoin
+		// epxression part is a literal.ex : 123
+		virtual void onLiteral(Literal&) override {
+
+		}
+		// epxressison part is a varible. ex : a
+		virtual void onVariable(Expression_Variable&)override {
+		
+		}
+		// epxressison part is a varible in a struct. ex : a.b
+		virtual void onVariableInStruct(Expression_StructMember&) override {
+
+		}
+
+
+	};
+	Visitor local_visitor(ctx, bloc_side,gate);
+
+	CodeBloc* code_bloc = bloc_side ? bloc_if_true : bloc_if_false;
+	// visit the bloc
+	code_bloc->visit_all_epressions(local_visitor);
 
 }
 
@@ -84,8 +107,8 @@ void Statement_If::build_circuit(BuildContext& ctx) const
 		gate_if->add_to_circuit(ctx.circuit, input_1_bit);
 
 	// set the input of the circuit : union of the 2 circuits inputs requirements
-	_add_all_bloc_input(ctx, bloc_if_true, gate_if);
-	_add_all_bloc_input(ctx, bloc_if_false, gate_if);
+	_add_all_bloc_input(ctx, true, gate_if);
+	_add_all_bloc_input(ctx, false, gate_if);
 
 	// tell the ciruit outupt sizz, without real connexion.
 	// the real output will be from or circuit_if_true ou ctx_if_false

@@ -24,8 +24,8 @@ public:
 	UnaryOperation(Operator op, Expression* exp);
 	// get expression type
 	virtual const Type& get_type(void) const override { return result_type; }
-	// visit all variables used in the Expression
-	virtual void visit_all_used_variable(std::function<void(IVariableToConnexion& expr_var)> visitor)  override { operand->visit_all_used_variable(visitor); }
+	// visit all part used in the Expression
+	virtual void visit_epression(IVisitExpression& visitor) override { operand->visit_epression(visitor); }
 	// init
 	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the binairy expression

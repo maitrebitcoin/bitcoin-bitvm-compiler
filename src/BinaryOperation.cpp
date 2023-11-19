@@ -16,10 +16,10 @@ BinaryOperation::BinaryOperation(Operator op, Expression* left, Expression* righ
 	// build the expression for debug purposes
 }
 
-// visit all variables used in the Expression
-void BinaryOperation::visit_all_used_variable(std::function<void(IVariableToConnexion& var2cnx)> visitor) {
-	left_operand->visit_all_used_variable(visitor);
-	right_operand->visit_all_used_variable(visitor);
+// visit all part used in the Expression
+ void BinaryOperation::visit_epression(IVisitExpression& visitor) {
+	left_operand->visit_epression(visitor);
+	right_operand->visit_epression(visitor);
 }
 
 // reorg epxresion tree to ensure operator precedence

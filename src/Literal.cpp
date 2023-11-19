@@ -218,15 +218,6 @@ uint64_t Literal::_get_uint64_value(std::string str_val) {
 	return std::stoull(str_val);
 }
 
-
-//--- IVariableToConnexion implentation :
-// get all the required connexion for the variable
-std::vector<Connection*> Literal::get_var_connexion(BuildContext& ctx) {
-	// same as build_circuit
-	return build_circuit(ctx);
-}
-
-
 std::vector<Connection*> Literal::build_circuit(BuildContext& ctx) {
 	std::vector<Connection*> result;
 

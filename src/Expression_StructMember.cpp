@@ -47,27 +47,6 @@ void Expression_StructMember::init(Scope& parent_scope) {
 	member_offest_in_bit = member.offest_in_bit;
 }
 
-//--- IVariableToConnexion implentation :
-// get all the required connexion for the variable
-std::vector<Connection*> Expression_StructMember::get_var_connexion(BuildContext& ctx) {
-
-	// get the parent variable type by name
-	VarBuild* var = ctx.variables.find_by_name(parent_name);
-	if (var == nullptr)
-		return {};
-	// if variable not set
-	if (!var->is_set())
-		return {};
-	// set outputs to get the value of the part of variable in the struct
-	assert(member_type != nullptr);
-	int member_size = member_type->size_in_bit();
-	auto begin_member = var->bits.begin() + member_offest_in_bit;
-	std::vector < Connection*> bits_member(begin_member, begin_member + member_size);
-	assert(bits_member.size() == member_type->size_in_bit());
-	return bits_member;
-}
-
-
 // build the circuit for the expression
 std::vector<Connection*> Expression_StructMember::build_circuit(BuildContext& ctx) {
 	// get the parent variable type by name

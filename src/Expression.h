@@ -9,12 +9,17 @@ class BuildContext;
 class Connection;
 class Scope;
 class Expression_Variable;
+class Expression_StructMember;
 
-// generiqc interfac for visit_all_used_variable
-class IVariableToConnexion {
+class IVisitExpression {
 public:
-	// get all the required connexion for the variable
-	virtual std::vector<Connection*> get_var_connexion(BuildContext& ctx) = 0;
+	// epxression part is a literal.ex : 123
+	virtual void onLiteral(Literal&) = 0;
+	// epxressison part is a varible. ex : a
+	virtual void onVariable(Expression_Variable&) = 0;
+	// epxressison part is a varible in a struct. ex : a.b
+	virtual void onVariableInStruct(Expression_StructMember&) = 0;
+
 };
 
 
@@ -35,8 +40,8 @@ public:
 
 	// get expression type
 	virtual const Type& get_type(void) const = 0;
-	// visit all variables used in the Expression
-	virtual void visit_all_used_variable(std::function<void(IVariableToConnexion& var2cnx)> visitor)  = 0;
+	// visit all part used in the Expression
+	virtual void visit_epression(IVisitExpression& visitor)  = 0;
 
 	// init
 	virtual void init(Scope& parent_scope) = 0;
