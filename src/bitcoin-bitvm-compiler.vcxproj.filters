@@ -91,6 +91,9 @@
     <ClCompile Include="TapScriptGate.cpp">
       <Filter>source\Gate</Filter>
     </ClCompile>
+    <ClCompile Include="ScopeVariable.cpp">
+      <Filter>source\Program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -206,6 +209,9 @@
     </ClInclude>
     <ClInclude Include="CompositedGate.h">
       <Filter>source\Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="ScopeVariable.h">
+      <Filter>source\Program</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

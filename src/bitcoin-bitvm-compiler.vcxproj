@@ -101,6 +101,7 @@
     <ClCompile Include="CompositedGate.cpp" />
     <ClCompile Include="LangageGrammar.cpp" />
     <ClCompile Include="Scope.cpp" />
+    <ClCompile Include="ScopeVariable.cpp" />
     <ClCompile Include="ShiftOperation.cpp" />
     <ClCompile Include="Statement_DeclareAndSetVar.cpp" />
     <ClCompile Include="Statement_DeclareStruct.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="Gate.h" />
     <ClInclude Include="LangageGrammar.h" />
     <ClInclude Include="Scope.h" />
+    <ClInclude Include="ScopeVariable.h" />
     <ClInclude Include="ShiftOperation.h" />
     <ClInclude Include="Statement.h" />
     <ClInclude Include="Statement_DeclareAndSetVar.h" />
