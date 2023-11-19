@@ -72,10 +72,11 @@ void Program::build_circuit(BuildContext& build_context) {
 	fn_main.build_circuit(build_context);
 
 	// init id for all gates and connections of all circuits
-	int id_circuit = 20000; // start a 20000 for debug purposes
+	int connection_id = 0;
+	int circuit_id    = 20000; // start a 20000 for debug purposes
 	build_context.visit_circuits([&](Circuit& circuit) {
-		circuit.set_id(id_circuit);
-		circuit.init_id_gates_and_connexions();
-		id_circuit++;
+		circuit.set_id(circuit_id);
+		circuit.init_id_gates_and_connexions(connection_id);
+		circuit_id++;
 	});
 }

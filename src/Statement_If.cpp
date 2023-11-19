@@ -40,14 +40,19 @@ void Statement_If::init(Scope& parent_scope) {
 }
 
 //  Init variables and If Gate for one side
-void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVariables& variables_dest, class Gate_IF* gate, bool bloc_side) const {
+void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVariables& variables_dest, class Gate_IF* gate, Circuit& circuit, bool bloc_side) const {
 	
 	class Visitor : public IVisitExpression {
 	protected:
+	// Closure
 		BuildContext& ctx_source;
 		ScopeVariables& variables_dest;
 		Gate_IF* gate_if;
 		bool bloc_side;
+	public:
+	// OUT
+		// bit copied to the sub circuit
+		int nb_bits_in= 0;
 
 	public:
 		// constructor
@@ -56,7 +61,7 @@ void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVaria
 		// -- IVisitExpression implemebtatoin
 		// epxression part is a literal.ex : 123
 		virtual void onLiteral(Literal&) override {
-
+			// noting to do
 		}
 		// epxressison part is a varible. ex : a
 		virtual void onVariable(Expression_Variable& expr_var )override {
@@ -71,10 +76,11 @@ void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVaria
 			for (Connection* connexion : connexions) {
 				gate_if->add_input(connexion, bloc_side);
 			}
+			nb_bits_in += (int)connexions.size();
 		}
 		// epxressison part is a varible in a struct. ex : a.b
 		virtual void onVariableInStruct(Expression_StructMember&) override {
-
+			// TODO
 		}
 
 
@@ -85,6 +91,20 @@ void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVaria
 	// visit the bloc
 	code_bloc->visit_all_epressions(local_visitor);
 
+	// basic impleation of InterfaceInputsMap
+	class Void_InterfaceInputsMap : public InterfaceInputsMap {
+		// InterfaceInputsMap Implementation 
+		// get a parameter info by name
+		virtual InterfaceInputsMap::Info find_info_by_name(std::string name) const override {
+			// used by commandline -run ony
+			assert(false);
+			throw Error("Internal error, not implemented");
+		}
+	};//InterfaceInputsMap
+
+	// init circuit inputs
+	InputsMap input_map = new Void_InterfaceInputsMap();
+	circuit.set_circuit_inputs(local_visitor.nb_bits_in, input_map);
 }
 
 // build the circuit for the return statement
@@ -108,11 +128,11 @@ void Statement_If::build_circuit(BuildContext& ctx) const
 	// créate a new gate IF
 	Gate_IF* gate_if = new Gate_IF(&circuit_if_true, &circuit_if_false);
 
-	// true case
-	_init_variables_and_gate(ctx, ctx_if_true.variables, gate_if, true );
+	// init true case
+	_init_variables_and_gate(ctx, ctx_if_true.variables, gate_if, circuit_if_true, true );
 	bloc_if_true->build_circuit(ctx_if_true);
-	// false case
-	_init_variables_and_gate(ctx, ctx_if_false.variables, gate_if, false );
+	// init false case
+	_init_variables_and_gate(ctx, ctx_if_false.variables, gate_if, circuit_if_false, false );
 	bloc_if_false->build_circuit(ctx_if_false);
 
 	// add the gate to the circuit

@@ -57,7 +57,7 @@ public:
 
 // spécial gate : If
 // jump to other cirucuit depending on the value of the input
-class Gate_IF : public T_TapScriptGate<1, 0>, public InterfaceInputsMap
+class Gate_IF : public T_TapScriptGate<1, 0>
 {
 public:
 	Circuit* circuit_if_true = nullptr;
@@ -74,10 +74,6 @@ public:
 	// IGate redefinition
 	// get the inputs of the gate
 	virtual std::vector<Connection*> get_inputs(void) const override;
-
-	// InterfaceInputsMap Implementation 
-	// get a parameter info by name
-	virtual InterfaceInputsMap::Info find_info_by_name(std::string name) const override;
 
 	// compute the output of the If  gate : error if called
 	virtual void compute(void) override;

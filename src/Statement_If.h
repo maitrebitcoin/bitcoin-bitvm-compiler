@@ -28,6 +28,6 @@ public:
 
 protected:
 	//  Init variables and If Gate for one side
-	void _init_variables_and_gate(BuildContext& ctx_source, ScopeVariables& variables_dest, class Gate_IF* gate, bool bloc_side ) const;
+	void _init_variables_and_gate(BuildContext& ctx_source, ScopeVariables& variables_dest, class Gate_IF* gate, Circuit& circuit, bool bloc_side) const;
 };
 

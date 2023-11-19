@@ -509,11 +509,10 @@ Program& Compiler::get_programm(void) {
 // compile and buil the circuit
 Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 {
-	Circuit null_circuit;
-
-	// open the file
+	// open source file
 	std::ifstream source_file(file_name);
 	if (!source_file) {
+		Circuit null_circuit;
 		return std::move(Result{ false, null_circuit, Error("Cannot open file ", file_name) });
 	}
 	// compile the source file for the  BitVM_C_Grammar
@@ -522,6 +521,7 @@ Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 	Error compile_error;
 	if (!compiler.compile(source_file, compile_error)) {
 		compile_error.file_name = file_name;
+		Circuit null_circuit;
 		return std::move(Result{ false, null_circuit, compile_error });
 	}
 	// get the compiled program 
@@ -536,6 +536,7 @@ Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 	}
 	catch (Error& build_error) {
 		build_error.file_name = file_name;
+		Circuit null_circuit;
 		return std::move(Result{ false, null_circuit, build_error });
 	}
 	// success

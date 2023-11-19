@@ -13,8 +13,8 @@ Circuit::Circuit(void) {
 
 
 // set the numbre of bits inputs of the circuit
-void Circuit::set_inputs(int bit_count, InputsMap map) {
-	assert(!is_fully_constructed);
+void Circuit::set_circuit_inputs(int bit_count, InputsMap map) {
+	assert(!is_fully_constructed); // too late to set inputs
 	for (int i = 0; i < bit_count; i++) {
 		Connection* input_i = new Connection();
 		inputs.push_back(input_i);
@@ -225,14 +225,13 @@ void Circuit::reset(void) const
 	}
 }
 // init gates and connections ID
-void Circuit::init_id_gates_and_connexions(void)
+void Circuit::init_id_gates_and_connexions(int &connection_id)
 {
 	// give an ID to all gates and all connections
 	for (int i = 0; i < gates.size(); i++) {
 		gates[i]->id = i;
 	}
 	// init literals
-	int connection_id = 0;
 	if (literals01[0])
 		literals01[0]->id = connection_id++;
 	if (literals01[1])

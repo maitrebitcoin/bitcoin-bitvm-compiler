@@ -84,7 +84,7 @@ void Function::build_circuit(BuildContext &ctx) {
 	// declare inputs
 	int nb_bits_in = size_in_bit_input();
 	InterfaceInputsMap* input_map = getInterfaceInputsMap();
-	ctx.circuit.set_inputs(nb_bits_in, input_map);
+	ctx.circuit.set_circuit_inputs(nb_bits_in, input_map);
 	// get input
 	std::vector<Connection*> current_input = ctx.circuit.getInputs();
 

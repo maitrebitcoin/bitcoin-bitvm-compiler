@@ -67,13 +67,6 @@ void Gate_IF::compute(void)
 
 	throw Error("gate IF is not computable");
 }
-// InterfaceInputsMap Implementation 
-// get a parameter info by name
-InterfaceInputsMap::Info Gate_IF::find_info_by_name(std::string name) const {
-	// used by commandline -run ony
-	assert(false);
-	throw Error("Internal error, not implemented");
-}
 
 // compute the output of the If gate : one of the sub cirusit 
 std::vector<Bit> Gate_IF::compute_if(void) const {
@@ -83,9 +76,8 @@ std::vector<Bit> Gate_IF::compute_if(void) const {
 	const std::vector<Connection*>& inputs = if_true ? input_for_circuit_if_true : input_for_circuit_if_false;
 
 	// build in values for the circuit with all the other inputs
-	CRunInputs in_sub_values;
-	InputsMap input_map = (InterfaceInputsMap *)this;
-	in_sub_values.init((int)inputs.size(), input_map);
+	//InputsMap input_map = (InterfaceInputsMap*)this;
+	CRunInputs in_sub_values = sub_circuit.get_run_inputs();
 	int i = 0;
 	for (Connection* connection : inputs) {
 		bool bit_i = connection->get_value();

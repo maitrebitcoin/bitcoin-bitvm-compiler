@@ -44,8 +44,8 @@ public:
 	// constructor
 	Circuit(void);
 
-	// set the nimbre of bits inputs of the circuit
-	void set_inputs(int bit_count, InputsMap input_map);
+	// set the number of bits inputs of the circuit
+	void set_circuit_inputs(int bit_count, InputsMap input_map);
 	// add a gate into the circuit
 	void add_gate(TapScriptGate* gate);
 	// set all connections ouput
@@ -71,7 +71,7 @@ public:
 	// set id fro the ciruit
 	void set_id(int id) { this->id = id; }
 	// init gates and connections ID
-	void init_id_gates_and_connexions(void);
+	void init_id_gates_and_connexions(int& connection_id);
 
 	// export to a string
 	std::string export_to_string(void) const;
@@ -98,7 +98,6 @@ protected:
 class CRunInputs : public std::vector <Bit>
 {
 	friend Circuit;
-	friend Gate_IF;
 
 protected:
 	// map for inoput correspondance 
