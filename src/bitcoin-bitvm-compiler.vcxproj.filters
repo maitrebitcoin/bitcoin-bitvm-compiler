@@ -302,6 +302,18 @@
     <None Include="sample\test_if.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="..\doc\Identifiers.md">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="..\README.md">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="..\doc\Statements.md">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="..\doc\Expressions.md">
+      <Filter>doc</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
@@ -318,6 +330,9 @@
     </Filter>
     <Filter Include="source\Gate">
       <UniqueIdentifier>{80ae73cc-a57d-4408-a379-407f0433c82d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{a8da2d67-d220-44a7-abb9-2f7353411c0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
