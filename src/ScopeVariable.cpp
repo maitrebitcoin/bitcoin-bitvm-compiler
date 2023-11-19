@@ -3,7 +3,7 @@
 #include "ScopeVariable.h"
 
 // set variable value
-void ScopeVariable::set_value(std::vector<Connection*>& value) {
+void ScopeVariable::set_value(const std::vector<Connection*>& value) {
 	assert(value.size() == type->size_in_bit());
 	// set bits
 	bits = value;
@@ -23,10 +23,42 @@ ScopeVariable* ScopeVariables::find_by_name(std::string name) {
 	}
 	return nullptr;
 }
+// Init from function defintion ans parameters
+void ScopeVariables::init_from_function_parameters(
+	const Function::Definition& definition,
+	std::vector<Connection*>& current_input)
+{
+
+	// init known variables
+	int index = 0;
+	for (const Function::Parameter& param_i : definition.parameters)
+	{
+		ScopeVariable var_i(param_i.type, param_i.name);
+		int size = param_i.type->size_in_bit();
+		var_i.bits.assign(current_input.begin() + index,
+			current_input.begin() + index + size);
+		this->push_back(var_i);
+		index += var_i.type->size_in_bit();
+	}
+}
+
 // declare a new local variable
 void ScopeVariables::declare_local_var(Type* var_type, std::string var_name) {
 
 	ScopeVariable new_var{ var_type, var_name };
 	push_back(new_var);
+}
+
+// copy a variable for a sub-scope
+void ScopeVariables::copy_var(const ScopeVariable& var_source)
+{
+	// deep copy : if the var is modified in the sub-scope, the parent scope var is not modified
+	ScopeVariable new_var{var_source.type, var_source.name };
+	// if the source var ia assigned, copy source bits to the new variable
+	if (var_source.is_set())
+		new_var.set_value(var_source.bits);
+
+	push_back(new_var);
+
 }
 

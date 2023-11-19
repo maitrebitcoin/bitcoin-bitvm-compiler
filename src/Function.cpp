@@ -88,22 +88,8 @@ void Function::build_circuit(BuildContext &ctx) {
 	// get input
 	std::vector<Connection*> current_input = ctx.circuit.getInputs();
 
-	// init known variables
-	ScopeVariables& variables = ctx.variables;
-	int index = 0;
-	for (const Parameter& param_i : definition.parameters)
-	{
-		ScopeVariable var_i(param_i.type, param_i.name);
-		int size = param_i.type->size_in_bit();
-		var_i.bits.assign(current_input.begin() + index,
-			current_input.begin() + index + size);
-		variables.push_back(var_i);
-		index += var_i.type->size_in_bit();
-	}
-
-	// init context variables
-	ctx.variables = variables;
-	//BuildContext ctx{ circuit, variables };
+	// init scope variables in the contente
+	ctx.variables.init_from_function_parameters(definition, current_input);
 
 	// build the body
 	try {

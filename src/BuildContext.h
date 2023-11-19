@@ -14,13 +14,13 @@ class BuildContext {
 
 
 public:
-	Circuit& circuit; // the circuit to build
+	Circuit &circuit; // the circuit to build
 	std::vector<Circuit*> sub_circuits; // sub circuits created pour if/loop/prorcedure
-	ScopeVariables& variables; // current known variables in the current scope
+	ScopeVariables variables; // current known variables in the current scope
 
 public:
 	// constructor
-	BuildContext(Circuit& c, ScopeVariables& vars) : circuit(c), variables(vars) { }
+	BuildContext(Circuit& c) : circuit(c) {}
 
 	// visit all the circuits
 	void visit_circuits(std::function<void (Circuit&)> fnVisit);

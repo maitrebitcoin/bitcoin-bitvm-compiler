@@ -15,6 +15,8 @@ public:
 
 	// init, will grag the type from the symbol table
 	virtual void init(Scope& parent_scope) override;
+	// get all gates used by the variable
+	std::vector<Connection*> get_all_connexions(BuildContext& ctx) const;
 	// build the circuit for the  expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 };

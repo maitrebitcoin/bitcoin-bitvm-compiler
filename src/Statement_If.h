@@ -27,7 +27,7 @@ public:
 	virtual void build_circuit(BuildContext& ctx) const override;
 
 protected:
-	// add ircuits inputs requirements from a bloc to a IF gat
-	void _add_all_bloc_input(BuildContext& ctx, bool bloc_side, class Gate_IF* gate) const;
+	//  Init variables and If Gate for one side
+	void _init_variables_and_gate(BuildContext& ctx_source, ScopeVariables& variables_dest, class Gate_IF* gate, bool bloc_side ) const;
 };
 

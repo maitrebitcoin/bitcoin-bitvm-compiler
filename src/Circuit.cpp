@@ -133,7 +133,7 @@ NbBit Circuit::nb_bits_output(void) const
 // run the circuit
 std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
 	assert(nb_bits_output() > 0);
-	assert(in_values.size() > 0);
+	//assert(in_values.size() > 0); no in sub circuit. ex : "Return 0"
 	assert(in_values.size() == inputs.size());
 
 	// init bits values in input 

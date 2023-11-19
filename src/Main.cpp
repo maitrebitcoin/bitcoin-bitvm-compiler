@@ -4,6 +4,7 @@
 
 // Usage :
 //   bitVM-compiler <source_file_name> <output_file_name>
+//   bitVM-compiler <source_file_name> -run  a=1234,b=5678
 
 // compile a program compatible with bitVM
 

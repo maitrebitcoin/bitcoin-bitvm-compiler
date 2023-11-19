@@ -28,23 +28,35 @@ std::vector<Connection*> Gate_IF::get_inputs(void) const {
 	// the first input is the condition
 	std::vector<Connection*> connections(input.begin(), input.end());
 	// add the inputs of the 2 sub circuits
-	for (Connection* cnx : input_for_circuit)
+	for (Connection* cnx : input_for_circuit_if_true)
 		connections.push_back(cnx);
+	for (Connection* cnx : input_for_circuit_if_false) {
+		// add only if not already present in connections
+		bool already_present = false;
+		for (auto c : connections) {
+			if (cnx == c)
+				already_present = true;
+		}
+		if (!already_present)
+			connections.push_back(cnx);
+	}
+
 	// return the inputs
 	return std::move(connections);
 }
 
 // declare a new input for the gate : to be used by the circuit if_true and/or circuit_if_false
-void Gate_IF::add_input(Connection* input) {
-
+void Gate_IF::add_input(Connection* input, bool if_true) {
+	// get the good vector
+	std::vector<Connection*>& inputs = if_true ? input_for_circuit_if_true : input_for_circuit_if_false;
 	// do not add the same input twice
-	for (int i = 0; i < input_for_circuit.size(); i++) {
-		if (input_for_circuit[i] == input) {
+	for (int i = 0; i < inputs.size(); i++) {
+		if (inputs[i] == input) {
 			return;
 		}
 	}
 	// add the input
-	input_for_circuit.push_back(input);
+	inputs.push_back(input);
 
 }
 
@@ -58,23 +70,24 @@ void Gate_IF::compute(void)
 // InterfaceInputsMap Implementation 
 // get a parameter info by name
 InterfaceInputsMap::Info Gate_IF::find_info_by_name(std::string name) const {
-
+	// used by commandline -run ony
 	assert(false);
-	throw Error("TODO");
+	throw Error("Internal error, not implemented");
 }
 
 // compute the output of the If gate : one of the sub cirusit 
 std::vector<Bit> Gate_IF::compute_if(void) const {
-	bool input_val = input[0]->get_value();
+	bool if_true = input[0]->get_value();
 	// get the circuit to compute
-	Circuit& sub_circuit = input_val ? *circuit_if_true : *circuit_if_false;
+	Circuit& sub_circuit				   = if_true ? *circuit_if_true : *circuit_if_false;
+	const std::vector<Connection*>& inputs = if_true ? input_for_circuit_if_true : input_for_circuit_if_false;
 
 	// build in values for the circuit with all the other inputs
 	CRunInputs in_sub_values;
 	InputsMap input_map = (InterfaceInputsMap *)this;
-	in_sub_values.init((int)input_for_circuit.size(), input_map);
+	in_sub_values.init((int)inputs.size(), input_map);
 	int i = 0;
-	for (Connection* connection : input_for_circuit) {
+	for (Connection* connection : inputs) {
 		bool bit_i = connection->get_value();
 		in_sub_values.set_bit_value(i, bit_i);
 		i++;

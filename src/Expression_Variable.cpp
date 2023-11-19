@@ -15,6 +15,19 @@ void Expression_Variable::init(Scope& parent_scope) {
 	type = variable_defintion->type;
 }
 
+// get all gates used by the variable
+std::vector<Connection*> Expression_Variable::get_all_connexions(BuildContext& ctx) const
+{
+	// get the variable type by name
+	ScopeVariable* var = ctx.variables.find_by_name(name);
+	if (var == nullptr)
+		return {};
+	// if variable not set
+	if (!var->is_set())
+		return {};
+	return var->bits;
+}
+
 // build the circuit for the  expression
 std::vector<Connection*> Expression_Variable::build_circuit(BuildContext& ctx) {
 
