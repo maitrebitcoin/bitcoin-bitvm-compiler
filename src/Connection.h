@@ -15,7 +15,6 @@ public:
 	std::vector<TapScriptGate*> tab_gate_in;
 	// set if this is an output of the circuit
 	bool is_output = false;
-	int  n_ouput_index = 0;
 	// id of the connection, for export
 	int id = 0;
 private:

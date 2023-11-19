@@ -3,7 +3,7 @@ int8 main(int8 a)
 {
 	if (a<10)
 	{
-		return 0; 
+		return 5; 
 	}
 	return a+1; 
 }

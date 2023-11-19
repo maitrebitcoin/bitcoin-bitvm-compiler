@@ -28,13 +28,9 @@ void Circuit::set_output(std::vector<Connection*> new_outputs)
 	assert(!is_fully_constructed);
 	assert(outputs.size() == 0);
 	assert(new_outputs.size() > 0);
-	int i = nb_bits_output();
-	assert(i == 0);
 
 	for (Connection* connexion : new_outputs) {
 		connexion->is_output = true;
-		connexion->n_ouput_index = i;
-		i++;
 		outputs.push_back(connexion);
 	}
 }
@@ -129,6 +125,18 @@ NbBit Circuit::nb_bits_output(void) const
 	return (NbBit)outputs.size();
 }
 
+// check if all outputs are computed
+bool Circuit::_all_outputs_calculated(void) const {
+	if (outputs.size() == 0)
+		return false;
+
+	for (Connection* output : outputs) {
+		if (!output->is_calculated())
+			return false;
+	}
+	return true;
+}
+
 
 // run the circuit
 std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
@@ -146,6 +154,20 @@ std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
 	int nb_step = 0;
 	while (true)
 	{
+		// if all outputs are computed, we have a result
+		if (_all_outputs_calculated()) {
+			// build the result
+			std::vector<Bit> result(nb_bits_output());
+			int i = 0;
+			for (Connection* connection_i : outputs) {
+				assert(connection_i->is_output);
+				bool value_calculted = connection_i->get_value();
+				result[i].set_value(value_calculted);
+				i++;
+			}
+			return result;
+		}
+
 		// get gates that have calculated intpus
 		std::vector<TapScriptGate*> gate_to_run = _get_computable_gate();
 		// if no more gates to run, error
@@ -166,8 +188,8 @@ std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
 		}
 		// do we have a result ?
 		// =all the needed outpus bits are calculated
-
-		// init result from calculated outos
+/*
+		// init result from calculated outputs
 		std::vector<Bit> result(nb_bits_output());
 		int bits_calculated = 0;
 		for (Connection* connection_i : connections) {
@@ -179,9 +201,10 @@ std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
 				bits_calculated++;
 			}
 		}
+	
 		// if all bits are calculated, return the result
 		if (bits_calculated == nb_bits_output())
-			return result;
+			return result;*/
 		// continue calculation
 		nb_step++;
 		

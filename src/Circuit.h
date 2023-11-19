@@ -91,7 +91,8 @@ public:
 protected:
 	// get all gates that have calculated inputes
 	std::vector<TapScriptGate*> _get_computable_gate(void) const;
-
+	// check if all outputs are computed
+	bool _all_outputs_calculated(void) const;
 };
 
 class CRunInputs : public std::vector <Bit>
