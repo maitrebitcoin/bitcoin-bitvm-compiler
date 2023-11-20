@@ -211,8 +211,18 @@ std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
 	} // while (true)
 
 }
-// reset the circuit gate before a new run
-void Circuit::reset(void) const
+
+// reset the circuit gates before a new run. resursive to all  sub circuits
+void Circuit::reset(void) const {
+	_reset_non_recursive();
+	// reset sub circuits
+	visit_sub_circuits([](Circuit& sub_circiut) {
+		sub_circiut._reset_non_recursive();
+		});
+}
+
+// reset the circuit gate before a new run. non recursive
+void Circuit::_reset_non_recursive(void) const
 {
 	for (TapScriptGate* gate : gates) {
 		gate->is_computed = false;
@@ -223,6 +233,8 @@ void Circuit::reset(void) const
 	for (Connection* connection_i : inputs){
 		connection_i->reset();
 	}
+	
+
 }
 // init gates and connections ID
 void Circuit::init_id_gates_and_connexions(int &connection_id)
@@ -326,4 +338,21 @@ void Circuit::export_to_stream(std::ostream& out) const {
 	}
 
 	out << "\n";
+}
+// visit all sub circuits
+void Circuit::visit_sub_circuits(std::function<void(Circuit&)> visitor) const {
+	for (TapScriptGate* gate_i : gates) {
+		// special case If gate
+		if (gate_i->cast_to_IF()) {
+			// cast to IF gate
+			Gate_IF* gate_if = gate_i->cast_to_IF();
+			// visit sub circuits of the IF gate
+			visitor(*gate_if->circuit_if_true);
+			gate_if->circuit_if_true->visit_sub_circuits(visitor);
+			visitor(*gate_if->circuit_if_false);
+			gate_if->circuit_if_false->visit_sub_circuits(visitor);
+
+		}
+	}
+
 }

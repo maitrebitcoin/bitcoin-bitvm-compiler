@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <functional>
 #include "Bits.h"
 #include "Gate.h"
 #include "Error.h"
@@ -87,12 +88,17 @@ public:
 		int nb_output = 0;
 	};
 	Stats get_stats(void) const;
+	// visit all sub circuits
+	void visit_sub_circuits(std::function<void(Circuit&)> visitor) const;
 
 protected:
 	// get all gates that have calculated inputes
 	std::vector<TapScriptGate*> _get_computable_gate(void) const;
 	// check if all outputs are computed
 	bool _all_outputs_calculated(void) const;
+	// reset the circuit gate before a new run. non recursive
+	void _reset_non_recursive(void) const;
+	
 };
 
 class CRunInputs : public std::vector <Bit>
