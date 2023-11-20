@@ -17,7 +17,7 @@ public:
 	Circuit &circuit; // the circuit to build
 	std::vector<Circuit*> sub_circuits; // sub circuits created pour if/loop/prorcedure
 	ScopeVariables variables; // current known variables in the current scope
-
+	BuildContext *main_context = nullptr; // main context
 public:
 	// constructor
 	BuildContext(Circuit& c) : circuit(c) {}

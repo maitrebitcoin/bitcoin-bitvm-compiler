@@ -16,3 +16,4 @@ void BuildContext::visit_circuits(std::function<void(Circuit&)> fnVisit) {
 	for (Circuit* sub_circuit : sub_circuits)
 		fnVisit(*sub_circuit);
 }
+

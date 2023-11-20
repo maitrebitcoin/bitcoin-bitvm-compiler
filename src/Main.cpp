@@ -162,17 +162,16 @@ int main(int argc, char* argv[])
 	if (command_line.run_simuation) {
 		// run the simulation
 		std::cout << "Running with : " << command_line.simulation_input << "\n";
-		std::string simulation_result = _run_circuit(result.circuit, command_line.simulation_input);
+		std::string simulation_result = _run_circuit(result.main_circuit(), command_line.simulation_input);
 		// show the result
 		std::cout << "Simulation result : " << simulation_result << "\n";
 		return 0;
 	}
 
-
 	// if not file name : show the circuit on the console
 	if (command_line.destination_file_name == "")
 	{
-		result.circuit.export_to_stream(std::cout);
+		result.export_to_stream(std::cout);
 		return 0; // OK
 	}
 
@@ -183,16 +182,17 @@ int main(int argc, char* argv[])
 		std::cout << "Cannot save file " << command_line.destination_file_name;
 		return 1;
 	}
-	result.circuit.export_to_stream(destination_file);
+	result.export_to_stream(destination_file);
 	destination_file.close();
 	// succes, show stats about the circuit
-	Circuit::Stats stats = result.circuit.get_stats();
+	Compiler::Result::Stats stats = result.get_stats();
 	std::cout << "Compilation ok\n";
 	std::cout << command_line.destination_file_name << " generated.\n";
-	std::cout << "# inputs : " << stats.nb_inputs		<< "\n";
-	std::cout << "# outpus : " << stats.nb_outputs		<< "\n";
-	std::cout << "# gates  : " << stats.nb_gates		<< "\n";
-	std::cout << "# wires  : " << stats.nb_connections  << "\n";
+	std::cout << "# circuit : " << stats.nb_circuit		<< "\n";
+	std::cout << "# inputs  : " << stats.nb_input		<< "\n";
+	std::cout << "# outpus  : " << stats.nb_output		<< "\n";
+	std::cout << "# gates   : " << stats.nb_gate		<< "\n";
+	std::cout << "# wires   : " << stats.nb_connection  << "\n";
 	
 	return 0;
 }

@@ -254,10 +254,10 @@ void Circuit::init_id_gates_and_connexions(int &connection_id)
 // get stats on the circuit
 Circuit::Stats Circuit::get_stats(void) const {
 	Circuit::Stats result;
-	result.nb_gates		 =(int)gates.size();
-	result.nb_connections=(int)connections.size();
-	result.nb_inputs	 =(int)inputs.size();
-	result.nb_outputs	 =(int)outputs.size();
+	result.nb_gate		 =(int)gates.size();
+	result.nb_connection =(int)connections.size();
+	result.nb_input	     =(int)inputs.size();
+	result.nb_output	 =(int)outputs.size();
 	return result;
 }
 

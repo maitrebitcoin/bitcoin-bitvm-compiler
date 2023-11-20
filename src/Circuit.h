@@ -81,10 +81,10 @@ public:
 	void export_to_stream(std::ostream& out) const;
 	// get stats
 	struct Stats {
-		int nb_gates = 0;
-		int nb_connections = 0;
-		int nb_inputs = 0;
-		int nb_outputs = 0;
+		int nb_gate = 0;
+		int nb_connection = 0;
+		int nb_input = 0;
+		int nb_output = 0;
 	};
 	Stats get_stats(void) const;
 

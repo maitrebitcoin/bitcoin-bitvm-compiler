@@ -506,14 +506,48 @@ Program& Compiler::get_programm(void) {
 	return *token_stack[0].value.program_value;
 }
 
+
+// execute the resut to a stream
+void Compiler::Result::export_to_stream(std::ostream& out) const {
+	assert(ok); // copilation must be ok
+	
+	for (const Circuit* circuit : circuits) {
+
+		// export the circuit
+		circuit->export_to_stream(out);
+		// space before the next circuit
+		out << "\n";
+
+	}
+}
+// get stats about the circuits
+Compiler::Result::Stats Compiler::Result::get_stats(void) const {
+	// fn result
+	Compiler::Result::Stats stats;
+	stats.nb_circuit = (int)circuits.size();
+
+	for (const Circuit* circuit : circuits) {
+		// get the stats of the  circuit
+		Circuit::Stats stat_cirtuit = circuit->get_stats();;
+		// copy stats
+		stats.nb_gate		+= stat_cirtuit.nb_gate;
+		stats.nb_connection += stat_cirtuit.nb_connection;
+		stats.nb_input		+= stat_cirtuit.nb_input;
+		stats.nb_output		+= stat_cirtuit.nb_output;
+	}
+
+	return stats;
+}
+
+
+
 // compile and buil the circuit
 Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 {
 	// open source file
 	std::ifstream source_file(file_name);
 	if (!source_file) {
-		Circuit null_circuit;
-		return std::move(Result{ false, null_circuit, Error("Cannot open file ", file_name) });
+		return std::move(Result( Error("Cannot open file ", file_name) ));
 	}
 	// compile the source file for the  BitVM_C_Grammar
 	LangageDefinitionAndContext BitVM_C_Grammar;
@@ -521,26 +555,29 @@ Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 	Error compile_error;
 	if (!compiler.compile(source_file, compile_error)) {
 		compile_error.file_name = file_name;
-		Circuit null_circuit;
-		return std::move(Result{ false, null_circuit, compile_error });
+		return std::move(Result( compile_error ));
 	}
 	// get the compiled program 
 	Program& program = compiler.get_programm();
 
 	// build the circuit
-	Circuit circuit_to_build;
-	BuildContext build_context(circuit_to_build);
+	Circuit* main_circuit_to_build = new Circuit();
+	BuildContext build_context(*main_circuit_to_build);
 	//Circuit circuit_ok;
 	try {
 		program.build_circuit(build_context);
 	}
 	catch (Error& build_error) {
 		build_error.file_name = file_name;
-		Circuit null_circuit;
-		return std::move(Result{ false, null_circuit, build_error });
+		return std::move(Result( build_error ));
 	}
-	// success
-	Error no_error;
-	return std::move(Result{ true, std::move(build_context.circuit), no_error });
+
+	// success gest all build ciruits
+	std::vector<Circuit*> circuits;
+	build_context.visit_circuits([&](Circuit& circuit) {
+		circuits.push_back(&circuit);
+	});
+	Result result_ok(circuits );
+	return std::move(result_ok);
 
 }

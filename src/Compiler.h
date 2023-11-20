@@ -163,10 +163,35 @@ protected:
 public:
 	//==>Main entry point
 	// compile and build the circuit from a file
-	struct Result {
-		bool	ok;
-		Circuit circuit;
+	class Result {
+	public:
+		bool ok=false;
+		// if result is not ok, the error
 		Error	error;
+	protected:
+		// if result is ok, the circuits. 0 is main circuit
+		std::vector<Circuit*> circuits;
+	public:
+		// Constructor if error
+		Result(Error e) : ok(false), error(e) {}
+		// Constructor if ok
+		Result(std::vector<Circuit*> c) : ok(true), circuits(c) {}
+
+		// export the resut to a stream
+		void export_to_stream(std::ostream& out) const;
+		// get stats
+		struct Stats {
+			int nb_circuit = 0;
+			int nb_gate = 0;
+			int nb_connection = 0;
+			int nb_input = 0;
+			int nb_output = 0;
+		};
+		// getd stats about the circuits
+		Stats get_stats(void) const;
+		// get the main circuits
+		Circuit& main_circuit(void) { return *circuits[0]; }
+
 	};
 	static Result compile_circuit_from_file(std::string file_name);
 
@@ -176,6 +201,8 @@ public:
 	bool compile(std::istream& source_code, Error& error_out);
 	// get the program afer compilation
 	Program& get_programm(void);
+
+
 
 protected:
 	// init the grammar
