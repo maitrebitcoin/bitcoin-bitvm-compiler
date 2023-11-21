@@ -314,6 +314,9 @@
     <None Include="..\doc\Expressions.md">
       <Filter>doc</Filter>
     </None>
+    <None Include="..\doc\Typess.md">
+      <Filter>doc</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">

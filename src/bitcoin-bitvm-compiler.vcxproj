@@ -162,6 +162,7 @@
     <None Include="..\doc\Expressions.md" />
     <None Include="..\doc\Identifiers.md" />
     <None Include="..\doc\Statements.md" />
+    <None Include="..\doc\Typess.md" />
     <None Include="..\README.md" />
     <None Include="sample\hello_word.bvc" />
     <None Include="sample\test_add.bvc" />

@@ -10,6 +10,19 @@ declare a new local var in the current scope
 	int8 local_var;
 ```
 
+## Struct type declaration
+
+daclare a new stucrture to be used as a user type
+
+```c
+struct Header {
+	int8 a;
+	int8 b;
+};
+int8 main(Header st_ab) 
+```
+
+
 ## Assign
 
 set a variable in the current scope
