@@ -1,4 +1,4 @@
-// test the int8 native type
+// test the if statement
 int8 main(int8 a) 
 {
 	if (a<10)

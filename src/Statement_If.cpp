@@ -79,10 +79,24 @@ void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVaria
 			nb_bits_in += (int)connexions.size();
 		}
 		// epxressison part is a varible in a struct. ex : a.b
-		virtual void onVariableInStruct(Expression_StructMember&) override {
-			// TODO
+		virtual void onVariableInStruct(Expression_StructMember& expr_var) override {
+			// get the parent variable type by name
+			ScopeVariable* var_source_srruct = ctx_source.variables.find_by_name(expr_var.parent_name);
+			if (var_source_srruct == nullptr) return;
+			// add all the struct in dest 
+			//#TODO : OPTIM, add only the struct member 
+			// if the var already exists in the dest, do nothing
+			if (variables_dest.find_by_name(expr_var.parent_name) != nullptr) return;
+			// copy var from source to dest
+			variables_dest.copy_var(*var_source_srruct);
+			// copy connexions for source to the gate
+			std::vector<Connection*> connexions = expr_var.get_all_connexions_full_struct(ctx_source);
+			for (Connection* connexion : connexions) {
+				gate_if->add_input(connexion, bloc_side);
+			}
+			nb_bits_in += (int)connexions.size();
 		}
-
+	protected:
 
 	};
 	Visitor local_visitor(ctx_source, variables_dest, gate, bloc_side );

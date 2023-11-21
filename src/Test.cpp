@@ -595,7 +595,25 @@ void test_if(void) {
 	_test_circuit_hex(result.main_circuit(), "77", "78");
 	_test_circuit_hex(result.main_circuit(), "FF", "05"); // -1 < 5
 }
-
+void test_if_and_stuct(void) {
+	// if (a < 10)	return 5;
+	// if (a==10) return 127;
+	//	return a + 1;
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_if_and_stuct.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.main_circuit(), "0000", "05");
+	_test_circuit_hex(result.main_circuit(), "0400", "05");
+	_test_circuit_hex(result.main_circuit(), "0900", "05");
+	_test_circuit_hex(result.main_circuit(), "0A01", "01"); // return b & 0F;
+	_test_circuit_hex(result.main_circuit(), "0A87", "07"); // return b & 0F;
+	_test_circuit_hex(result.main_circuit(), "0B01", "0C");
+	_test_circuit_hex(result.main_circuit(), "1B02", "1C");
+	_test_circuit_hex(result.main_circuit(), "7700", "78");
+	_test_circuit_hex(result.main_circuit(), "FFFF", "05"); // -1 < 5
+}
 
 
 
@@ -603,6 +621,8 @@ void test_if(void) {
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
+
+	test_if_and_stuct();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
@@ -632,6 +652,7 @@ void run_all_test(void) {
 	test_precedence();			std::cout << " precedence - PASSED\n";  
 	test_structure();		    std::cout << " structures - PASSED\n";
 	test_if();					std::cout << " if - PASSED\n";
+	test_if_and_stuct();		std::cout << " if and struct - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

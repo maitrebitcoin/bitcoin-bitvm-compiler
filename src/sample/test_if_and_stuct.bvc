@@ -1,0 +1,20 @@
+// test the if statemetn and struct together
+
+struct Header {
+	int8 a;
+	int8 b;
+};
+
+int8 main(Header st) 
+{
+	if (st.a<10)
+	{
+		return 5; 
+	}
+	if (st.a==10)
+	{
+		int8 c= st.b & 0x0F;
+		return c; 
+	}
+	return st.a+1; 
+}

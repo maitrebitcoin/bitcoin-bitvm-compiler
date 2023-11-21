@@ -47,6 +47,20 @@ void Expression_StructMember::init(Scope& parent_scope) {
 	member_offest_in_bit = member.offest_in_bit;
 }
 
+// get all gates used by the parent struct variable
+std::vector<Connection*> Expression_StructMember::get_all_connexions_full_struct(BuildContext& ctx) const {
+	// get the parent variable type by name
+	ScopeVariable* var = ctx.variables.find_by_name(parent_name);
+	if (var == nullptr)
+		return {};
+	// if variable not set
+	if (!var->is_set())
+		return {};
+	// return all the bits of the variable
+	return var->bits;
+}
+
+
 // build the circuit for the expression
 std::vector<Connection*> Expression_StructMember::build_circuit(BuildContext& ctx) {
 	// get the parent variable type by name

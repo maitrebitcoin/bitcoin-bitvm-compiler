@@ -317,6 +317,9 @@
     <None Include="..\doc\Typess.md">
       <Filter>doc</Filter>
     </None>
+    <None Include="sample\test_if_and_stuct.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">

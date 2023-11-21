@@ -24,6 +24,8 @@ public:
 	virtual void visit_epression(IVisitExpression& visitor) override { visitor.onVariableInStruct(*this); }
 	// init
 	virtual void init(Scope& parent_scope) override;
+	// get all gates used by the parent struct variable
+	std::vector<Connection*> get_all_connexions_full_struct(BuildContext& ctx) const;
 	// build the circuit for the expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 };
