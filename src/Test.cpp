@@ -615,7 +615,6 @@ void test_if_and_stuct(void) {
 	_test_circuit_hex(result.main_circuit(), "FFFF", "05"); // -1 < 5
 }
 
-
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
@@ -627,7 +626,6 @@ void run_all_test(void) {
 	test_or_gate();				std::cout << " or - PASSED\n";
 	test_equal_bool();			std::cout << " equal - PASSED\n";
 	// test basic langage consctuctions and operators
-
 	test_local_var();			std::cout << " local var - PASSED\n";
 	test_local_var_and_set();	std::cout << " local set var & set - PASSED\n";
 	test_int8();				std::cout << " int8 - PASSED\n";

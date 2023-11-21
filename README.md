@@ -64,13 +64,13 @@ Bits are in low endian (x86 format)
 
 # Current todo list :
 
-- write the language documentation
+
 - array support
 - operators : \* / % 
 - procedure calls
-- if statement
 - loop statement
 - basic function stdlib (sha256, shnor,... )
+- write the full language documentation
 - linux : create a makefile
 - wasm support and browser demo site
 - check for unused inputs instead of a "no more gates" error
