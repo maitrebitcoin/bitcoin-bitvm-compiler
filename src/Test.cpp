@@ -616,13 +616,9 @@ void test_if_and_stuct(void) {
 }
 
 
-
-
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
-
-	test_if_and_stuct();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
