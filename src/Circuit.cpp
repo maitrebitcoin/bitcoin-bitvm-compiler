@@ -28,12 +28,23 @@ void Circuit::set_output(std::vector<Connection*> new_outputs)
 	assert(!is_fully_constructed);
 	assert(outputs.size() == 0);
 	assert(new_outputs.size() > 0);
+	assert(output_size_child == 0);
 
 	for (Connection* connexion : new_outputs) {
 		connexion->is_output = true;
 		outputs.push_back(connexion);
 	}
 }
+// if the circuit have sub circuits (If statement for exemple), set the output size only
+void Circuit::set_output_size_child(NbBit size) {
+	assert(!is_fully_constructed);
+	assert(outputs.size() == 0);
+	assert(output_size_child == 0);
+	assert(size > 0);
+
+	output_size_child = size; 
+}
+
 
 
 // add a gate and its connexions into the circuit

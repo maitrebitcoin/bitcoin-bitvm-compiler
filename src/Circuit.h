@@ -59,7 +59,7 @@ public:
 	bool is_using_litteral_values(void) const;
 
 	// if the circuit have sub circuits (If statement for exemple), set the output size only
-	void set_output_size_child(NbBit size) { output_size_child = size; }
+	void set_output_size_child(NbBit size);
 	// size in bits of the output
 	NbBit nb_bits_output(void) const;
 

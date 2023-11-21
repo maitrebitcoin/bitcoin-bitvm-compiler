@@ -64,7 +64,7 @@ void CodeBloc::_reorganize_bloc_if_statement(void) {
 			for (int k = i + 1; k < statements.size(); k++)
 				bloc_after_if->statements.push_back(statements[k]);
 			// remove  bloc after the if
-			statements.erase(statements.begin() + i + 1);
+			statements.erase(statements.begin() + i + 1, statements.end());
 			// set the else bloc
 			if_statement->setElseBloc(bloc_after_if);
 			// no more statements

@@ -5,5 +5,9 @@ int8 main(int8 a)
 	{
 		return 5; 
 	}
+	if (a==10)
+	{
+		return 127; 
+	}
 	return a+1; 
 }

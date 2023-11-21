@@ -579,6 +579,7 @@ void test_structure(void) {
 }
 void test_if(void) {
 	// if (a < 10)	return 5;
+	// if (a==10) return 127;
 	//	return a + 1;
 	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_if.bvc");
 	if (!result.ok) {
@@ -588,7 +589,7 @@ void test_if(void) {
 	_test_circuit_hex(result.main_circuit(), "00", "05");
 	_test_circuit_hex(result.main_circuit(), "04", "05");
 	_test_circuit_hex(result.main_circuit(), "09", "05");
-	_test_circuit_hex(result.main_circuit(), "0A", "0B");
+	_test_circuit_hex(result.main_circuit(), "0A", "7F"); // return 127
 	_test_circuit_hex(result.main_circuit(), "0B", "0C");
 	_test_circuit_hex(result.main_circuit(), "1B", "1C");
 	_test_circuit_hex(result.main_circuit(), "77", "78");
@@ -603,8 +604,6 @@ void test_if(void) {
 void run_all_test(void) {
 	std::cout << "Testing...\n";
 
-	test_if();
-
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
 	test_xor_gate();			std::cout << " xor - PASSED\n";
@@ -612,6 +611,7 @@ void run_all_test(void) {
 	test_or_gate();				std::cout << " or - PASSED\n";
 	test_equal_bool();			std::cout << " equal - PASSED\n";
 	// test basic langage consctuctions and operators
+
 	test_local_var();			std::cout << " local var - PASSED\n";
 	test_local_var_and_set();	std::cout << " local set var & set - PASSED\n";
 	test_int8();				std::cout << " int8 - PASSED\n";
