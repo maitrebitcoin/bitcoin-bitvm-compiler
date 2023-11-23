@@ -76,7 +76,6 @@ void CodeBloc::_reorganize_bloc_if_statement(void) {
 // visit all part used in the bloc
 void CodeBloc::visit_all_epressions(IVisitExpression& visitor)
 {
-	
 	for (Statement* statement_i : statements) {
 		// visit expressions in the statement
 		statement_i->visit_Expression([&](Expression& expression) {
@@ -85,6 +84,17 @@ void CodeBloc::visit_all_epressions(IVisitExpression& visitor)
 		});
 	}//for
 }
+// visit all expression used in all the statement
+void CodeBloc::visit_Expression(std::function<void(Expression& expr)> visitor) const {
+	
+	for (Statement* statement_i : statements) {
+		// visit expressions in the statement
+		statement_i->visit_Expression(visitor);
+	}//for
+
+}
+
+
 
 // build a circuit that represents the bloc
 void CodeBloc::build_circuit(BuildContext& ctx) {

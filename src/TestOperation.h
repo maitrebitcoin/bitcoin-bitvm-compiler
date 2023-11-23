@@ -8,6 +8,8 @@ class TestOperation : public BinaryOperation {
 public:
 	// constructor
 	TestOperation(Operator op, Expression* left, Expression* right) : BinaryOperation(op, left, right) {};
+	// cast to 	TestOperation test_operation = for_condition->cast_to_TestOperationr();
+	virtual TestOperation* cast_to_TestOperationr(void) override { return this; }
 	// init
 	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the binairy expression

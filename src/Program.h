@@ -31,7 +31,9 @@ class LangageAttributes;
 #include "Statement_SetVar.h"
 #include "Statement_DeclareAndSetVar.h"
 #include "Statement_DeclareStruct.h"
+#include "Statement_Increment.h"
 #include "Statement_If.h"
+#include "Statement_For.h"
 #include "Function.h"
 #include "Scope.h"
 

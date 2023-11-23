@@ -2,7 +2,7 @@
 
 // set a variable statement
 class Statement_SetVar : public Statement {
-protected:
+public:
 	// name of the variable
 	std::string var_name;
 	Expression* expression;

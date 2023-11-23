@@ -34,7 +34,10 @@ enum E_TokenId {
 	TOKEN_STRUCT_TYPE,		   //  qs as type befor a var. ex: "struct b;"
 	TOKEN_USE_STRUCT,		   //  before . as in "struct.member"
 	TOKEN_USE_STRUCT_MEMBER,   //  after . as in "struct.member"
-	TOKEN_KEYWORKD_IF,			//  keyword "if"
+	TOKEN_KEYWORKD_IF,		   //  keyword "if"
+	TOKEN_KEYWORKD_FOR,		   //  keyword "fo"
+	TOKEN_INCREMENT,		   //  ++
+	TOKEN_DECREMENT,		   //  --
 
 
 };

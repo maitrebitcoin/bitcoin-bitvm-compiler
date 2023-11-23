@@ -2,7 +2,7 @@
 
 // déclare and set a variable statement
 class Statement_DeclareAndSetVar : public Statement {
-protected:
+public:
 	Statement_DeclareVar declaration;
 	Statement_SetVar	 affectation;
 
@@ -13,6 +13,8 @@ public:
 		declaration(line, type, varname),
 		affectation{ line, varname, expr }
 	{}
+	// cast to Statement_DeclareAndSetVar
+	virtual Statement_DeclareAndSetVar* cast_to_Statement_DeclareAndSetVar(void) { return this; }
 	// get return type
 	const Type& get_type(void) const { return declaration.get_type(); }
 	// visit all expression ueed in the statement

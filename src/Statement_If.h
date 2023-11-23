@@ -19,7 +19,7 @@ public:
 	// setthe bloc executed if  expression if true
 	void setElseBloc( CodeBloc*  bloc_else) { bloc_if_false = bloc_else; }
 	// visit all expression ueed in the statement
-	virtual void visit_Expression(std::function<void(Expression& expr)> visitor) const override { visitor(*expression); }
+	virtual void visit_Expression(std::function<void(Expression& expr)> visitor) const override;
 
 	// init if statmenet
 	virtual void init(Scope& parent_scope) override;

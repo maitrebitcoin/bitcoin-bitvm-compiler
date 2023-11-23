@@ -8,6 +8,8 @@ class Expression_Variable: public VariableDefinition, public Expression {
 public:
 	// constructor
 	Expression_Variable(std::string n) : VariableDefinition( (Type *)nullptr, n) {}
+	// cast to Expression_Variable
+	virtual Expression_Variable* cast_to_Expression_Variable(void) override { return this; }
 	// get Operand type
 	const Type& get_type(void) const { assert(type != nullptr); return *type; }
 	// visit all part used in the Expression

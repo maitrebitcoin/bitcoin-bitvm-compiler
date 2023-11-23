@@ -10,6 +10,7 @@ class Connection;
 class Scope;
 class Expression_Variable;
 class Expression_StructMember;
+class TestOperation;
 
 class IVisitExpression {
 public:
@@ -37,6 +38,10 @@ public:
 	virtual Literal* cast_to_literal(void) { return nullptr; }
 	// if the expression is a binairy expression, return it
 	virtual BinaryOperation* cast_to_BinaryOperation(void) { return nullptr; }
+	// cast to 	TestOperation test_operation = for_condition->cast_to_TestOperationr();
+	virtual TestOperation* cast_to_TestOperationr(void)  { return nullptr; }
+	// cast to Expression_Variable
+	virtual Expression_Variable* cast_to_Expression_Variable(void) { return nullptr; }
 
 	// get expression type
 	virtual const Type& get_type(void) const = 0;

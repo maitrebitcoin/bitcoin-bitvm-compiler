@@ -15,7 +15,14 @@ Statement_If::Statement_If(int line, Expression* condidtion, CodeBloc* if_true, 
 {
 	assert(bloc_if_true != nullptr || bloc_if_false != nullptr  );
 }
-
+// visit all expression ueed in the statement
+void Statement_If::visit_Expression(std::function<void(Expression& expr)> visitor) const  {
+	visitor(*expression); 
+	if (bloc_if_true != nullptr)
+		bloc_if_true->visit_Expression(visitor);
+	if (bloc_if_false != nullptr)
+		bloc_if_false->visit_Expression(visitor);
+}
 
 // init if statmenet
 void Statement_If::init(Scope& parent_scope) {

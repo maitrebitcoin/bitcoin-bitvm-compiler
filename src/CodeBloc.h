@@ -5,6 +5,7 @@
 class Statement;
 class Function;
 class BuildContext;
+class Expression;
 class Expression_Variable;
 class IVisitExpression;
 
@@ -27,6 +28,8 @@ public:
 	class Statement_Return* get_return_statement(void) const;
 	// visit all part used in the bloc
 	void visit_all_epressions(IVisitExpression& visitor);
+	// visit all expression used in all the statement
+	void visit_Expression(std::function<void(Expression& expr)> visitor) const;
 
 protected:
 	// reoorganize the bloc in case of "If"

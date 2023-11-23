@@ -614,10 +614,45 @@ void test_if_and_stuct(void) {
 	_test_circuit_hex(result.main_circuit(), "7700", "78");
 	_test_circuit_hex(result.main_circuit(), "FFFF", "05"); // -1 < 5
 }
+void test_increment(void) {
+	//  a++; return a;
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_increment.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.main_circuit(), "00", "01");
+	_test_circuit_hex(result.main_circuit(), "04", "05");
+	_test_circuit_hex(result.main_circuit(), "09", "0A");
+	_test_circuit_hex(result.main_circuit(), "0A", "0B"); // return 127
+	_test_circuit_hex(result.main_circuit(), "0B", "0C");
+	_test_circuit_hex(result.main_circuit(), "1B", "1C");
+	_test_circuit_hex(result.main_circuit(), "77", "78");
+	_test_circuit_hex(result.main_circuit(), "FF", "00"); 
+}
+void test_decrement(void) {
+	//  a++; return a;
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_decrement.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.main_circuit(), "00", "FF");
+	_test_circuit_hex(result.main_circuit(), "04", "03");
+	_test_circuit_hex(result.main_circuit(), "09", "08");
+	_test_circuit_hex(result.main_circuit(), "0A", "09"); // return 127
+	_test_circuit_hex(result.main_circuit(), "0B", "0A");
+	_test_circuit_hex(result.main_circuit(), "1B", "1A");
+	_test_circuit_hex(result.main_circuit(), "77", "76");
+	_test_circuit_hex(result.main_circuit(), "FF", "FE");
+}
+
 
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
+
+	test_increment();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
@@ -647,6 +682,8 @@ void run_all_test(void) {
 	test_structure();		    std::cout << " structures - PASSED\n";
 	test_if();					std::cout << " if - PASSED\n";
 	test_if_and_stuct();		std::cout << " if and struct - PASSED\n";
+	test_increment();			std::cout << " increment - PASSED\n";
+	test_decrement();			std::cout << " decrement - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

@@ -29,6 +29,7 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_FALSE,				"false"},
 		{ TOKEN_KEYWORKD_STRUCT,	"struct"},
 		{ TOKEN_KEYWORKD_IF,		"if"},
+		{ TOKEN_KEYWORKD_FOR,		"for"},
 		{ TOKEN_LEFT_SHIFT,			"<<"},
 		{ TOKEN_RIGHT_SHIFT,		">>"},
 		{ TOKEN_TEST_EQUAL,			"=="},
@@ -37,6 +38,8 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_TEST_LOWER,			"<"},
 		{ TOKEN_TEST_GREATEROREQ,	">="},
 		{ TOKEN_TEST_GREATER,		">"},
+		{ TOKEN_INCREMENT,			"++"},
+		{ TOKEN_DECREMENT,			"--"},
 		{ TOKEN_IDENTIFIER_FNNAME,	nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return !in_body && !in_fn_param && !in_declare_struct; }},
 		{ TOKEN_IDENTIFIER_FNPARAM,	nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return !in_body && in_fn_param; }},
 		{ TOKEN_IDENTIFIER_SETVAR  ,nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return in_body && in_set_var_possible;}},
@@ -141,6 +144,18 @@ RuleDefinition rules_definition[] =
 			result.statement_value = new_declare_and_set_var_statement(p[0].type_value, *p[1].string_value,  p[3].expression_value);
 		}
 	},
+	// var++
+	{ RULE_1_STATEMENT , {RULE_EXPRESSION, TOKEN_INCREMENT, ';'} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.statement_value = new_increment_statement(*p[0].expression_value, true);
+		}
+	},
+	// var--
+	{ RULE_1_STATEMENT , {RULE_EXPRESSION, TOKEN_DECREMENT, ';'} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.statement_value = new_increment_statement(*p[0].expression_value, false);
+		}
+	},
 	// strucutre declaration
 	// ex: struct Header { byte zize; bool is_ok; }
 	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_STRUCT, TOKEN_DECLARE_STRUCT_NAME, RULE_CODEBLOC, ';'} ,
@@ -155,6 +170,16 @@ RuleDefinition rules_definition[] =
 			result.statement_value = new_if_statement(p[1].expression_value, p[2].code_block_value);
 		}
 	},
+	// for (int8 i=0; i<10; i++) {code}
+	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_FOR, '(', RULE_1_STATEMENT, ';', RULE_EXPRESSION, ';', RULE_1_STATEMENT, ')', RULE_CODEBLOC  } ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.statement_value = new_for_statement(p[2].statement_value,	// int8 i=0;
+													   p[4].expression_value,	// i<10;
+													   p[6].statement_value,	// i++
+													   p[8].code_block_value);	// {code}
+		}
+	},
+			
 			
 
 	// all expressions : a,123,a&b,a-1+b

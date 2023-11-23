@@ -21,6 +21,11 @@ public:
 	virtual class Statement_DeclareVar* cast_to_Statement_DeclareVarr(void) { return nullptr; }
 	// cast to Statement_DeclareStruct
 	virtual class Statement_DeclareStruct* cast_to_Statement_DeclareStruct(void)  { return nullptr; }
+	// cast to Statement_DeclareAndSetVar
+	virtual class Statement_DeclareAndSetVar* cast_to_Statement_DeclareAndSetVar(void) { return nullptr; }
+	// cast to Statement_Increment
+	virtual	class Statement_Increment* cast_to_Statement_Increment(void) { return nullptr; }
+
 	// visit all expression ueed in the statement
 	virtual void visit_Expression(std::function<void(Expression& expr)> visitor) const = 0;
 

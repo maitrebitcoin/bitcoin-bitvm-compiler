@@ -106,7 +106,9 @@
     <ClCompile Include="Statement_DeclareAndSetVar.cpp" />
     <ClCompile Include="Statement_DeclareStruct.cpp" />
     <ClCompile Include="Statement_DeclareVar.cpp" />
+    <ClCompile Include="Statement_For.cpp" />
     <ClCompile Include="Statement_If.cpp" />
+    <ClCompile Include="Statement_Increment.cpp" />
     <ClCompile Include="Statement_Return.cpp" />
     <ClCompile Include="Statement_SetVar.cpp" />
     <ClCompile Include="TapScriptGate.cpp" />
@@ -145,7 +147,9 @@
     <ClInclude Include="Statement_DeclareAndSetVar.h" />
     <ClInclude Include="Statement_DeclareStruct.h" />
     <ClInclude Include="Statement_DeclareVar.h" />
+    <ClInclude Include="Statement_For.h" />
     <ClInclude Include="Statement_If.h" />
+    <ClInclude Include="Statement_Increment.h" />
     <ClInclude Include="Statement_Return.h" />
     <ClInclude Include="Statement_SetVar.h" />
     <ClInclude Include="TapScriptGate.h" />
@@ -167,8 +171,11 @@
     <None Include="sample\hello_word.bvc" />
     <None Include="sample\test_add.bvc" />
     <None Include="sample\test_and.bvc" />
+    <None Include="sample\test_decrement.bvc" />
+    <None Include="sample\test_for.bvc" />
     <None Include="sample\test_if.bvc" />
     <None Include="sample\test_if_and_stuct.bvc" />
+    <None Include="sample\test_increment.bvc" />
     <None Include="sample\test_int256.bvc" />
     <None Include="sample\test_int32.bvc" />
     <None Include="sample\test_int64.bvc" />

@@ -6,6 +6,7 @@
 #include "Program.h"
 #include "ParsingContext.h"
 #include "LangageAttributes.h"
+#include "Error.h"
 
 struct TokenDefinition;
 struct RuleDefinition;
@@ -168,6 +169,21 @@ public:
 		Statement_If* new_if_statement = new Statement_If(get_current_line_number(), condition, if_code, else_code);
 		statements.push_back(new_if_statement);
 		return new_if_statement;
+	}
+	// get a new for statement
+	Statement* new_for_statement(Statement* init, Expression* condition, Statement* increment, CodeBloc* code) {
+		Statement_For* new_for_statement = new Statement_For(get_current_line_number(), init, condition, increment, code);
+		statements.push_back(new_for_statement);
+		return new_for_statement;
+	}
+	// gest a new increment statement
+	Statement* new_increment_statement(Expression& exp, bool is_increment) {
+		Expression_Variable* var=exp.cast_to_Expression_Variable();
+		if (var==nullptr)
+			throw Error("increment on non variable");
+		Statement_Increment* new_increment_statement = new Statement_Increment(get_current_line_number(), var->name, is_increment);
+		statements.push_back(new_increment_statement);
+		return new_increment_statement;
 	}
 
 	// gst an new struct memeber

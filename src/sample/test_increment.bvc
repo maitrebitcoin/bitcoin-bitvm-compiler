@@ -1,0 +1,6 @@
+// test the var++ statement
+int8 main(int8 a) 
+{
+	a++;
+	return a; 
+}

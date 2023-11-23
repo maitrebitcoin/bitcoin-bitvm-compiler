@@ -31,22 +31,7 @@
     <ClCompile Include="CodeBloc.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
-    <ClCompile Include="Statement_DeclareVar.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
-    <ClCompile Include="Statement_DeclareStruct.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
     <ClCompile Include="TypeStruct.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
-    <ClCompile Include="Statement_Return.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
-    <ClCompile Include="Statement_SetVar.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
-    <ClCompile Include="Statement_DeclareAndSetVar.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
     <ClCompile Include="Type.cpp">
@@ -56,9 +41,6 @@
       <Filter>source\Program</Filter>
     </ClCompile>
     <ClCompile Include="Function.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
-    <ClCompile Include="Statement_If.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
     <ClCompile Include="BuildContext.cpp">
@@ -93,6 +75,30 @@
     </ClCompile>
     <ClCompile Include="ScopeVariable.cpp">
       <Filter>source\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_DeclareAndSetVar.cpp">
+      <Filter>source\Program\Statements</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_DeclareStruct.cpp">
+      <Filter>source\Program\Statements</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_DeclareVar.cpp">
+      <Filter>source\Program\Statements</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_If.cpp">
+      <Filter>source\Program\Statements</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_Return.cpp">
+      <Filter>source\Program\Statements</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_SetVar.cpp">
+      <Filter>source\Program\Statements</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_For.cpp">
+      <Filter>source\Program\Statements</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_Increment.cpp">
+      <Filter>source\Program\Statements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -141,25 +147,7 @@
     <ClInclude Include="TypeStruct.h">
       <Filter>source\Program</Filter>
     </ClInclude>
-    <ClInclude Include="Statement_DeclareVar.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
     <ClInclude Include="BuildContext.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Statement_DeclareStruct.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Statement_SetVar.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Statement_DeclareAndSetVar.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Statement_Return.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Statement.h">
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="Scope.h">
@@ -169,9 +157,6 @@
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="InterfaceInputsMap.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Statement_If.h">
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="BinaryOperation.h">
@@ -212,6 +197,33 @@
     </ClInclude>
     <ClInclude Include="ScopeVariable.h">
       <Filter>source\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement.h">
+      <Filter>source\Program\Statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_DeclareAndSetVar.h">
+      <Filter>source\Program\Statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_DeclareStruct.h">
+      <Filter>source\Program\Statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_DeclareVar.h">
+      <Filter>source\Program\Statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_If.h">
+      <Filter>source\Program\Statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_Return.h">
+      <Filter>source\Program\Statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_SetVar.h">
+      <Filter>source\Program\Statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_For.h">
+      <Filter>source\Program\Statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_Increment.h">
+      <Filter>source\Program\Statements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +332,15 @@
     <None Include="sample\test_if_and_stuct.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_for.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_increment.bvc">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_decrement.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
@@ -339,6 +360,9 @@
     </Filter>
     <Filter Include="doc">
       <UniqueIdentifier>{a8da2d67-d220-44a7-abb9-2f7353411c0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Program\Statements">
+      <UniqueIdentifier>{18e39e80-2138-4cba-ba62-672e70c68679}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
