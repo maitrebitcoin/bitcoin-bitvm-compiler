@@ -646,6 +646,26 @@ void test_decrement(void) {
 	_test_circuit_hex(result.main_circuit(), "77", "76");
 	_test_circuit_hex(result.main_circuit(), "FF", "FE");
 }
+void test_for(void) {
+
+	// return the sum of int form 1 to max_i, up to 10
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_for.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.main_circuit(), "00", "00");
+	_test_circuit_hex(result.main_circuit(), "01", "01");
+	_test_circuit_hex(result.main_circuit(), "02", "03");
+	_test_circuit_hex(result.main_circuit(), "03", "06"); 
+	_test_circuit_hex(result.main_circuit(), "04", "0A");
+	_test_circuit_hex(result.main_circuit(), "05", "0F");
+	_test_circuit_hex(result.main_circuit(), "0A", "37"); //55
+	_test_circuit_hex(result.main_circuit(), "0B", "37");
+	_test_circuit_hex(result.main_circuit(), "77", "37");
+	
+}
+
 
 
 // run all tests
