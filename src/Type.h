@@ -67,7 +67,7 @@ public:
 	// type is bool ?
 	virtual bool is_bool(void) const  override { return native_type == Native::bit; }
 	// type is integer ?
-	virtual bool is_integer(void) const override { return native_type == Native::int8 || native_type == Native::uint8; }
+	virtual bool is_integer(void) const override;
 	// type is a basic type (ie not a struct) ?
 	virtual bool is_basic(void) const { return true; }
 	// type is complete type (false : only the name is known)
@@ -81,5 +81,7 @@ public:
 
 	// get the native type
 	Native get_native_type(void) const { return native_type; }
+	// change native type. ex int8 to int256
+	void set_native_type(Native tn) { native_type = tn; }
 };
 

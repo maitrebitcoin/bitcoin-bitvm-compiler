@@ -42,7 +42,7 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_DECREMENT,			"--"},
 		{ TOKEN_IDENTIFIER_FNNAME,	nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return !in_body && !in_fn_param && !in_declare_struct; }},
 		{ TOKEN_IDENTIFIER_FNPARAM,	nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return !in_body && in_fn_param; }},
-		{ TOKEN_IDENTIFIER_SETVAR  ,nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return in_body && in_set_var_possible;}},
+		{ TOKEN_IDENTIFIER_SETVAR  ,nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return in_body && in_set_var_possible && next_char == '='; }},
 		{ TOKEN_IDENTIFIER,			nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return (in_body && !in_decl_localvar) && next_char != '.' && !in_use_struct; }},
 		{ TOKEN_IDENTIFIER_DECL,	nullptr, REGEXP_IDENTIFIER, [this](char next_char) {return (in_body && in_decl_localvar);   }},
 		{ TOKEN_DECLARE_STRUCT_NAME,nullptr, REGEXP_USERTYPE,	 [this](char next_char) {return in_declare_struct;  }},
@@ -113,7 +113,8 @@ RuleDefinition rules_definition[] =
 	{ RULE_N_STATEMENTS , {RULE_1_STATEMENT } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.code_block_value = new_code_bloc(p[0].statement_value);
-		}
+		},
+		[this](void) { return !in_for_statement; } // pre-condition to prevent rgouring statements in for loop
 	},
 	// statements -------------------
 	// return
@@ -144,14 +145,18 @@ RuleDefinition rules_definition[] =
 			result.statement_value = new_declare_and_set_var_statement(p[0].type_value, *p[1].string_value,  p[3].expression_value);
 		}
 	},
+	// var++ / var--
+	{ RULE_1_STATEMENT , {RULE_STATEMENT_INCREMENT, ';'} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {	result.expression_value = p[0].expression_value; }
+	},
 	// var++
-	{ RULE_1_STATEMENT , {RULE_EXPRESSION, TOKEN_INCREMENT, ';'} ,
+	{ RULE_STATEMENT_INCREMENT , {RULE_EXPRESSION, TOKEN_INCREMENT} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_increment_statement(*p[0].expression_value, true);
 		}
 	},
 	// var--
-	{ RULE_1_STATEMENT , {RULE_EXPRESSION, TOKEN_DECREMENT, ';'} ,
+	{ RULE_STATEMENT_INCREMENT , {RULE_EXPRESSION, TOKEN_DECREMENT} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_increment_statement(*p[0].expression_value, false);
 		}
@@ -171,15 +176,15 @@ RuleDefinition rules_definition[] =
 		}
 	},
 	// for (int8 i=0; i<10; i++) {code}
-	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_FOR, '(', RULE_1_STATEMENT, ';', RULE_EXPRESSION, ';', RULE_1_STATEMENT, ')', RULE_CODEBLOC  } ,
+	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_FOR, '(', RULE_1_STATEMENT, RULE_EXPRESSION, ';', RULE_1_STATEMENT, ')', RULE_CODEBLOC  } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_for_statement(p[2].statement_value,	// int8 i=0;
-													   p[4].expression_value,	// i<10;
-													   p[6].statement_value,	// i++
-													   p[8].code_block_value);	// {code}
+													   p[3].expression_value,	// i<10;
+													   p[5].statement_value,	// i++
+													   p[7].code_block_value);	// {code}
 		}
 	},
-			
+		
 			
 
 	// all expressions : a,123,a&b,a-1+b

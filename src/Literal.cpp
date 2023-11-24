@@ -3,6 +3,11 @@
 #include "Error.h"
 #include "Circuit.h"
 
+// constructor
+Literal::Literal(TypeBasic t, std::string v) 
+	: type(t)
+	, value_str(v) 
+{}
 
 // lietral init
 void Literal::init(Scope&) {
@@ -10,6 +15,15 @@ void Literal::init(Scope&) {
 	// ex: "0x12" => 0x12
 	value_bits = get_bools_from_value_str(type.get_native_type(), value_str);
 }
+// change literal type. ex int8 to int256
+void Literal::set_native_type(TypeBasic::Native tn) {
+	// mut ber
+	type.set_native_type( tn );
+	// reset value
+	value_bits = get_bools_from_value_str(type.get_native_type(), value_str);
+
+}
+	
 
 // get value of liette as a vector of bit
 std::vector<bool>  Literal::get_bools_from_value_str(Type::Native native_type, std::string value_str) {

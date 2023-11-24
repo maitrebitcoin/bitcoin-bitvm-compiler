@@ -25,6 +25,35 @@ int TypeBasic::size_in_bit(void) const
 		return 0;
 	}
 }
+
+// type is integer ?
+bool TypeBasic::is_integer(void) const  
+{ 
+	switch (native_type)
+	{
+	case Type::Native::undefined:
+		assert(false);
+		return false;
+	case Type::Native::bit:    
+		return   false;
+	case Type::Native::int8:   
+	case Type::Native::uint8:  
+	case Type::Native::int32:  
+	case Type::Native::uint32: 
+	case Type::Native::int64:  
+	case Type::Native::uint64: 
+	case Type::Native::int256: 
+	case Type::Native::uint256:
+		return true;
+	default:
+		assert(false);
+		return 0;
+	}
+
+}
+
+
+
 // compare
  bool TypeBasic::is_same_type(const Type& other) const {
 	// must be a basic type

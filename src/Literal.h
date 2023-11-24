@@ -13,7 +13,7 @@ public:
 	std::vector<bool> value_bits;
 public:
 	// constructor
-	Literal(TypeBasic t, std::string v) : type(t), value_str(v) {}
+	Literal(TypeBasic t, std::string v);
 	// visit all part used in the Expression
 	virtual void visit_epression(IVisitExpression& visitor) override { visitor.onLiteral(*this); }
 	// get Operand type
@@ -28,6 +28,8 @@ public:
 
 	// init
 	virtual void init(Scope& parent_scope) override;
+	// change literal type. ex int8 to int256
+	void set_native_type(TypeBasic::Native tn);
 	// build the circuit for the  expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 

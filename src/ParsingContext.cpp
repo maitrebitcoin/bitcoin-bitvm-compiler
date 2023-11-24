@@ -5,6 +5,17 @@
 #include "Compiler.h"
 #include "TokenId.h"
 
+// called when '{' is found
+void ParsingContext::open_bracket(void) {
+	opened_bracket++;
+	in_body = true;
+	in_set_var_possible = true;
+}
+void ParsingContext::close_bracket(void) {
+	opened_bracket--;
+	in_body = (opened_bracket > 0);
+}
+
 // caled for a new line 
 void ParsingContext::on_new_line(void) {
 	num_line++;
@@ -13,12 +24,20 @@ void ParsingContext::on_new_line(void) {
 // caled for each new token 
 void ParsingContext::on_new_token(const CToken& token)
 {
+	// bracket counting
 	if (token.type == '{')
 		open_bracket();
 	if (token.type == '}') {
 		close_bracket();
 		in_declare_struct = false;
 	}
+	// parenthesis counting
+	if (token.type == '(')
+		opened_parenthesis++;
+	if (token.type == ')')
+		opened_parenthesis--;
+
+
 	if (token.type == TOKEN_KEYWORKD_STRUCT)
 		in_declare_struct = true;
 	if (token.type == TOKEN_USE_STRUCT)
@@ -52,9 +71,16 @@ void ParsingContext::on_new_token(const CToken& token)
 			in_decl_localvar    = false;
 			in_set_var_possible = true;
 		}
-		else	{
-			// any token afer ';' cannot be a affecation
+		if ((token.type != ';') && (token.type != '{')) {
+			// any token afer ';' or '{' cannot be a affecation
 			in_set_var_possible = false;
 		}
+		// for () : enterind ans exiting
+		if (token.type == TOKEN_KEYWORKD_FOR)
+			in_for_statement = true;
+		if (in_for_statement && token.type == ')' && opened_parenthesis==0)
+			in_for_statement = false;
+
+
 	}
 }

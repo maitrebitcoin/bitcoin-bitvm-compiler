@@ -62,6 +62,9 @@ struct RuleDefinition {
 	std::vector<TokenOrRuleId> tokens;
 	// callback function if the rule is matched
 	std::function<void (TokenValue& result, std::vector<TokenValue> values)> action;
+	// pre-condiciton to reduce the rule. null = no pre-condition
+	std::function<bool(void)> pre_condition;
+
 };
 class GrammarRule : public RuleDefinition  {
 public:
@@ -73,14 +76,14 @@ public:
 	std::vector<TokenId> left_token_possible;
 	// right conditions to produce the rules.  empty  = all is valid
 	std::vector<TokenId> right_token_conditions;
-	
 
 public:
 	// constructor
 	GrammarRule(RuleDefinition definition) {
-		rule_id = definition.rule_id;
-		tokens  = definition.tokens;
-		action  = definition.action;
+		rule_id		  = definition.rule_id;
+		tokens		  = definition.tokens;
+		action		  = definition.action;
+		pre_condition = definition.pre_condition;
 	}
 	// add left basic possible tokens if not already present
 	void add_unique_left_token_possible(TokenId token_id) {
@@ -142,7 +145,8 @@ protected:
 	bool _is_line_empty(std::string line) const;
 	// remove spaces, tabs and comments
 	void _remove_white_space_and_comments(std::string& code_in_out) const;
-
+	// get first non space/tab char afet a match
+	char _get_next_nonspace_char(std::string code_in_out, std::string match_string) const;
 };
 
 class Compiler

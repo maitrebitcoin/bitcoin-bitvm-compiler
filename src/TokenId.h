@@ -2,42 +2,42 @@
 
 // token elements (lexer)
 enum E_TokenId {
-	TOKEN_TYPE_BOOL			  = 257,
-	TOKEN_TYPE_INT8,		   //  signed 8 bits integer
-	TOKEN_TYPE_UINT8,		   // 
-	TOKEN_TYPE_INT32,		   //  signed 32 bits integer
-	TOKEN_TYPE_UINT32,		   // 
-	TOKEN_TYPE_INT64,		   //  signed 64 bits integer
-	TOKEN_TYPE_UINT64,		   // 
-	TOKEN_TYPE_INT256,		   //  signed 256 bits integer / hash
-	TOKEN_TYPE_UINT256,		   // 
-	TOKEN_IDENTIFIER_FNNAME,   //  - function name
-	TOKEN_IDENTIFIER_FNPARAM,  //  - in function parmetres only
-	TOKEN_IDENTIFIER,	       //  - in function body statement only,
-	TOKEN_IDENTIFIER_DECL	 , //  - in function body statement only, after a type: local var déclaration
-	TOKEN_IDENTIFIER_SETVAR,   //  - in function body statement only, var name for affectation only.
-	TOKEN_NUMBER,			   // 
-	TOKEN_RETURN,			   // 
-	TOKEN_TRUE,				   //  true
-	TOKEN_FALSE,			   //  false
-	TOKEN_LEFT_SHIFT,		   //  <<
-	TOKEN_RIGHT_SHIFT,		   //  >>
-	TOKEN_TEST_EQUAL,		   //  ==
-	TOKEN_TEST_NOTEQUAL,	   //  !=
-	TOKEN_TEST_LOWER,		   //  <
-	TOKEN_TEST_LOWEROREQ,	   //  <=
-	TOKEN_TEST_GREATER,		   //  >
-	TOKEN_TEST_GREATEROREQ,	   //  >=
-	TOKEN_HEXANUMBER,		   //  0xF2
-	TOKEN_KEYWORKD_STRUCT,	   //  keyword "struct"
-	TOKEN_DECLARE_STRUCT_NAME, //  after "struct" keyword
-	TOKEN_STRUCT_TYPE,		   //  qs as type befor a var. ex: "struct b;"
-	TOKEN_USE_STRUCT,		   //  before . as in "struct.member"
-	TOKEN_USE_STRUCT_MEMBER,   //  after . as in "struct.member"
-	TOKEN_KEYWORKD_IF,		   //  keyword "if"
-	TOKEN_KEYWORKD_FOR,		   //  keyword "fo"
-	TOKEN_INCREMENT,		   //  ++
-	TOKEN_DECREMENT,		   //  --
+	TOKEN_TYPE_BOOL			  =   257,
+	TOKEN_TYPE_INT8,		   // 258	 signed 8 bits integer
+	TOKEN_TYPE_UINT8,		   // 259	
+	TOKEN_TYPE_INT32,		   // 260	 signed 32 bits integer
+	TOKEN_TYPE_UINT32,		   // 261	
+	TOKEN_TYPE_INT64,		   // 262	 signed 64 bits integer
+	TOKEN_TYPE_UINT64,		   // 263		
+	TOKEN_TYPE_INT256,		   // 264	 signed 256 bits integer / hash
+	TOKEN_TYPE_UINT256,		   // 265		
+	TOKEN_IDENTIFIER_FNNAME,   // 266	 - function name
+	TOKEN_IDENTIFIER_FNPARAM,  // 277	 - in function parmetres only
+	TOKEN_IDENTIFIER,	       // 268	 - in function body statement only,
+	TOKEN_IDENTIFIER_DECL	 , // 269	 - in function body statement only, after a type: local var déclaration
+	TOKEN_IDENTIFIER_SETVAR,   // 270	 - in function body statement only, var name for affectation only.
+	TOKEN_NUMBER,			   // 		
+	TOKEN_RETURN,			   //		
+	TOKEN_TRUE,				   //		 true
+	TOKEN_FALSE,			   //		 false
+	TOKEN_LEFT_SHIFT,		   // 275	 <<
+	TOKEN_RIGHT_SHIFT,		   // 276	 >>
+	TOKEN_TEST_EQUAL,		   // 277	 ==
+	TOKEN_TEST_NOTEQUAL,	   //		 !=
+	TOKEN_TEST_LOWER,		   //		 <
+	TOKEN_TEST_LOWEROREQ,	   // 280	 <=
+	TOKEN_TEST_GREATER,		   //		 >
+	TOKEN_TEST_GREATEROREQ,	   //		 >=
+	TOKEN_HEXANUMBER,		   //		 0xF2
+	TOKEN_KEYWORKD_STRUCT,	   //		 keyword "struct"
+	TOKEN_DECLARE_STRUCT_NAME, // 285	 after "struct" keyword
+	TOKEN_STRUCT_TYPE,		   //		 qs as type befor a var. ex: "struct b;"
+	TOKEN_USE_STRUCT,		   //		 before . as in "struct.member"
+	TOKEN_USE_STRUCT_MEMBER,   //		 after . as in "struct.member"
+	TOKEN_KEYWORKD_IF,		   //		 keyword "if"
+	TOKEN_KEYWORKD_FOR,		   // 290	 keyword "fo"
+	TOKEN_INCREMENT,		   //		 ++
+	TOKEN_DECREMENT,		   // 292	 --
 
 
 };
@@ -68,5 +68,6 @@ enum E_RuleId {
 	RULE_OPERATOR_COMPLEMENT,   // 1020 ex : ~a 
 	RULE_OPERATOR_SHIFT,		// 1021 ex : << >>
 	RULE_OPERATOR_CMP,			// 1022 ex : <= > ===
+	RULE_STATEMENT_INCREMENT,	// 1033 i++ or i--
 	RULE_PROGRAM = 1999, //  the whole program
 };

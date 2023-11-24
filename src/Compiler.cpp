@@ -233,6 +233,13 @@ bool Compiler::is_rule_matching_stack(GrammarRule& rule)  {
 			return false;
 	}
 
+	// check pre-condition
+	if (rule.pre_condition != nullptr) {
+		bool rule_ok = rule.pre_condition();
+		if (!rule_ok)
+			return false;
+	}
+
 	// récrusiv rule  : ignore post conditions
 	if (rule.is_recursive)
 		// matching ok
@@ -370,6 +377,18 @@ void CLexer::_remove_white_space_and_comments(std::string& code_in_out) const {
 		code_in_out = "";
 
 }
+// get first non space/tab char afet a match
+char CLexer::_get_next_nonspace_char(std::string code_in_out, std::string match_string) const {
+
+	int next_char_index = 0;
+	char next_char = code_in_out.substr(match_string.size(), 1)[0];
+	// skipo spaces and tab
+	while (next_char == ' ' || next_char == '\t') {
+		next_char_index++;
+		next_char = code_in_out.substr(match_string.size()+ next_char_index, 1)[0];
+	}
+	return next_char;
+}
 
 // get 1 token from the line
 CToken CLexer::get_next_token(ReadOption option) {
@@ -387,6 +406,7 @@ CToken CLexer::get_next_token(ReadOption option) {
 	}
 	return _get_next_token_from_line(remaining_ligne, ReadOption::remove);
 }
+
 
 // get 1 token from a string <code_in_out>
 CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption option) const {
@@ -434,8 +454,8 @@ CToken CLexer::_get_next_token_from_line(std::string& code_in_out, ReadOption op
 					// if thhe definition has a rule, check it
 					if (definition.condition != nullptr) {
 						// if the condition is not met, continue
-						char nextt_char = code_in_out.substr(match_string.size(), 1)[0];
-						if (!definition.condition(nextt_char))
+						char next_char = _get_next_nonspace_char( code_in_out, match_string );
+						if (!definition.condition(next_char))
 							continue;
 					}
 

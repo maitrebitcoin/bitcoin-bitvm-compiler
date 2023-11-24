@@ -5,13 +5,15 @@ class CToken;
 //  parsing context
 class ParsingContext {
 protected:
-	int  opened_bracket = 0;
+	int  opened_bracket = 0; // number of opened bracket
+	int  opened_parenthesis = 0; // number of opened parenthesis
 	bool in_body = false;
 	bool in_declare_struct = false; // in a struct declaration
 	bool in_use_struct = false; // in struct.membeer
 	bool in_fn_param = false;
 	bool in_decl_localvar = false;
 	bool in_set_var_possible = false;
+	bool in_for_statement = false; // in the for (a,b,c) statement
 	int num_line = 0;
 public:
 	// caled for each new token 
@@ -23,13 +25,6 @@ public:
 
 protected:
 	// called when '{' is found
-	void open_bracket(void) {
-		opened_bracket++;
-		in_body = true;
-		in_set_var_possible= true;
-	}
-	void close_bracket(void) {
-		opened_bracket--;
-		in_body = (opened_bracket > 0);
-	}
+	void open_bracket(void);
+	void close_bracket(void);
 };
