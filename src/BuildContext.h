@@ -31,6 +31,8 @@ public:
 	Circuit& circuit(void) { return *ctx_circuit; }
 	// visit all the circuits
 	void visit_circuits(std::function<void(Circuit&)> fnVisit);
+	// are we in a for statement ?
+	bool is_in_for_loop(void) const { return create_caller == Caller::for_statement; }
 
 };
 
