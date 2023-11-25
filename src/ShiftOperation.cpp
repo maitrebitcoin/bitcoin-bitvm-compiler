@@ -43,7 +43,7 @@ std::vector<Connection*> ShiftOperation::build_circuit(BuildContext& ctx) {
 	std::vector<Connection*> result(op_size, nullptr);
 
 	//  nb of bit in the output for the operand
-	Connection* _0 = ctx.circuit.get_literal_values(false);
+	Connection* _0 = ctx.circuit().get_literal_values(false);
 	for (int i = 0; i < op_size; i++) {
 		// right shift : >>
 		if (operation == Operator::op_right_shift) {

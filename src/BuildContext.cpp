@@ -3,7 +3,7 @@
 #include "Circuit.h"
 
 // constructor
-BuildContext::BuildContext(Caller caller) 
+BuildContext::BuildContext(Caller caller) : create_caller(caller)
 {
 	assert(caller == Caller::main_body); 
 	// alloc main circuit
@@ -12,7 +12,7 @@ BuildContext::BuildContext(Caller caller)
 
 
 // copy constructor
-BuildContext::BuildContext(const BuildContext& source, Caller caller) 
+BuildContext::BuildContext(const BuildContext& source, Caller caller) : create_caller(caller)
 {
 	assert(caller != Caller::main_body);
 	switch (caller) 

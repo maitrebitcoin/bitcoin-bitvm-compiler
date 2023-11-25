@@ -52,7 +52,7 @@ std::vector<Connection*> UnaryOperation::build_circuit_not(BuildContext& ctx, st
 	std::vector<Connection*> result;
 	for (int i = 0; i < inputs.size(); i++) {
 		std::array<Connection*, 1> input_1_bit = { inputs[i] };
-		std::array<Connection*, 1> bits_result = Gate_NOT().add_to_circuit(ctx.circuit, input_1_bit);
+		std::array<Connection*, 1> bits_result = Gate_NOT().add_to_circuit(ctx.circuit(), input_1_bit);
 		result.push_back(bits_result[0]);
 	}
 	return result;
@@ -66,7 +66,7 @@ std::vector<Connection*> UnaryOperation::build_circuit_negation(BuildContext& ct
 	// get 1 with the right size
 	std::vector<Connection*> _1;
 	for (int i = 0; i < inputs.size(); i++) {
-		_1.push_back(ctx.circuit.get_literal_values(i == 0));
+		_1.push_back(ctx.circuit().get_literal_values(i == 0));
 	}
 	// add 1
 	return BinaryOperation::build_circuit_add(ctx, not_inputs, _1);
