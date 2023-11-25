@@ -88,6 +88,7 @@
     <ClCompile Include="BinaryOperation.cpp" />
     <ClCompile Include="BuildContext.cpp" />
     <ClCompile Include="CodeBloc.cpp" />
+    <ClCompile Include="Expression.cpp" />
     <ClCompile Include="Expression_StructMember.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="LangageAttributes.cpp" />

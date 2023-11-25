@@ -16,8 +16,19 @@ void Literal::init(Scope&) {
 	value_bits = get_bools_from_value_str(type.get_native_type(), value_str);
 }
 // change literal type. ex int8 to int256
-void Literal::set_native_type(TypeBasic::Native tn) {
-	// mut ber
+void Literal::change_type(const Type& new_type)
+{
+	// new type must be a basic type
+	if (!new_type.is_basic())
+		throw Error("Invalid literal type");
+	// bool cannot be converted to other type
+	if (type.get_native_type() == Type::Native::bit )
+		throw Error("Cannot convert bool to other type");
+	assert(new_type.is_integer());
+	
+	// get new type
+	Type::Native tn	= new_type.cast_to_TypeBasic()->get_native_type();
+	// set type
 	type.set_native_type( tn );
 	// reset value
 	value_bits = get_bools_from_value_str(type.get_native_type(), value_str);

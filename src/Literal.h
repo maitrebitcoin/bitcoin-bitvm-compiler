@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Expression.h"
+#include "Type.h"
 
 // ex: 123
 class Literal : public Expression {
@@ -29,7 +30,7 @@ public:
 	// init
 	virtual void init(Scope& parent_scope) override;
 	// change literal type. ex int8 to int256
-	void set_native_type(TypeBasic::Native tn);
+	void change_type(const Type& new_type);
 	// build the circuit for the  expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 

@@ -100,6 +100,9 @@
     <ClCompile Include="Statement_Increment.cpp">
       <Filter>source\Program\Statements</Filter>
     </ClCompile>
+    <ClCompile Include="Expression.cpp">
+      <Filter>source\Program\Expression</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
