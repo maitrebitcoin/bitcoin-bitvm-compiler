@@ -1,6 +1,6 @@
 # bitcoin-bitvm-compiler 
 
-Generate a logical circuit for BitVM Bitcoin from a C like source code
+Generate aone or more logical circuits for BitVM Bitcoin from a C like source code
 
 
 ## Example :
@@ -14,7 +14,7 @@ int8 main(int8 a, int8 b)
 }
 ```
 
-Generate the cirucuit with :
+Generate the cirucuit(s) with :
 ```
  bitvmcompiler.exe source.bvc export.txt
 ```
@@ -64,7 +64,6 @@ Bits are in low endian (x86 format)
 
 # Current todo list :
 
-
 - array support
 - operators : \* / % 
 - procedure calls
@@ -74,4 +73,4 @@ Bits are in low endian (x86 format)
 - linux : create a makefile
 - wasm support and browser demo site
 - check for unused inputs instead of a "no more gates" error
-- optimise the generated circuit
+- optimize the generated circuit
