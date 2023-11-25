@@ -73,7 +73,15 @@ void BinaryOperation::init(Scope& parent_scope) {
 	right_operand->init(parent_scope);
 	// left and right operand must have the same type
 	if (!left_operand->get_type().is_same_type(right_operand->get_type()))
-		throw Error("Type mismatch");
+	{
+		// if left if a literal, try to cast right to the type of left
+		if (left_operand->cast_to_literal() != nullptr)
+			right_operand->cast_to_literal()->change_type(right_operand->get_type());
+		else if (right_operand->cast_to_literal() != nullptr )
+			right_operand->cast_to_literal()->change_type(left_operand->get_type());
+		else
+			throw Error("Type mismatch");
+	}
 	// type must ba a basic type
 	const TypeBasic* type_basic = left_operand->get_type().cast_to_TypeBasic();
 	if (type_basic == nullptr)
