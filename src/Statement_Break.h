@@ -1,0 +1,21 @@
+// the break statement 
+// in for() loop only
+
+#pragma once
+#include "Statement.h"
+
+class Statement_Break : public Statement {
+
+public:
+	// constructor
+	Statement_Break(int line) : Statement(line) {}
+
+	// visit all expression ueed in the statement
+	virtual void visit_Expression(std::function<void(Expression& expr)> visitor) const override {};
+	// init statmenet
+	virtual void init(Scope& parent_scope) override;
+	// build the circuit 
+	virtual void build_circuit(BuildContext& ctx) const override;
+
+};
+

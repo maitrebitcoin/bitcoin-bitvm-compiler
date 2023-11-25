@@ -8,6 +8,7 @@
 class Circuit;
 class ScopeVariables;
 class Connection;
+class Statement_For;
 
 // context for building the circuit
 class BuildContext {
@@ -20,7 +21,7 @@ public:
 	Caller create_caller;
 	Circuit *ctx_circuit = nullptr; // the circuit to build
 	ScopeVariables variables; // current known variables in the current scope
-
+	Statement_For * for_statement = nullptr; // the current for statement if we are building a loop
 public:
 	// constructor
 	BuildContext(Caller caller);

@@ -103,6 +103,9 @@
     <ClCompile Include="Expression.cpp">
       <Filter>source\Program\Expression</Filter>
     </ClCompile>
+    <ClCompile Include="Statement_Break.cpp">
+      <Filter>source\Program\Statements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -226,6 +229,9 @@
       <Filter>source\Program\Statements</Filter>
     </ClInclude>
     <ClInclude Include="Statement_Increment.h">
+      <Filter>source\Program\Statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_Break.h">
       <Filter>source\Program\Statements</Filter>
     </ClInclude>
   </ItemGroup>

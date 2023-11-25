@@ -185,6 +185,12 @@ public:
 		statements.push_back(new_increment_statement);
 		return new_increment_statement;
 	}
+	// get a new break statement
+	Statement* new_break_statement(void) {
+		Statement_Break* new_break_statement = new Statement_Break(get_current_line_number());
+		statements.push_back(new_break_statement);
+		return new_break_statement;
+	}
 
 	// gst an new struct memeber
 	Expression* new_struct_member(std::string struct_name, std::string membre_name ) {

@@ -34,6 +34,7 @@ class LangageAttributes;
 #include "Statement_Increment.h"
 #include "Statement_If.h"
 #include "Statement_For.h"
+#include "Statement_Break.h"
 #include "Function.h"
 #include "Scope.h"
 

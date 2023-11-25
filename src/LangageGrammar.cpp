@@ -30,6 +30,7 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_KEYWORKD_STRUCT,	"struct"},
 		{ TOKEN_KEYWORKD_IF,		"if"},
 		{ TOKEN_KEYWORKD_FOR,		"for"},
+		{ TOKEN_KEYWORKD_BREAK,		"break"},
 		{ TOKEN_LEFT_SHIFT,			"<<"},
 		{ TOKEN_RIGHT_SHIFT,		">>"},
 		{ TOKEN_TEST_EQUAL,			"=="},
@@ -184,7 +185,13 @@ RuleDefinition rules_definition[] =
 													   p[7].code_block_value);	// {code}
 		}
 	},
-		
+	// break	
+	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_BREAK, ';'} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.statement_value = new_break_statement();
+		}
+	},
+
 			
 
 	// all expressions : a,123,a&b,a-1+b

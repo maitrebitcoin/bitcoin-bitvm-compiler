@@ -38,6 +38,7 @@ enum E_TokenId {
 	TOKEN_KEYWORKD_FOR,		   // 290	 keyword "fo"
 	TOKEN_INCREMENT,		   //		 ++
 	TOKEN_DECREMENT,		   // 292	 --
+	TOKEN_KEYWORKD_BREAK,	   // 293	 keyword "break"
 
 
 };

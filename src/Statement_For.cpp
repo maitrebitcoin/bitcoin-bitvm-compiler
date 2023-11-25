@@ -93,6 +93,7 @@ void Statement_For::build_circuit(BuildContext& ctx) const {
 
 	// build a new context for the for loop
 	BuildContext ctx_for_loop(ctx, BuildContext::Caller::for_statement );
+	ctx_for_loop.for_statement =  const_cast<Statement_For *>(this);
 	// init : crate loop var and set it to start value
 	for_init->build_circuit(ctx_for_loop);
 	Statement_DeclareAndSetVar* for_init_as_declare_var = for_init->cast_to_Statement_DeclareAndSetVar();
