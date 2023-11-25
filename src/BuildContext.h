@@ -14,19 +14,21 @@ class BuildContext {
 
 
 public:
-	Circuit &circuit; // the circuit to build
-	//std::vector<Circuit*> sub_circuits; // sub circuits created pour if/loop/prorcedure
+	Circuit *ctx_circuit = nullptr; // the circuit to build
 	ScopeVariables variables; // current known variables in the current scope
 
 public:
+	// creator on copy coller type
+	enum class Caller { main_body, if_statement, for_statement };
 	// constructor
-	BuildContext(Circuit& c) : circuit(c) {}
+	BuildContext(Caller caller);
+	// copy constructor
+	BuildContext(const BuildContext& source, Caller caller);
 
+	// get the current circuit to build in the context
+	Circuit& circuit(void) { return *ctx_circuit; }
 	// visit all the circuits
-	void visit_circuits(std::function<void (Circuit&)> fnVisit);
-
-	// get a new sub circuit
-	Circuit& get_new_sub_circuit(void);
+	void visit_circuits(std::function<void(Circuit&)> fnVisit);
 
 };
 

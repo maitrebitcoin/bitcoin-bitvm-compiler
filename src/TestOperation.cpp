@@ -32,7 +32,7 @@ std::vector<Connection*> TestOperation::build_circuit(BuildContext& ctx) {
 		std::vector<Connection*> equal = build_circuit_equal(ctx, op_left, op_right);
 		// negate the result
 		std::array<Connection*, 1> input_1_bit = { equal[0] };
-		std::array<Connection*, 1> bit_not_equal = Gate_NOT().add_to_circuit(ctx.circuit, input_1_bit);
+		std::array<Connection*, 1> bit_not_equal = Gate_NOT().add_to_circuit(ctx.circuit(), input_1_bit);
 		std::vector<Connection*> result(1, nullptr);
 		result[0] = bit_not_equal[0];
 		return result;
@@ -53,7 +53,7 @@ std::vector<Connection*> TestOperation::build_circuit(BuildContext& ctx) {
 		Connection* b_minus_a_is_negative = b_minus_a[op_right.size() - 1];
 		// a<=b = !(a>b) 
 		std::array<Connection*, 1> input_1_bit = { b_minus_a_is_negative };
-		std::array<Connection*, 1> bit_result = Gate_NOT().add_to_circuit(ctx.circuit, input_1_bit);
+		std::array<Connection*, 1> bit_result = Gate_NOT().add_to_circuit(ctx.circuit(), input_1_bit);
 		std::vector<Connection*> result(1, bit_result[0]);
 		return result;
 	}
@@ -73,7 +73,7 @@ std::vector<Connection*> TestOperation::build_circuit(BuildContext& ctx) {
 		Connection* a_minus_b_is_negative = a_minus_b[op_right.size() - 1];
 		// a<=b = !(a>b) 
 		std::array<Connection*, 1> input_1_bit = { a_minus_b_is_negative };
-		std::array<Connection*, 1> bit_result = Gate_NOT().add_to_circuit(ctx.circuit, input_1_bit);
+		std::array<Connection*, 1> bit_result = Gate_NOT().add_to_circuit(ctx.circuit(), input_1_bit);
 		std::vector<Connection*> result(1, bit_result[0]);
 		return result;
 	}
@@ -101,7 +101,7 @@ std::vector<Connection*>  TestOperation::build_circuit_equal(BuildContext& ctx,
 	for (int i = 0; i < nb_bit; i++)
 	{
 		std::array<Connection*, 2> input_2_bit = { op_left[i], op_right[i] };
-		std::array<Connection*, 1> bit_equal = Gate_XNOR().add_to_circuit(ctx.circuit, input_2_bit);
+		std::array<Connection*, 1> bit_equal = Gate_XNOR().add_to_circuit(ctx.circuit(), input_2_bit);
 		bit_equal_array[i] = bit_equal[0];
 	}
 	// easy case: compare 2 bools
@@ -120,7 +120,7 @@ std::vector<Connection*>  TestOperation::build_circuit_equal(BuildContext& ctx,
 		for (int i = 0; i < bit_equal_array_next.size(); i++)
 		{
 			std::array<Connection*, 2> input_2_bit = { bit_equal_array[i * 2], bit_equal_array[i * 2 + 1] };
-			std::array<Connection*, 1> _equal = Gate_AND().add_to_circuit(ctx.circuit, input_2_bit);
+			std::array<Connection*, 1> _equal = Gate_AND().add_to_circuit(ctx.circuit(), input_2_bit);
 			bit_equal_array_next[i] = _equal[0];
 		}
 		// nesxt cascade

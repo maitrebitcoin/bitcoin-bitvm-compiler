@@ -252,7 +252,7 @@ std::vector<Connection*> Literal::build_circuit(BuildContext& ctx) {
 		// get the bit value
 		bool b = value_bits[i];
 		// get literal value as a vector of bits
-		Connection* connection_to_0or1 = ctx.circuit.get_literal_values(b);
+		Connection* connection_to_0or1 = ctx.circuit().get_literal_values(b);
 		result.push_back(connection_to_0or1);
 	}
 

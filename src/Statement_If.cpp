@@ -141,36 +141,34 @@ void Statement_If::build_circuit(BuildContext& ctx) const
 	if (bloc_if_false == nullptr)
 		throw Error("Internal error : if (false) bloc is null");
 
-	// create 2 new sub-circuits 
-	Circuit& circuit_if_true  = ctx.get_new_sub_circuit();
-	BuildContext ctx_if_true(circuit_if_true);
-	Circuit& circuit_if_false = ctx.get_new_sub_circuit();;
-	BuildContext ctx_if_false(circuit_if_false);
+	// create 2 contexts with 2 new sub circuits 
+	BuildContext ctx_if_true(ctx,  BuildContext::Caller::if_statement );
+	BuildContext ctx_if_false(ctx, BuildContext::Caller::if_statement);
 	// créate a new gate IF
-	Gate_IF* gate_if = new Gate_IF(&circuit_if_true, &circuit_if_false);
+	Gate_IF* gate_if = new Gate_IF(&ctx_if_true.circuit(), &ctx_if_false.circuit());
 
 	// init true case
-	_init_variables_and_gate(ctx, ctx_if_true.variables, gate_if, circuit_if_true, true );
+	_init_variables_and_gate(ctx, ctx_if_true.variables, gate_if, ctx_if_true.circuit(), true);
 	bloc_if_true->build_circuit(ctx_if_true);
 	// init false case
-	_init_variables_and_gate(ctx, ctx_if_false.variables, gate_if, circuit_if_false, false );
+	_init_variables_and_gate(ctx, ctx_if_false.variables, gate_if, ctx_if_false.circuit(), false);
 	bloc_if_false->build_circuit(ctx_if_false);
 
 	// add the gate to the circuit
 	std::array<Connection*, 1> input_1_bit = { expression_value[0] };
 	std::array<Connection*, 0> void_result =
-	gate_if->add_to_circuit(ctx.circuit, input_1_bit);
+	gate_if->add_to_circuit(ctx.circuit(), input_1_bit);
 
 
 	// tell the ciruit outupt sizz, without real connexion.
 	// the real output will be from or circuit_if_true ou ctx_if_false
-	NbBit nb_bit_out = circuit_if_true.nb_bits_output();
+	NbBit nb_bit_out = ctx_if_true.circuit().nb_bits_output();
 	// the 2 circuits must have the same output size
-	if (nb_bit_out != circuit_if_false.nb_bits_output())
+	if (nb_bit_out != ctx_if_false.circuit().nb_bits_output())
 		throw Error("If : 2 Return statements with different size");
 
 	// connect the output of the expression to the output of the circuit
-	ctx.circuit.set_output_size_child(nb_bit_out);
+	ctx.circuit().set_output_size_child(nb_bit_out);
 }
 
 

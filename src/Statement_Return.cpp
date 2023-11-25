@@ -26,5 +26,5 @@ void Statement_Return::build_circuit(BuildContext& ctx) const {
 	int nb_bit_out = (int)outputs.size();
 	assert(nb_bit_out == get_type().size_in_bit());
 	// connect the output of the expression to the output of the circuit
-	ctx.circuit.set_output(outputs);
+	ctx.circuit().set_output(outputs);
 }

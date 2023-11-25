@@ -130,7 +130,7 @@ std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {
 		// IN
 		std::array<Connection*, 2> input_2_bit = { output_left[i], output_right[i] };
 		// OUT = A OP B
-		std::array<Connection*, 1> bits_result = gate->add_to_circuit(ctx.circuit, input_2_bit);
+		std::array<Connection*, 1> bits_result = gate->add_to_circuit(ctx.circuit(), input_2_bit);
 		//TODO
 		//delete gate;
 		result.insert(result.end(), bits_result.begin(), bits_result.end());
@@ -148,13 +148,13 @@ std::vector<Connection*> BinaryOperation::build_circuit_add(BuildContext& ctx,
 	Gate_ADDC gate_addc; // add 2 birs + carry, return carry + 1 bit 
 	// start with 1st bit addition
 	std::array<Connection*, 2> input_2_bit = { in_a[0], in_b[0] };
-	std::array<Connection*, 2> low_bits = gate_add.add_to_circuit(ctx.circuit, input_2_bit);
+	std::array<Connection*, 2> low_bits = gate_add.add_to_circuit(ctx.circuit(), input_2_bit);
 	result.push_back(low_bits[0]);
 	Connection* carry = low_bits[1];
 	for (int i = 1; i < size; i++) {
 		// IN
 		std::array<Connection*, 3> input_3_bit = { in_a[i], in_b[i], carry };
-		std::array<Connection*, 2> bits_ = gate_addc.add_to_circuit(ctx.circuit, input_3_bit);
+		std::array<Connection*, 2> bits_ = gate_addc.add_to_circuit(ctx.circuit(), input_3_bit);
 		result.push_back(bits_[0]);
 		carry = bits_[1];
 	}

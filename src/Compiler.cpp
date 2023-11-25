@@ -581,8 +581,7 @@ Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 	Program& program = compiler.get_programm();
 
 	// build the circuit
-	Circuit* main_circuit_to_build = new Circuit();
-	BuildContext build_context(*main_circuit_to_build);
+	BuildContext build_context( BuildContext::Caller::main_body );
 	//Circuit circuit_ok;
 	try {
 		program.build_circuit(build_context);

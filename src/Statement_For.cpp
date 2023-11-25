@@ -73,10 +73,11 @@ void Statement_For::init(Scope& parent_scope) {
 	// init ok
 }
 // build the circuit for the for statement
+
 void Statement_For::build_circuit(BuildContext& ctx) const {
 
-	// bluild context for the for loop
-	BuildContext ctx_for_loop(ctx.circuit);
+	// build a new context for the for loop
+	BuildContext ctx_for_loop(ctx, BuildContext::Caller::for_statement );
 	// init : crate loop var and set it to start value
 	for_init->build_circuit(ctx_for_loop);
 
