@@ -30,7 +30,7 @@ void Statement_For::init(Scope& parent_scope) {
 	for_condition->init(parent_scope);
 	for_increment->init( parent_scope );
 	// init blocs of code
-	code->init(parent_scope);
+	code->init_ex(parent_scope, CodeBloc::InitOption::return_not_required);
 
 	// init statement mut be declaration of a variable set to an literal
 	// ex: int i=0
@@ -59,12 +59,34 @@ void Statement_For::init(Scope& parent_scope) {
 	if (increment_as_increment == nullptr)
 		throw Error("Increment statement must be var++");
 
+	if (increment_as_increment->is_increment)
+		incr_value = 1;// i++
+	else
+		incr_value = -1; // i--
+
+	// sanity check on loop values
+	if (incr_value == 1 && end_value<=start_value)
+		throw Error("For loop : invalid bounds");
+	if (incr_value == -1 && end_value >= start_value)
+		throw Error("For loop : invalid bounds");
+
 	// init ok
 }
 // build the circuit for the for statement
 void Statement_For::build_circuit(BuildContext& ctx) const {
 
-	throw Error("TODO");
+	// bluild context for the for loop
+	BuildContext ctx_for_loop(ctx.circuit);
+	// init : crate loop var and set it to start value
+	for_init->build_circuit(ctx_for_loop);
+
+	// loop to create all gates
+	for (int i = start_value; i != end_value; i += incr_value) {
+
+		code->build_circuit(ctx_for_loop);
+		// increment
+		for_increment->build_circuit(ctx_for_loop);
+	}
 
 }
 

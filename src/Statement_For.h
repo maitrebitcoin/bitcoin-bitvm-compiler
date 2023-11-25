@@ -19,6 +19,8 @@ protected:
 	int start_value = 0;
 	// en value
 	int end_value = 0;
+	// increment value 1 ou -1
+	int incr_value = 1;
 
 public:
 	// constructor

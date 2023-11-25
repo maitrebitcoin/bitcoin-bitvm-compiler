@@ -15,7 +15,11 @@ Statement_Return* CodeBloc::get_return_statement(void) const {
 }
 
 // init a bloc
-void CodeBloc::init(Scope& parent_scp) {
+void CodeBloc::init(Scope& scope) {
+	init_ex(scope, InitOption::return_must_be_present);
+}
+// init a bloc, extentend version used in "for" statement
+void CodeBloc::init_ex(Scope& parent_scp, InitOption option) {
 	// init parent function in the scope
 	parent_function = parent_scp.get_parent_function();
 	parent_scope	= &parent_scp;
@@ -39,6 +43,11 @@ void CodeBloc::init(Scope& parent_scp) {
 	// check statements :
 	if (statements.size() == 0)
 		throw Error("Empty function");
+
+	// if retunr is optionnal
+	if (option == InitOption::return_not_required)
+		return;
+
 	// last statement must be a return or if
 	Statement* last_statement = statements.back();
 	if (  last_statement->cast_to_Statement_Return() == nullptr
