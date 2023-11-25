@@ -23,7 +23,7 @@ public:
 	// init a bloc
 	void init( Scope& global_scope);
 	// init a bloc, extentend version used in "for" statement
-	enum class InitOption { return_must_be_present, return_not_required };
+	enum class InitOption { return_must_be_present, return_or_break_must_be_present, return_not_required, };
 	void init_ex(Scope& global_scope, InitOption option);
 	// build a circuit that represents the bloc
 	void build_circuit(BuildContext& ctx);

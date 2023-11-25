@@ -9,6 +9,8 @@ class Statement_Break : public Statement {
 public:
 	// constructor
 	Statement_Break(int line) : Statement(line) {}
+	// cast to Statement_Break
+	virtual	class Statement_Break* cast_to_Statement_Break(void) override { return this; }
 
 	// visit all expression ueed in the statement
 	virtual void visit_Expression(std::function<void(Expression& expr)> visitor) const override {};

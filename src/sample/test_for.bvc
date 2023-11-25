@@ -4,10 +4,12 @@ int8 main(int8 max_i)
 	// return the sum of int form 1 to max_i, up to 10
 	int8 sum=0;
 	for (int8 i=0;i<=10;i++;) {
-		int8 local = sum + i;
-//		if (i==max_i)
-//			return sum;
-		sum =  local;//sum + i;
+	//	int8 local = sum + i;
+		if (i==max_i) 
+		{
+			break;
+		}
+		sum = sum + i;
 	}
 	return sum;
 }

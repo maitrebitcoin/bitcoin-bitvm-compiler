@@ -48,8 +48,13 @@ void CodeBloc::init_ex(Scope& parent_scp, InitOption option) {
 	if (option == InitOption::return_not_required)
 		return;
 
-	// last statement must be a return or if
 	Statement* last_statement = statements.back();
+	// if last statement can be a break and iti is a break
+	if (option == InitOption::return_or_break_must_be_present
+		&& last_statement->cast_to_Statement_Break() != nullptr)
+		return; //OK
+
+	// last statement must be a return or if
 	if (  last_statement->cast_to_Statement_Return() == nullptr
 	   && last_statement->cast_to_Statement_If() == nullptr)
 		throw Error("Last statement must be a return");

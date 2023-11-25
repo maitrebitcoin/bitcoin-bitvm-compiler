@@ -71,7 +71,10 @@ void ParsingContext::on_new_token(const CToken& token)
 			in_decl_localvar    = false;
 			in_set_var_possible = true;
 		}
-		if ((token.type != ';') && (token.type != '{')) {
+		if (    (token.type != ';')  // after a statement
+			 && (token.type != '{') // begin of block
+			 && (token.type != '}')) // afeter end of block. ex; "if (a) {}\nint8 b=3;"
+	    {
 			// any token afer ';' or '{' cannot be a affecation
 			in_set_var_possible = false;
 		}

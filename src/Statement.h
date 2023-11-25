@@ -25,6 +25,8 @@ public:
 	virtual class Statement_DeclareAndSetVar* cast_to_Statement_DeclareAndSetVar(void) { return nullptr; }
 	// cast to Statement_Increment
 	virtual	class Statement_Increment* cast_to_Statement_Increment(void) { return nullptr; }
+	// cast to Statement_Break
+	virtual	class Statement_Break* cast_to_Statement_Break(void) { return nullptr; }
 
 	// visit all expression ueed in the statement
 	virtual void visit_Expression(std::function<void(Expression& expr)> visitor) const = 0;
