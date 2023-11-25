@@ -16,10 +16,10 @@ bool ScopeVariable::is_set(void) const {
 
 // find a variable by name
 ScopeVariable* ScopeVariables::find_by_name(std::string name) {
-	for (ScopeVariable& var_i : *this)
+	for (ScopeVariable* var_i : *this)
 	{
-		if (var_i.name == name)
-			return &var_i;
+		if (var_i->name == name)
+			return var_i;
 	}
 	return nullptr;
 }
@@ -33,19 +33,19 @@ void ScopeVariables::init_from_function_parameters(
 	int index = 0;
 	for (const Function::Parameter& param_i : definition.parameters)
 	{
-		ScopeVariable var_i(param_i.type, param_i.name);
+		ScopeVariable* var_i = new ScopeVariable(param_i.type, param_i.name);
 		int size = param_i.type->size_in_bit();
-		var_i.bits.assign(current_input.begin() + index,
+		var_i->bits.assign(current_input.begin() + index,
 			current_input.begin() + index + size);
 		this->push_back(var_i);
-		index += var_i.type->size_in_bit();
+		index += var_i->type->size_in_bit();
 	}
 }
 
 // declare a new local variable
 void ScopeVariables::declare_local_var(Type* var_type, std::string var_name) {
 
-	ScopeVariable new_var{ var_type, var_name };
+	ScopeVariable* new_var = new ScopeVariable( var_type, var_name );
 	push_back(new_var);
 }
 
@@ -53,10 +53,10 @@ void ScopeVariables::declare_local_var(Type* var_type, std::string var_name) {
 void ScopeVariables::copy_var(const ScopeVariable& var_source)
 {
 	// deep copy : if the var is modified in the sub-scope, the parent scope var is not modified
-	ScopeVariable new_var{var_source.type, var_source.name };
+	ScopeVariable* new_var = new ScopeVariable(var_source.type, var_source.name );
 	// if the source var ia assigned, copy source bits to the new variable
 	if (var_source.is_set())
-		new_var.set_value(var_source.bits);
+		new_var->set_value(var_source.bits);
 
 	push_back(new_var);
 

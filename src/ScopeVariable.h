@@ -10,7 +10,7 @@
 // var during building, valid in a scope
 class ScopeVariable : public VariableDefinition {
 public:
-	std::vector<Connection*> bits; // curetn vue. emtpy if var not yet assigned
+	std::vector<Connection*> bits; // current val. emtpy if var not yet assigned
 public:
 	// constructor
 	ScopeVariable(Type* t, std::string n) : VariableDefinition(t, n) { }
@@ -21,7 +21,7 @@ public:
 	bool is_set(void) const;
 };
 // all the variables in a scope
-class ScopeVariables : private std::vector<ScopeVariable> {
+class ScopeVariables : private std::vector<ScopeVariable*> {
 public:
 	// find a variable by name
 	ScopeVariable* find_by_name(std::string name);

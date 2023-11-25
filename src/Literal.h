@@ -34,10 +34,14 @@ public:
 	// build the circuit for the  expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
 
-	// get value of liette as a vector of bit
+	// get value of litteral string as a vector of bit
 	static std::vector<bool> get_bools_from_value_str(Type::Native native_type, std::string value_str);
 	// convert hex string of any size to array of bits in low endian
 	static std::vector<bool> hex_string_to_bits(std::string hex_string);
+	// get value  of an int as a vector of connexions
+	static std::vector<Connection*> get_connections_from_value_int(BuildContext& ctx, const Type& type, int value_int);
+
+
 protected:
 	// convert the value of the literal to a vector of bits for bool type
 	static std::vector<bool> _get_bits_value_bool(std::string str_val);

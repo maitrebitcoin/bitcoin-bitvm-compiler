@@ -62,6 +62,30 @@ std::vector<bool>  Literal::get_bools_from_value_str(Type::Native native_type, s
 		throw Error("Invalid literal type");
 	}
 }
+// get value  of an int as a vector of connexions
+std::vector<Connection*> Literal::get_connections_from_value_int(BuildContext& ctx, const Type& type, int value_int) {
+
+	assert(type.is_integer());
+
+	int nbBit = type.size_in_bit();
+
+	// convert to bits in low endian (x86 format)
+	std::vector<Connection*> result;
+	for (int i = 0; i < nbBit; i++)
+	{
+		bool b = value_int & 1;
+		value_int >>= 1;
+
+		// get literal value as a vector of bits
+		Connection* connection_to_0or1 = ctx.circuit().get_literal_values(b);
+		result.push_back(connection_to_0or1);
+
+	}
+	return result;
+
+}
+
+
 
 // convert the value of the literal to a vector of bits for byte type
 // convert to bits in low endian (x86 format)
