@@ -2,18 +2,23 @@
 #include "Scope.h"
 #include "Function.h"
 
+// init scope for a code bloc
+void Scope::init_CodeBloc(Scope& parent_scp)
+{
+	// init parent function in the scope
+	parent_function = parent_scp.get_parent_function();
+	parent_for_loop = parent_scp.parent_for_loop;
+	parent_scope = &parent_scp;
+}
+
 
 // create a new child scope
 Scope* Scope::create_child_scope(void) {
 	// create a new empty scope
 	Scope* child_scope = new Scope();
-	
-	// parenting
-	child_scope->parent_scope = this;
-	child_scope->parent_function = this->parent_function;
-
+	// init new scope
+	child_scope->init_CodeBloc(*this);
 	return child_scope;
-
 }
 
 // declare a local variable

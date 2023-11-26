@@ -23,14 +23,19 @@ void Statement_For::visit_Expression(std::function<void(Expression& expr)> visit
 }
 
 // init for statmenet
-void Statement_For::init(Scope& parent_scope) {
+void Statement_For::init(Scope& parent_scp) {
+
+	// new scope for the for parent_scp
+	Scope scope_for_loop(parent_scp);
+	scope_for_loop.init_CodeBloc(parent_scp);
+	scope_for_loop.parent_for_loop = this;
 
 	// init statement a expressions
-	for_init->init( parent_scope );
-	for_condition->init(parent_scope);
-	for_increment->init( parent_scope );
+	for_init->init(scope_for_loop);
+	for_condition->init(scope_for_loop);
+	for_increment->init(scope_for_loop);
 	// init blocs of code
-	code->init_ex(parent_scope, CodeBloc::InitOption::return_not_required);
+	code->init_ex(scope_for_loop, CodeBloc::InitOption::return_not_required);
 
 	// init statement mut be declaration of a variable set to an literal
 	// ex: int i=0

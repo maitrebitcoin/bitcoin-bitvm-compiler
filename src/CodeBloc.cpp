@@ -21,8 +21,7 @@ void CodeBloc::init(Scope& scope) {
 // init a bloc, extentend version used in "for" statement
 void CodeBloc::init_ex(Scope& parent_scp, InitOption option) {
 	// init parent function in the scope
-	parent_function = parent_scp.get_parent_function();
-	parent_scope	= &parent_scp;
+	init_CodeBloc(parent_scp);
 
 	// reoorganize the bloc in case of "If"
 	_reorganize_bloc_if_statement();
@@ -44,7 +43,7 @@ void CodeBloc::init_ex(Scope& parent_scp, InitOption option) {
 	if (statements.size() == 0)
 		throw Error("Empty function");
 
-	// if retunr is optionnal
+	// if return (or break) is optionnal
 	if (option == InitOption::return_not_required)
 		return;
 

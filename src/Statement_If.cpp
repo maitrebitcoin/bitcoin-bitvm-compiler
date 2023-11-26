@@ -42,8 +42,15 @@ void Statement_If::init(Scope& parent_scope) {
 		throw Error("Internal error : if (false) bloc is null");
 
 	// init blocs of code
-	bloc_if_true->init_ex(parent_scope, CodeBloc::InitOption::return_or_break_must_be_present);
-	bloc_if_false->init(parent_scope);
+	if (parent_scope.is_in_for_loop())	{
+		// insida a for loop, special rules : brek is ok, and the else bloc do not need a return
+		bloc_if_true->init_ex( parent_scope, CodeBloc::InitOption::return_or_break_must_be_present);
+		bloc_if_false->init_ex(parent_scope, CodeBloc::InitOption::return_not_required);
+	}
+	else {
+		bloc_if_true->init( parent_scope);
+		bloc_if_false->init(parent_scope);
+	}
 }
 
 //  Init variables and If Gate for one side
