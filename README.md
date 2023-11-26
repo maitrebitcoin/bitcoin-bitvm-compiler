@@ -64,10 +64,10 @@ Bits are in low endian (x86 format)
 
 # Current todo list :
 
+- loop statement (in current development)
 - array support
 - operators : \* / % 
 - procedure calls
-- loop statement
 - basic function stdlib (sha256, shnor,... )
 - write the full language documentation
 - linux : create a makefile
