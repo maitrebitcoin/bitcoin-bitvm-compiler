@@ -20,7 +20,7 @@ public:
 	// init a statmenet
 	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the declaration statement
-	virtual void build_circuit(BuildContext& ctx) const override;
+	virtual NextAction build_circuit(BuildContext& ctx) const override;
 
 protected:
 	// add a member to the struct

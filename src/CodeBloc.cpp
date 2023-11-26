@@ -107,16 +107,44 @@ void CodeBloc::visit_Expression(std::function<void(Expression& expr)> visitor) c
 
 }
 
-
-
 // build a circuit that represents the bloc
-void CodeBloc::build_circuit(BuildContext& ctx) {
+Statement::NextAction CodeBloc::build_circuit(BuildContext& ctx) {
+	// buidl form the first statement
+	return _build_circuit_from(ctx,0);
+}
 
-	// build the statements before "return"
-	for (int i = 0; i < statements.size(); i++) {
+
+// build a circuit that represents the bloc, from a statement index
+Statement::NextAction CodeBloc::_build_circuit_from(BuildContext& ctx, int first_statement_index) {
+
+	// build the statements 
+	for (int i = first_statement_index; i < statements.size(); i++) {
 		Statement* statement = statements[i];
 		try {
-			statement->build_circuit(ctx);
+			// action in case of if to bluild the circuit from a new position
+			// build all the other loops iterations
+			ctx.all_next_statements_builder = [this, i](BuildContext& context) {
+				return _build_circuit_from(context, i + 1);
+			};
+			Statement::NextAction action =statement->build_circuit(ctx);
+			ctx.all_next_statements_builder = nullptr;
+			switch (action)	
+			{
+			case Statement::NextAction::Continue: // proceed to next statement
+				break;
+			case Statement::NextAction::Break:
+				//we should be in a from loop 
+				assert(false);
+				throw Error("Break statement outside loop");
+				break;
+			case Statement::NextAction::Return:
+				// nothing more to do
+				return Statement::NextAction::Return;
+			default:
+				assert(false);
+				break;
+			}
+
 		}
 		catch (Error& e) {
 			//add info to the error
@@ -124,4 +152,5 @@ void CodeBloc::build_circuit(BuildContext& ctx) {
 			throw e;
 		}
 	}
+	return Statement::NextAction::Continue;
 }

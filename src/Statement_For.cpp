@@ -93,24 +93,46 @@ void Statement_For::init(Scope& parent_scp) {
 	// init ok
 }
 // build the circuit for the for statement
+Statement::NextAction Statement_For::build_circuit(BuildContext& ctx) const {
+	// call internal version
+	return _build_circuit_from(ctx, start_value);
+}
 
-void Statement_For::build_circuit(BuildContext& ctx) const {
+//  internal build of the circuit for the for statement
+Statement::NextAction  Statement_For::_build_circuit_from(BuildContext& ctx, int start_value_param) const {
+	// if lopp ended
+	if (start_value_param == end_value)
+		return NextAction::Continue;
+
 
 	// build a new context for the for loop
 	BuildContext ctx_for_loop(ctx, BuildContext::Caller::for_statement );
 	ctx_for_loop.for_statement =  const_cast<Statement_For *>(this);
+
+
 	// init : crate loop var and set it to start value
 	for_init->build_circuit(ctx_for_loop);
 	Statement_DeclareAndSetVar* for_init_as_declare_var = for_init->cast_to_Statement_DeclareAndSetVar();
 	Statement_SetVar& statement_set_var = for_init_as_declare_var->affectation;
 
 	// loop to create all gates
-	for (int i = start_value; i != end_value; i += incr_value) {
+	for (int i = start_value_param; i != end_value; i += incr_value) {
 		// set loop var to current value
 		statement_set_var.build_circuit_set_to_int(ctx_for_loop, i);
+		
+		// action in case of if to bluild the circuit from a new position
+		// build all the other loops iterations
+		ctx_for_loop.all_next_statements_builder = [this,i](BuildContext& context) {
+			return _build_circuit_from(context,  i + incr_value);
+		};
 		// build circuit for the code bloc
-		code->build_circuit(ctx_for_loop);
+		Statement::NextAction  action =	code->build_circuit(ctx_for_loop);
+		ctx_for_loop.all_next_statements_builder = nullptr;
+		// stop on brek or return
+		if (action != NextAction::Continue)
+			return action;
 	}
+	return NextAction::Continue;
 
 }
 

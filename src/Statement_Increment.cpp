@@ -53,7 +53,7 @@ void Statement_Increment::init(Scope& parent_scope) {
 }
 
 // build the circuit for the assignment statement
-void Statement_Increment::build_circuit(BuildContext& ctx) const {
+Statement::NextAction Statement_Increment::build_circuit(BuildContext& ctx) const {
 	// get the variable type by name
 	ScopeVariable* var = ctx.variables.find_by_name(var_name);
 	if (var == nullptr)
@@ -63,5 +63,6 @@ void Statement_Increment::build_circuit(BuildContext& ctx) const {
 	std::vector<Connection*> expression_value = incr_expression->build_circuit(ctx);
 	// connect the output of the expression to current value of the variable
 	var->set_value(expression_value);
+	return NextAction::Continue;
 }
 

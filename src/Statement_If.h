@@ -24,7 +24,7 @@ public:
 	// init if statmenet
 	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the return statement
-	virtual void build_circuit(BuildContext& ctx) const override;
+	virtual NextAction build_circuit(BuildContext& ctx) const override;
 
 protected:
 	//  Init variables and If Gate for one side

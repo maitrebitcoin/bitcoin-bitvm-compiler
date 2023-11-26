@@ -136,7 +136,7 @@ void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVaria
 }
 
 // build the circuit for the return statement
-void Statement_If::build_circuit(BuildContext& ctx) const
+Statement::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 {
 	// build the condition expression
 	std::vector<Connection*> expression_value = expression->build_circuit(ctx);
@@ -176,6 +176,8 @@ void Statement_If::build_circuit(BuildContext& ctx) const
 
 	// connect the output of the expression to the output of the circuit
 	ctx.circuit().set_output_size_child(nb_bit_out);
+	// circuit is build fot both cas, no need to build it after
+	return NextAction::Return;
 }
 
 

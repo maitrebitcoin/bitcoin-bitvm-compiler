@@ -93,7 +93,9 @@ void Function::build_circuit(BuildContext &ctx) {
 
 	// build the body
 	try {
-		body->build_circuit(ctx);
+		Statement::NextAction action =	body->build_circuit(ctx);
+		if (action != Statement::NextAction::Return)
+			throw Error("Missing return statement");
 	}
 	catch (Error& e) {
 		//add fucntion name info to the error

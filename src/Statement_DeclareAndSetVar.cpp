@@ -12,10 +12,11 @@ void Statement_DeclareAndSetVar::init(Scope& parent_scope) {
 }
 
 // build the circuit for "int a=3"
-void Statement_DeclareAndSetVar::build_circuit(BuildContext& ctx) const {
+Statement::NextAction  Statement_DeclareAndSetVar::build_circuit(BuildContext& ctx) const {
 	// declare the variable
 	declaration.build_circuit(ctx);
 	// set variable value
 	affectation.build_circuit(ctx);
+	return NextAction::Continue;
 }
 

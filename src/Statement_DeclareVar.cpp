@@ -30,16 +30,18 @@ void Statement_DeclareVar::init(Scope& parent_scope) {
 }
 
 // build the circuit for the declaration statement
-void Statement_DeclareVar::build_circuit(BuildContext& ctx) const {
+Statement::NextAction  Statement_DeclareVar::build_circuit(BuildContext& ctx) const {
 	// if the variable is already known
 	if (ctx.variables.find_by_name(name) != nullptr)
 	{
 		// in a for loop, the variable can be declared twice, just ignore the second declaration
 		if (ctx.is_in_for_loop())
-			return;
+			return NextAction::Continue;
 
 		throw Error("Variable already declared : ", name);
 	}
 	// declare the variable
 	ctx.variables.declare_local_var(type, name);
+	return NextAction::Continue;
+
 }

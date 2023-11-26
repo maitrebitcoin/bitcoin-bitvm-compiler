@@ -4,6 +4,7 @@
 #include <functional>
 #include "VariableDefinition.h"
 #include "ScopeVariable.h"
+#include "Statement.h"
 
 class Circuit;
 class ScopeVariables;
@@ -22,6 +23,9 @@ public:
 	Circuit *ctx_circuit = nullptr; // the circuit to build
 	ScopeVariables variables; // current known variables in the current scope
 	Statement_For * for_statement = nullptr; // the current for statement if we are building a loop
+	// action to do to build alls next statementq
+	std::function<Statement::NextAction (BuildContext&)> all_next_statements_builder;
+
 public:
 	// constructor
 	BuildContext(Caller caller);

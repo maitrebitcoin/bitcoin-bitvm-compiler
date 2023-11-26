@@ -16,7 +16,7 @@ public:
 	// init a statmenet
 	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the declaration statement
-	virtual void build_circuit(BuildContext& ctx) const override;
+	virtual NextAction build_circuit(BuildContext& ctx) const override;
 	// build the circuit for the assignment to int (for loop)
 	void build_circuit_set_to_int(BuildContext& ctx, int new_val) const;
 
