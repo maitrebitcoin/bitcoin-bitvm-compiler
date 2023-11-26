@@ -1,6 +1,6 @@
 # bitcoin-bitvm-compiler 
 
-Generate aone or more logical circuits for BitVM Bitcoin from a C like source code
+Generate one or more logical circuits for BitVM Bitcoin from a C like source code
 
 
 ## Example :
