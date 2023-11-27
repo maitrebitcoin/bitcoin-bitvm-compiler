@@ -38,18 +38,16 @@ void Statement_If::init(Scope& parent_scope) {
 	// both blocs must exists
 	if (bloc_if_true == nullptr)
 		throw Error("Internal error : if (true) bloc is null");
-	if (bloc_if_false == nullptr)
-		throw Error("Internal error : if (false) bloc is null");
 
 	// init blocs of code
 	if (parent_scope.is_in_for_loop())	{
 		// insida a for loop, special rules : brek is ok, and the else bloc do not need a return
 		bloc_if_true->init_ex( parent_scope, CodeBloc::InitOption::return_or_break_must_be_present);
-		bloc_if_false->init_ex(parent_scope, CodeBloc::InitOption::return_not_required);
+		if (bloc_if_false) bloc_if_false->init_ex(parent_scope, CodeBloc::InitOption::return_not_required);
 	}
 	else {
 		bloc_if_true->init( parent_scope);
-		bloc_if_false->init(parent_scope);
+		if (bloc_if_false) bloc_if_false->init(parent_scope);
 	}
 }
 
@@ -116,8 +114,15 @@ void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVaria
 	Visitor local_visitor(ctx_source, variables_dest, gate, bloc_side );
 
 	CodeBloc* code_bloc = bloc_side ? bloc_if_true : bloc_if_false;
-	// visit the bloc
-	code_bloc->visit_all_epressions(local_visitor);
+	// if no bloc
+	if (code_bloc == nullptr) {
+		// visit form main context remaining bloc after if
+		ctx_source.visit_all_next_statements(local_visitor);
+	}
+	else {
+		// visit the bloc
+		code_bloc->visit_all_epressions(local_visitor);
+	}
 
 	// basic impleation of InterfaceInputsMap
 	class Void_InterfaceInputsMap : public InterfaceInputsMap {
@@ -145,8 +150,8 @@ Statement::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 	// both blocs must exists
 	if (bloc_if_true == nullptr)
 		throw Error("Internal error : if (true) bloc is null");
-	if (bloc_if_false == nullptr)
-		throw Error("Internal error : if (false) bloc is null");
+//	if (bloc_if_false == nullptr)
+//		throw Error("Internal error : if (false) bloc is null");
 
 	// create 2 contexts with 2 new sub circuits 
 	BuildContext ctx_if_true(ctx,  BuildContext::Caller::if_statement );
@@ -156,27 +161,41 @@ Statement::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 
 	// init true case
 	_init_variables_and_gate(ctx, ctx_if_true.variables, gate_if, ctx_if_true.circuit(), true);
-	bloc_if_true->build_circuit(ctx_if_true);
+	NextAction next_action = bloc_if_true->build_circuit(ctx_if_true);
+	// if no return or break statement, add the end of the bloc
+	if (next_action == NextAction::Continue ) {
+		// add the end of the bloc
+		assert(ctx.build_all_next_statements != nullptr);
+		next_action = ctx.build_all_next_statements(ctx_if_true);
+		assert(next_action == NextAction::Return);
+	}
 	// init false case
+	ctx_if_false.build_all_next_statements = ctx.build_all_next_statements;
+	ctx_if_false.visit_all_next_statements = ctx.visit_all_next_statements;
 	_init_variables_and_gate(ctx, ctx_if_false.variables, gate_if, ctx_if_false.circuit(), false);
-	bloc_if_false->build_circuit(ctx_if_false);
+	assert(bloc_if_false == nullptr);// TODO: else
+//	bloc_if_false->build_circuit(ctx_if_false);
+	// add the end of the bloc 
+	assert(ctx.build_all_next_statements != nullptr);
+	next_action = ctx.build_all_next_statements(ctx_if_false);
+	assert(next_action == NextAction::Return);
 
 	// add the gate to the circuit
 	std::array<Connection*, 1> input_1_bit = { expression_value[0] };
 	std::array<Connection*, 0> void_result =
 	gate_if->add_to_circuit(ctx.circuit(), input_1_bit);
 
-
 	// tell the ciruit outupt sizz, without real connexion.
 	// the real output will be from or circuit_if_true ou ctx_if_false
-	NbBit nb_bit_out = ctx_if_true.circuit().nb_bits_output();
+	NbBit nb_bit_out1 = ctx_if_true.circuit().nb_bits_output();
+	NbBit nb_bit_out0 = ctx_if_false.circuit().nb_bits_output();
 	// the 2 circuits must have the same output size
-	if (nb_bit_out != ctx_if_false.circuit().nb_bits_output())
+	if (nb_bit_out1 != nb_bit_out0)
 		throw Error("If : 2 Return statements with different size");
 
-	// connect the output of the expression to the output of the circuit
-	ctx.circuit().set_output_size_child(nb_bit_out);
-	// circuit is build fot both cas, no need to build it after
+	// tell the ciruit outupt sizz, without real connexion. they are those og ctx_if_true 
+	ctx.circuit().set_output_size_child(nb_bit_out1);
+	// circuit is build fot both cas, no need to build anything
 	return NextAction::Return;
 }
 

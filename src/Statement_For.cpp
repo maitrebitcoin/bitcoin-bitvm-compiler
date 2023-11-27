@@ -122,12 +122,19 @@ Statement::NextAction  Statement_For::_build_circuit_from(BuildContext& ctx, int
 		
 		// action in case of if to bluild the circuit from a new position
 		// build all the other loops iterations
-		ctx_for_loop.all_next_statements_builder = [this,i](BuildContext& context) {
+		ctx_for_loop.build_all_next_statements = [this,i](BuildContext& context) {
 			return _build_circuit_from(context,  i + incr_value);
 		};
+		ctx_for_loop.visit_all_next_statements = [this, i](IVisitExpression& visitor) {
+			// all statements in the code bloc
+			if (i + incr_value != end_value) // one or more loops remaining
+				code->visit_all_epressions(visitor);
+		};
+		
 		// build circuit for the code bloc
 		Statement::NextAction  action =	code->build_circuit(ctx_for_loop);
-		ctx_for_loop.all_next_statements_builder = nullptr;
+		ctx_for_loop.build_all_next_statements = nullptr;
+		ctx_for_loop.visit_all_next_statements = nullptr;
 		// stop on brek or return
 		if (action != NextAction::Continue)
 			return action;

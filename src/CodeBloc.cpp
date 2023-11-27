@@ -24,7 +24,7 @@ void CodeBloc::init_ex(Scope& parent_scp, InitOption option) {
 	init_CodeBloc(parent_scp);
 
 	// reoorganize the bloc in case of "If"
-	_reorganize_bloc_if_statement();
+	//_reorganize_bloc_if_statement();
 
 	// init statemtents
 	for (Statement* statement_i : statements) {
@@ -97,6 +97,20 @@ void CodeBloc::visit_all_epressions(IVisitExpression& visitor)
 		});
 	}//for
 }
+// visit part used in the bloc, fram a given statement
+void CodeBloc::visit_all_epressions_from(IVisitExpression& visitor, int statement_index)
+{
+	for (int i = statement_index; i < statements.size(); i++) {
+		Statement* statement_i = statements[i];
+		// visit expressions in the statement
+		statement_i->visit_Expression([&](Expression& expression) {
+			// visi expression
+			expression.visit_epression(visitor);
+		});
+	}//for
+
+}
+
 // visit all expression used in all the statement
 void CodeBloc::visit_Expression(std::function<void(Expression& expr)> visitor) const {
 	
@@ -123,11 +137,16 @@ Statement::NextAction CodeBloc::_build_circuit_from(BuildContext& ctx, int first
 		try {
 			// action in case of if to bluild the circuit from a new position
 			// build all the other loops iterations
-			ctx.all_next_statements_builder = [this, i](BuildContext& context) {
+			ctx.build_all_next_statements = [this, i](BuildContext& context) {
 				return _build_circuit_from(context, i + 1);
 			};
+			ctx.visit_all_next_statements = [this, i](IVisitExpression& visitor) {
+				visit_all_epressions_from( visitor, i + 1);
+			};
+
 			Statement::NextAction action =statement->build_circuit(ctx);
-			ctx.all_next_statements_builder = nullptr;
+			ctx.build_all_next_statements = nullptr;
+			ctx.visit_all_next_statements = nullptr;
 			switch (action)	
 			{
 			case Statement::NextAction::Continue: // proceed to next statement

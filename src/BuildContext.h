@@ -10,6 +10,7 @@ class Circuit;
 class ScopeVariables;
 class Connection;
 class Statement_For;
+class IVisitExpression;
 
 // context for building the circuit
 class BuildContext {
@@ -17,14 +18,15 @@ public:
 	// creation or copy coller type
 	enum class Caller { main_body, if_statement, for_statement };
 
-
 public:
 	Caller create_caller;
 	Circuit *ctx_circuit = nullptr; // the circuit to build
 	ScopeVariables variables; // current known variables in the current scope
 	Statement_For * for_statement = nullptr; // the current for statement if we are building a loop
-	// action to do to build alls next statementq
-	std::function<Statement::NextAction (BuildContext&)> all_next_statements_builder;
+	// action to do to build all next statementq
+	std::function<Statement::NextAction (BuildContext&)> build_all_next_statements;
+	// visit all next statements
+	std::function <void (IVisitExpression& visitor)> visit_all_next_statements;
 
 public:
 	// constructor

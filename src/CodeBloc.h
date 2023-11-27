@@ -32,6 +32,8 @@ public:
 	class Statement_Return* get_return_statement(void) const;
 	// visit all part used in the bloc
 	void visit_all_epressions(IVisitExpression& visitor);
+	// visit part used in the bloc, fram a given statement
+	void visit_all_epressions_from(IVisitExpression& visitor, int statement_index);
 	// visit all expression used in all the statement
 	void visit_Expression(std::function<void(Expression& expr)> visitor) const;
 

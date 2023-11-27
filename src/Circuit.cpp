@@ -151,6 +151,7 @@ bool Circuit::_all_outputs_calculated(void) const {
 
 // run the circuit
 std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
+
 	assert(nb_bits_output() > 0);
 	//assert(in_values.size() > 0); no in sub circuit. ex : "Return 0"
 	assert(in_values.size() == inputs.size());
