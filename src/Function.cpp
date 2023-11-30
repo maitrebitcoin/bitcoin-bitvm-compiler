@@ -91,6 +91,24 @@ void Function::build_circuit(BuildContext &ctx) {
 	// init scope variables in the contente
 	ctx.variables.init_from_function_parameters(definition, current_input);
 
+	ctx.build_all_next_statements = [](BuildContext& ctx) {
+		// error if the generation calls here : 
+		throw Error("Internal error : missing return");
+		return Statement::NextAction::Return;
+	};
+
+	// build the body
+	try {
+		Statement::NextAction action = body->build_circuit(ctx);
+		if (action != Statement::NextAction::Return)
+			throw Error("Missing return statement");
+	}
+	catch (Error& e) {
+		//add fucntion name info to the error
+		e.function_name = definition.name;
+		throw e;
+	}
+
 	// build the body
 	try {
 		Statement::NextAction action =	body->build_circuit(ctx);

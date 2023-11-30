@@ -54,6 +54,23 @@ void Statement_If::init(Scope& parent_scope) {
 //  Init variables and If Gate for one side
 void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVariables& variables_dest, class Gate_IF* gate, Circuit& circuit, bool bloc_side) const {
 	
+
+	// create a visitor to copy variables from source to dest
+	BuildContext::InfoCopy infoCopy = ctx_source.get_info_copy();
+
+	// init variables
+	variables_dest = infoCopy.variables_dest;
+	// inits connexions to the gate
+	for (Connection* connexion : infoCopy.connexions_dest) {
+		gate->add_input(connexion, bloc_side);
+	}
+	// init circuit inputs
+	circuit.set_circuit_inputs(infoCopy.nb_bits_in(), infoCopy.input_map);
+
+	return;
+
+// old code : optim possible : do not copy all variables , using only the one used in the bloc
+	/*
 	class Visitor : public IVisitExpression {
 	protected:
 	// Closure
@@ -138,6 +155,7 @@ void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVaria
 	// init circuit inputs
 	InputsMap input_map = new Void_InterfaceInputsMap();
 	circuit.set_circuit_inputs(local_visitor.nb_bits_in, input_map);
+	*/
 }
 
 // build the circuit for the return statement
@@ -171,14 +189,13 @@ Statement::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 	}
 	// init false case
 	ctx_if_false.build_all_next_statements = ctx.build_all_next_statements;
-	ctx_if_false.visit_all_next_statements = ctx.visit_all_next_statements;
 	_init_variables_and_gate(ctx, ctx_if_false.variables, gate_if, ctx_if_false.circuit(), false);
 	assert(bloc_if_false == nullptr);// TODO: else
 //	bloc_if_false->build_circuit(ctx_if_false);
 	// add the end of the bloc 
 	assert(ctx.build_all_next_statements != nullptr);
 	next_action = ctx.build_all_next_statements(ctx_if_false);
-	assert(next_action == NextAction::Return);
+	assert(next_action == NextAction::Return); //build_all_next_statements muut havec reachted a return statement-
 
 	// add the gate to the circuit
 	std::array<Connection*, 1> input_1_bit = { expression_value[0] };

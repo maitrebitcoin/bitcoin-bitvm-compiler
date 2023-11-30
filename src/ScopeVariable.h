@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 #include "Connection.h"
 #include "VariableDefinition.h"
 #include "Function.h"
@@ -28,8 +29,9 @@ public:
 	// declare a new local variable
 	void declare_local_var(Type* var_type, std::string var_name);
 	// copy a variable for a sub-scope
-	void copy_var(const ScopeVariable& var_source);
-
+	ScopeVariable* copy_var(const ScopeVariable& var_source);
+	// visit all variables
+	void visit_all_variables(std::function<void(const ScopeVariable&)> visitor) const;
 
 	// Init from function defintion ans parameters
 	void init_from_function_parameters(const Function::Definition& definition, std::vector<Connection*>& current_input);

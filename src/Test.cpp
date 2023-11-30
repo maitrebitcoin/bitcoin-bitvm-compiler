@@ -672,7 +672,7 @@ void test_for(void) {
 void run_all_test(void) {
 	std::cout << "Testing...\n";
 
-//	test_for();
+	test_for();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";

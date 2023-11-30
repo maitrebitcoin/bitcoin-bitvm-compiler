@@ -106,38 +106,57 @@ Statement::NextAction  Statement_For::_build_circuit_from(BuildContext& ctx, int
 
 
 	// build a new context for the for loop
-	BuildContext ctx_for_loop(ctx, BuildContext::Caller::for_statement );
-	ctx_for_loop.for_statement =  const_cast<Statement_For *>(this);
+	BuildContext ctx_for_loop_extern(ctx, BuildContext::Caller::for_statement );
+	ctx_for_loop_extern.for_statement =  const_cast<Statement_For *>(this);
 
 
 	// init : crate loop var and set it to start value
-	for_init->build_circuit(ctx_for_loop);
+	for_init->build_circuit(ctx_for_loop_extern);
 	Statement_DeclareAndSetVar* for_init_as_declare_var = for_init->cast_to_Statement_DeclareAndSetVar();
 	Statement_SetVar& statement_set_var = for_init_as_declare_var->affectation;
 
+
 	// loop to create all gates
 	for (int i = start_value_param; i != end_value; i += incr_value) {
-		// set loop var to current value
-		statement_set_var.build_circuit_set_to_int(ctx_for_loop, i);
+
+		BuildContext ctx_for_loop_internal(ctx_for_loop_extern, BuildContext::Caller::build_next);
 		
+		// set loop var to current value
+		statement_set_var.build_circuit_set_to_int(ctx_for_loop_internal, i);
+
 		// action in case of if to bluild the circuit from a new position
 		// build all the other loops iterations
-		ctx_for_loop.build_all_next_statements = [this,i](BuildContext& context) {
-			return _build_circuit_from(context,  i + incr_value);
-		};
-		ctx_for_loop.visit_all_next_statements = [this, i](IVisitExpression& visitor) {
-			// all statements in the code bloc
-			if (i + incr_value != end_value) // one or more loops remaining
-				code->visit_all_epressions(visitor);
+		ctx_for_loop_internal.build_all_next_statements = [this,i,ctx](BuildContext& param_context) {
+			Statement::NextAction action = _build_circuit_from(param_context,  i + incr_value);
+			if (action != Statement::NextAction::Continue)
+				return action;
+			// continue to the rest of the circuit
+			if (ctx.build_all_next_statements != nullptr)
+			{
+				return ctx.build_all_next_statements(param_context);
+			}
+			return Statement::NextAction::Continue;
 		};
 		
 		// build circuit for the code bloc
-		Statement::NextAction  action =	code->build_circuit(ctx_for_loop);
-		ctx_for_loop.build_all_next_statements = nullptr;
-		ctx_for_loop.visit_all_next_statements = nullptr;
-		// stop on brek or return
-		if (action != NextAction::Continue)
-			return action;
+		Statement::NextAction  action =	code->build_circuit(ctx_for_loop_internal);
+
+		switch (action)
+		{
+		case Statement::NextAction::Continue: 
+			// proceed to next statement
+			continue;
+		case Statement::NextAction::Break:
+			// stop the loop			assert(false);
+			break;
+		case Statement::NextAction::Return:
+			// nothing more to do
+			return Statement::NextAction::Return;
+		default:
+			assert(false);
+			break;
+		}
+
 	}
 	return NextAction::Continue;
 

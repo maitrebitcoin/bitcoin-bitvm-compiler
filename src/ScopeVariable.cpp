@@ -49,8 +49,15 @@ void ScopeVariables::declare_local_var(Type* var_type, std::string var_name) {
 	push_back(new_var);
 }
 
-// copy a variable for a sub-scope
-void ScopeVariables::copy_var(const ScopeVariable& var_source)
+// visit all variables
+void ScopeVariables::visit_all_variables(std::function<void(const ScopeVariable&)> visitor) const {
+	for (auto var_i : *this)
+		visitor(*var_i);
+
+}
+
+// copy a variable for a sub-scope a retrun the copy
+ScopeVariable* ScopeVariables::copy_var(const ScopeVariable& var_source)
 {
 	// deep copy : if the var is modified in the sub-scope, the parent scope var is not modified
 	ScopeVariable* new_var = new ScopeVariable(var_source.type, var_source.name );
@@ -59,6 +66,7 @@ void ScopeVariables::copy_var(const ScopeVariable& var_source)
 		new_var->set_value(var_source.bits);
 
 	push_back(new_var);
+	return new_var;
 
 }
 
