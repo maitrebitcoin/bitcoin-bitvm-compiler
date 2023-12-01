@@ -51,115 +51,8 @@ void Statement_If::init(Scope& parent_scope) {
 	}
 }
 
-//  Init variables and If Gate for one side
-void Statement_If::_init_variables_and_gate(BuildContext& ctx_source, ScopeVariables& variables_dest, class Gate_IF* gate, Circuit& circuit, bool bloc_side) const {
-	
-
-	// create a visitor to copy variables from source to dest
-	BuildContext::InfoCopy infoCopy = ctx_source.get_info_copy();
-
-	// init variables
-	variables_dest = infoCopy.variables_dest;
-	// inits connexions to the gate
-	for (Connection* connexion : infoCopy.connexions_dest) {
-		gate->add_input(connexion, bloc_side);
-	}
-	// init circuit inputs
-	circuit.set_circuit_inputs(infoCopy.nb_bits_in(), infoCopy.input_map);
-
-	return;
-
-// old code : optim possible : do not copy all variables , using only the one used in the bloc
-	/*
-	class Visitor : public IVisitExpression {
-	protected:
-	// Closure
-		BuildContext& ctx_source;
-		ScopeVariables& variables_dest;
-		Gate_IF* gate_if;
-		bool bloc_side;
-	public:
-	// OUT
-		// bit copied to the sub circuit
-		int nb_bits_in= 0;
-
-	public:
-		// constructor
-		Visitor(BuildContext& c, ScopeVariables& v, Gate_IF* g, bool b ) : ctx_source(c), variables_dest(v), gate_if(g), bloc_side(b) {}
-
-		// -- IVisitExpression implemebtatoin
-		// epxression part is a literal.ex : 123
-		virtual void onLiteral(Literal&) override {
-			// noting to do
-		}
-		// epxressison part is a varible. ex : a
-		virtual void onVariable(Expression_Variable& expr_var )override {
-			ScopeVariable* var_source = ctx_source.variables.find_by_name(expr_var.name);
-			if (var_source == nullptr) return;
-			// if the var already exists in the dest, do nothing
-			if (variables_dest.find_by_name(expr_var.name) != nullptr) return;
-			// copy var from source to dest
-			variables_dest.copy_var(*var_source);
-			// copy connexions for source to the gate
-			std::vector<Connection*> connexions = expr_var.get_all_connexions(ctx_source);
-			for (Connection* connexion : connexions) {
-				gate_if->add_input(connexion, bloc_side);
-			}
-			nb_bits_in += (int)connexions.size();
-		}
-		// epxressison part is a varible in a struct. ex : a.b
-		virtual void onVariableInStruct(Expression_StructMember& expr_var) override {
-			// get the parent variable type by name
-			ScopeVariable* var_source_srruct = ctx_source.variables.find_by_name(expr_var.parent_name);
-			if (var_source_srruct == nullptr) return;
-			// add all the struct in dest 
-			//#TODO : OPTIM, add only the struct member 
-			// if the var already exists in the dest, do nothing
-			if (variables_dest.find_by_name(expr_var.parent_name) != nullptr) return;
-			// copy var from source to dest
-			variables_dest.copy_var(*var_source_srruct);
-			// copy connexions for source to the gate
-			std::vector<Connection*> connexions = expr_var.get_all_connexions_full_struct(ctx_source);
-			for (Connection* connexion : connexions) {
-				gate_if->add_input(connexion, bloc_side);
-			}
-			nb_bits_in += (int)connexions.size();
-		}
-	protected:
-
-	};
-	Visitor local_visitor(ctx_source, variables_dest, gate, bloc_side );
-
-	CodeBloc* code_bloc = bloc_side ? bloc_if_true : bloc_if_false;
-	// if no bloc
-	if (code_bloc == nullptr) {
-		// visit form main context remaining bloc after if
-		ctx_source.visit_all_next_statements(local_visitor);
-	}
-	else {
-		// visit the bloc
-		code_bloc->visit_all_epressions(local_visitor);
-	}
-
-	// basic impleation of InterfaceInputsMap
-	class Void_InterfaceInputsMap : public InterfaceInputsMap {
-		// InterfaceInputsMap Implementation 
-		// get a parameter info by name
-		virtual InterfaceInputsMap::Info find_info_by_name(std::string name) const override {
-			// used by commandline -run ony
-			assert(false);
-			throw Error("Internal error, not implemented");
-		}
-	};//InterfaceInputsMap
-
-	// init circuit inputs
-	InputsMap input_map = new Void_InterfaceInputsMap();
-	circuit.set_circuit_inputs(local_visitor.nb_bits_in, input_map);
-	*/
-}
-
 // build the circuit for the return statement
-Statement::NextAction Statement_If::build_circuit(BuildContext& ctx) const
+BuildContext::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 {
 	// build the condition expression
 	std::vector<Connection*> expression_value = expression->build_circuit(ctx);
@@ -178,24 +71,26 @@ Statement::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 	Gate_IF* gate_if = new Gate_IF(&ctx_if_true.circuit(), &ctx_if_false.circuit());
 
 	// init true case
-	_init_variables_and_gate(ctx, ctx_if_true.variables, gate_if, ctx_if_true.circuit(), true);
-	NextAction next_action = bloc_if_true->build_circuit(ctx_if_true);
+	ctx_if_true.init_variables_if_gate(ctx, gate_if,  true);
+	BuildContext::NextAction next_action = bloc_if_true->build_circuit(ctx_if_true);
 	// if no return or break statement, add the end of the bloc
-	if (next_action == NextAction::Continue ) {
+	if (next_action != BuildContext::NextAction::Return ) {
 		// add the end of the bloc
 		assert(ctx.build_all_next_statements != nullptr);
-		next_action = ctx.build_all_next_statements(ctx_if_true);
-		assert(next_action == NextAction::Return);
+		BuildContext::NextAction action_1 = ctx.build_all_next_statements(ctx_if_true, next_action);
+		assert(action_1 == BuildContext::NextAction::Return);
 	}
+
+
 	// init false case
 	ctx_if_false.build_all_next_statements = ctx.build_all_next_statements;
-	_init_variables_and_gate(ctx, ctx_if_false.variables, gate_if, ctx_if_false.circuit(), false);
+	ctx_if_false.init_variables_if_gate(ctx, gate_if, false);
 	assert(bloc_if_false == nullptr);// TODO: else
 //	bloc_if_false->build_circuit(ctx_if_false);
 	// add the end of the bloc 
 	assert(ctx.build_all_next_statements != nullptr);
-	next_action = ctx.build_all_next_statements(ctx_if_false);
-	assert(next_action == NextAction::Return); //build_all_next_statements muut havec reachted a return statement-
+	BuildContext::NextAction action_0 = ctx.build_all_next_statements(ctx_if_false, next_action);
+	assert(action_0 == BuildContext::NextAction::Return); //build_all_next_statements muut havec reachted a return statement-
 
 	// add the gate to the circuit
 	std::array<Connection*, 1> input_1_bit = { expression_value[0] };
@@ -213,7 +108,7 @@ Statement::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 	// tell the ciruit outupt sizz, without real connexion. they are those og ctx_if_true 
 	ctx.circuit().set_output_size_child(nb_bit_out1);
 	// circuit is build fot both cas, no need to build anything
-	return NextAction::Return;
+	return BuildContext::NextAction::Return;
 }
 
 

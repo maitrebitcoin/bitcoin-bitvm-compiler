@@ -50,7 +50,7 @@ void Expression_StructMember::init(Scope& parent_scope) {
 // get all gates used by the parent struct variable
 std::vector<Connection*> Expression_StructMember::get_all_connexions_full_struct(BuildContext& ctx) const {
 	// get the parent variable type by name
-	ScopeVariable* var = ctx.variables.find_by_name(parent_name);
+	ScopeVariable* var = ctx.variables().find_by_name(parent_name);
 	if (var == nullptr)
 		return {};
 	// if variable not set
@@ -64,7 +64,7 @@ std::vector<Connection*> Expression_StructMember::get_all_connexions_full_struct
 // build the circuit for the expression
 std::vector<Connection*> Expression_StructMember::build_circuit(BuildContext& ctx) {
 	// get the parent variable type by name
-	ScopeVariable* var = ctx.variables.find_by_name(parent_name);
+	ScopeVariable* var = ctx.variables().find_by_name(parent_name);
 	if (var == nullptr)
 		throw Error("Unknonwn variable : ", parent_name);
 	// if variable not set

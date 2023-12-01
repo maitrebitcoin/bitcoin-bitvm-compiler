@@ -31,13 +31,13 @@ BuildContext::BuildContext(const BuildContext& source, Caller caller) : create_c
 			build_all_next_statements = source.build_all_next_statements;
 
 			// copy all vaiables
-			variables = source.variables;
+			ctx_variables = source.variables();
 			break;
-		case Caller::build_next:
+		case Caller::build_next_lambda:
 			// sub conterxt to preserve build_all_next_statements
 			ctx_circuit = source.ctx_circuit;
 			for_statement = source.for_statement;
-			variables = source.variables;
+			parent_ctx_variables = const_cast<ScopeVariables*>(&source.variables());
 			break;
 		default:
 			assert(false);
@@ -46,12 +46,30 @@ BuildContext::BuildContext(const BuildContext& source, Caller caller) : create_c
 
 }
 
+
+//  Init variables and If Gate for a "IF"  statmeent
+void BuildContext::init_variables_if_gate(BuildContext& ctx_source, class Gate_IF* gate, bool bloc_side) {
+	assert(create_caller == Caller::if_statement);
+
+	// get all copy parameters from source
+	BuildContext::InfoCopy infoCopy = ctx_source.get_info_copy();
+
+	// init variables
+	ctx_variables = infoCopy.variables_dest;
+	// inits connexions to the gate
+	for (Connection* connexion : infoCopy.connexions_dest) {
+		gate->add_input(connexion, bloc_side);
+	}
+	// init circuit inputs
+	circuit().set_circuit_inputs(infoCopy.nb_bits_in(), infoCopy.input_map);
+}
+
 //  get all info needed to create a new copy of acontexte; for "if statement" 
 BuildContext::InfoCopy BuildContext::get_info_copy(void) const {
 
 	InfoCopy result;
 	// get all variables to copy
-	variables.visit_all_variables([&](const ScopeVariable& variable_source) {
+	variables().visit_all_variables([&](const ScopeVariable& variable_source) {
 
 		// copy var from source to dest
 		ScopeVariable* copy_var = result.variables_dest.copy_var(variable_source);
@@ -86,5 +104,17 @@ void BuildContext::visit_circuits(std::function<void(Circuit&)> fnVisit) {
 	fnVisit(circuit());
 	// sub circuits
 	circuit().visit_sub_circuits(fnVisit);
+}
+
+// get the variables in the contexte
+ScopeVariables& BuildContext::variables(void) const
+{
+	// if we share varaibles with the parent context
+	if (parent_ctx_variables != nullptr) {
+		assert(create_caller == Caller::build_next_lambda );
+		return *parent_ctx_variables;
+	}
+	return const_cast<BuildContext*>(this)->ctx_variables;
+
 }
 

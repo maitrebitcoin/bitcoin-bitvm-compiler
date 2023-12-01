@@ -122,14 +122,14 @@ void CodeBloc::visit_Expression(std::function<void(Expression& expr)> visitor) c
 }
 
 // build a circuit that represents the bloc
-Statement::NextAction CodeBloc::build_circuit(BuildContext& ctx) {
+BuildContext::NextAction CodeBloc::build_circuit(BuildContext& ctx) {
 	// buidl form the first statement
 	return _build_circuit_from(ctx,0);
 }
 
 
 // build a circuit that represents the bloc, from a statement index
-Statement::NextAction CodeBloc::_build_circuit_from(BuildContext& ctx, int first_statement_index) {
+BuildContext::NextAction CodeBloc::_build_circuit_from(BuildContext& ctx, int first_statement_index) {
 
 
 	// build the statements 
@@ -138,31 +138,33 @@ Statement::NextAction CodeBloc::_build_circuit_from(BuildContext& ctx, int first
 		try {
 
 			// action in case of if to bluild the circuit from a new position
-			BuildContext ctx_internal(ctx, BuildContext::Caller::build_next);
-			ctx_internal.build_all_next_statements = [this, i](BuildContext& context_param) {
-				Statement::NextAction action  =  _build_circuit_from(context_param, i + 1);
-				if (action != Statement::NextAction::Continue)
+			BuildContext ctx_internal(ctx, BuildContext::Caller::build_next_lambda);
+			ctx_internal.build_all_next_statements = [this, ctx, i](BuildContext& context_param, BuildContext::NextAction action) {
+				assert(action != BuildContext::NextAction::Return);
+				if (action != BuildContext::NextAction::Break)
+					action  =  _build_circuit_from(context_param, i + 1);
+				if (action == BuildContext::NextAction::Return)
 					return action;
-				if (context_param.build_all_next_statements != nullptr)
+				if (ctx.build_all_next_statements != nullptr)
 				{
-					return context_param.build_all_next_statements(context_param);
+					return ctx.build_all_next_statements(context_param, action);
 				}
-				return Statement::NextAction::Continue;
+				return BuildContext::NextAction::Continue;
 			};
 
-			Statement::NextAction action =statement->build_circuit(ctx_internal);
+			BuildContext::NextAction action =statement->build_circuit(ctx_internal);
 
 			switch (action)	
 			{
-			case Statement::NextAction::Continue: // proceed to next statement
+			case BuildContext::NextAction::Continue: // proceed to next statement
 				break;
-			case Statement::NextAction::Break:
+			case BuildContext::NextAction::Break:
 				//we should be in a from loop 
 				assert(ctx.is_in_for_loop());
-				return Statement::NextAction::Break;
-			case Statement::NextAction::Return:
+				return BuildContext::NextAction::Break;
+			case BuildContext::NextAction::Return:
 				// nothing more to do
-				return Statement::NextAction::Return;
+				return BuildContext::NextAction::Return;
 			default:
 				assert(false);
 				break;
@@ -175,5 +177,5 @@ Statement::NextAction CodeBloc::_build_circuit_from(BuildContext& ctx, int first
 			throw e;
 		}
 	}
-	return Statement::NextAction::Continue;
+	return BuildContext::NextAction::Continue;
 }

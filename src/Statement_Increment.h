@@ -28,5 +28,5 @@ public:
 	// init statmenet
 	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the statement
-	virtual NextAction build_circuit(BuildContext& ctx) const override;
+	virtual BuildContext::NextAction build_circuit(BuildContext& ctx) const override;
 };

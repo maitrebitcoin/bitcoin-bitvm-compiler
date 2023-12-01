@@ -1,7 +1,9 @@
 #pragma once
 
+#include "BuildContext.h"
 class Scope;
 class Expression;
+
 
 // base class for a statement. 
 // ex "v=a+2" or "return a+2;"
@@ -33,7 +35,6 @@ public:
 	virtual void visit_Expression(std::function<void(Expression& expr)> visitor) const = 0;
 
 	// build the circuit for the return statelebt
-	enum class NextAction { Continue, Break, Return };
-	virtual NextAction build_circuit(BuildContext& ctx) const = 0;
+	virtual BuildContext::NextAction build_circuit(BuildContext& ctx) const = 0;
 
 };

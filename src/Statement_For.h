@@ -31,11 +31,11 @@ public:
 	// init for statmenet
 	virtual void init(Scope& parent_scope) override;
 	// build the circuit for the for statement
-	virtual NextAction build_circuit(BuildContext& ctx) const override;
+	virtual BuildContext::NextAction build_circuit(BuildContext& ctx) const override;
 
 protected:
 	//  internal build of the circuit for the for statement
-	NextAction  _build_circuit_from(BuildContext& ctx, int start_value_param) const;
+	BuildContext::NextAction  _build_circuit_from(BuildContext& ctx, int start_value_param) const;
 
 
 };

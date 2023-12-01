@@ -27,7 +27,7 @@ public:
 	enum class InitOption { return_must_be_present, return_or_break_must_be_present, return_not_required };
 	void init_ex(Scope& global_scope, InitOption option);
 	// build a circuit that represents the bloc
-	Statement::NextAction build_circuit(BuildContext& ctx);
+	BuildContext::NextAction build_circuit(BuildContext& ctx);
 	// get the return statement of the bloc
 	class Statement_Return* get_return_statement(void) const;
 	// visit all part used in the bloc
@@ -39,7 +39,7 @@ public:
 
 protected:
 	// build a circuit that represents the bloc, from a statement index
-	Statement::NextAction _build_circuit_from(BuildContext& ctx, int first_statement_index);
+	BuildContext::NextAction _build_circuit_from(BuildContext& ctx, int first_statement_index);
 	// reoorganize the bloc in case of "If"
 	void _reorganize_bloc_if_statement(void);
 };

@@ -4,7 +4,7 @@
 #include <functional>
 #include "VariableDefinition.h"
 #include "ScopeVariable.h"
-#include "Statement.h"
+
 
 class Circuit;
 class ScopeVariables;
@@ -18,22 +18,42 @@ using InputsMap = InterfaceInputsMap*;
 class BuildContext {
 public:
 	// creation or copy coller type
-	enum class Caller { main_body, if_statement, for_statement, build_next
-	};
+	enum class Caller { main_body, if_statement, for_statement, build_next_lambda};
+	// action retur, what to do to build all next statements
+	enum class NextAction { Continue, Break, Return };
+
+protected:
+	Caller create_caller;
+	Circuit* ctx_circuit = nullptr; // the circuit to build
+	ScopeVariables ctx_variables; // current known variables in the current scope
+	ScopeVariables* parent_ctx_variables= nullptr; // variables ftom the parent context
+
 
 public:
-	Caller create_caller;
-	Circuit *ctx_circuit = nullptr; // the circuit to build
-	ScopeVariables variables; // current known variables in the current scope
-	Statement_For * for_statement = nullptr; // the current for statement if we are building a loop
+	Statement_For* for_statement = nullptr; // the current for statement if we are building a loop
+
 	// action to do to build all next statementq
-	std::function<Statement::NextAction (BuildContext&)> build_all_next_statements;
+	std::function < NextAction(BuildContext&, NextAction action ) > build_all_next_statements;
 
 public:
 	// constructor
 	BuildContext(Caller caller);
 	// copy constructor
 	BuildContext(const BuildContext& source, Caller caller);
+
+	//  Init variables and If Gate for a "IF"  statmeent
+	void init_variables_if_gate(BuildContext& ctx_source, class Gate_IF* gate, bool bloc_side);
+
+	// get the current circuit to build in the context
+	Circuit& circuit(void) { return *ctx_circuit; }
+	// get the variables in the contexte
+	ScopeVariables& variables(void) const;
+	// visit all the circuits
+	void visit_circuits(std::function<void(Circuit&)> fnVisit);
+	// are we in a for statement ?
+	bool is_in_for_loop(void) const { return for_statement != nullptr; }
+
+protected:
 	//  get all info needed to create a new copy of acontexte; for "if statement" 
 	class InfoCopy {
 	public:
@@ -45,13 +65,5 @@ public:
 		int nb_bits_in(void) const { return (int)connexions_dest.size(); }
 	};
 	InfoCopy get_info_copy(void) const;
-
-	// get the current circuit to build in the context
-	Circuit& circuit(void) { return *ctx_circuit; }
-	// visit all the circuits
-	void visit_circuits(std::function<void(Circuit&)> fnVisit);
-	// are we in a for statement ?
-	bool is_in_for_loop(void) const { return for_statement != nullptr; }
-
 };
 

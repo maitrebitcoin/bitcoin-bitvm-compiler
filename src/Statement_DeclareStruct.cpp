@@ -32,9 +32,9 @@ void  Statement_DeclareStruct::init(Scope& parent_scope) {
 	parent_scope.declare_struct(this->struct_type);
 }
 // build the circuit for the declaration statement
-Statement::NextAction Statement_DeclareStruct::build_circuit(BuildContext& ctx) const {
+BuildContext::NextAction Statement_DeclareStruct::build_circuit(BuildContext& ctx) const {
 	// nothind to do
-	return NextAction::Continue;
+	return BuildContext::NextAction::Continue;
 
 }
 

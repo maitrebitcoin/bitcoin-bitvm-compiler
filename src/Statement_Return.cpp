@@ -19,7 +19,7 @@ void Statement_Return::init(Scope& parent_scope) {
 }
 
 // build the circuit for the return statem-ent
-Statement::NextAction Statement_Return::build_circuit(BuildContext& ctx) const {
+BuildContext::NextAction Statement_Return::build_circuit(BuildContext& ctx) const {
 
 	// build the expression
 	std::vector<Connection*> outputs = expression->build_circuit(ctx);
@@ -27,5 +27,5 @@ Statement::NextAction Statement_Return::build_circuit(BuildContext& ctx) const {
 	assert(nb_bit_out == get_type().size_in_bit());
 	// connect the output of the expression to the output of the circuit
 	ctx.circuit().set_output(outputs);
-	return NextAction::Return;
+	return BuildContext::NextAction::Return;
 }
