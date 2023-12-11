@@ -7,6 +7,8 @@ int8 main(int8 max_i)
 	//	int8 local = sum + i;
 		if (i==max_i) 
 		{
+			int8 local = sum + i;
+			sum = local;
 			break;
 		}
 		sum = sum + i;

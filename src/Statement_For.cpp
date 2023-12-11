@@ -108,6 +108,7 @@ BuildContext::NextAction  Statement_For::_build_circuit_from(BuildContext& ctx, 
 	// build a new context for the for loop
 	BuildContext ctx_for_loop_extern(ctx, BuildContext::Caller::for_statement );
 	ctx_for_loop_extern.for_statement =  const_cast<Statement_For *>(this);
+	ctx_for_loop_extern.debug_description = "ctx_for_loop_extern";
 
 
 	// init : crate loop var and set it to start value
@@ -123,25 +124,31 @@ BuildContext::NextAction  Statement_For::_build_circuit_from(BuildContext& ctx, 
 		
 		// set loop var to current value
 		statement_set_var.build_circuit_set_to_int(ctx_for_loop_internal, i);
+		ctx_for_loop_internal.debug_description = "ctx_for_loop_internal for (" + std::to_string(i) + ")";
 
 		// action in case of if to bluild the circuit from a new position
 		// build all the other loops iterations
-		ctx_for_loop_internal.build_all_next_statements = [this,i,ctx](BuildContext& param_context, BuildContext::NextAction action) {
+		BuildContext* pctx_caller = &ctx;
+		ctx_for_loop_internal.build_all_next_statements = [this,i, pctx_caller](BuildContext& param_context, BuildContext::NextAction action) {
 			assert(action != BuildContext::NextAction::Return);
-			
-			if (action == BuildContext::NextAction::Break)
+			bool bBreak	      = action == BuildContext::NextAction::Break;
+			if (bBreak)
 				// break cas handeld : build ocde afet the loop
 				action = BuildContext::NextAction::Continue; 
 			else
-				// do the othe iterations of thee loop
-				action = _build_circuit_from(param_context,  i + incr_value);
-			
-			if (action == BuildContext::NextAction::Return)
-				return action;
-			// continue to the rest of the circuit
-			if (ctx.build_all_next_statements != nullptr)
 			{
-				return ctx.build_all_next_statements(param_context, action);
+				// do the othe iterations of thee loop
+				action = _build_circuit_from(param_context, i + incr_value);
+				if (action == BuildContext::NextAction::Return)
+					return action;
+			}
+			// continue to the rest of the circuit
+			if (pctx_caller->build_all_next_statements != nullptr)
+			{
+				auto sub_action = pctx_caller->build_all_next_statements(param_context, action);
+				if (bBreak && sub_action == BuildContext::NextAction::Continue)
+					return  BuildContext::NextAction::Break;
+				return sub_action;
 			}
 			return BuildContext::NextAction::Continue;
 		};

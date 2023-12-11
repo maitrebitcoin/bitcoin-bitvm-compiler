@@ -139,15 +139,21 @@ BuildContext::NextAction CodeBloc::_build_circuit_from(BuildContext& ctx, int fi
 
 			// action in case of if to bluild the circuit from a new position
 			BuildContext ctx_internal(ctx, BuildContext::Caller::build_next_lambda);
-			ctx_internal.build_all_next_statements = [this, ctx, i](BuildContext& context_param, BuildContext::NextAction action) {
+			ctx_internal.debug_description = "statement " + std::to_string(i) + " / line " + std::to_string(statement->num_line);
+			BuildContext* pctx_caller = &ctx;
+			ctx_internal.build_all_next_statements = [this, pctx_caller, i](BuildContext& context_param, BuildContext::NextAction action) {
 				assert(action != BuildContext::NextAction::Return);
-				if (action != BuildContext::NextAction::Break)
+				bool bBreak = action == BuildContext::NextAction::Break;
+				if (!bBreak)
 					action  =  _build_circuit_from(context_param, i + 1);
 				if (action == BuildContext::NextAction::Return)
 					return action;
-				if (ctx.build_all_next_statements != nullptr)
+				if (pctx_caller->build_all_next_statements != nullptr)
 				{
-					return ctx.build_all_next_statements(context_param, action);
+					auto sub_action = pctx_caller->build_all_next_statements(context_param, action);
+					if (bBreak && sub_action == BuildContext::NextAction::Continue)
+						return  BuildContext::NextAction::Break;
+					return sub_action;
 				}
 				return BuildContext::NextAction::Continue;
 			};

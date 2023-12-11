@@ -58,15 +58,14 @@ BuildContext::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 	std::vector<Connection*> expression_value = expression->build_circuit(ctx);
 	assert(expression_value.size() == 1);
 
-	// both blocs must exists
 	if (bloc_if_true == nullptr)
 		throw Error("Internal error : if (true) bloc is null");
-//	if (bloc_if_false == nullptr)
-//		throw Error("Internal error : if (false) bloc is null");
 
 	// create 2 contexts with 2 new sub circuits 
 	BuildContext ctx_if_true(ctx,  BuildContext::Caller::if_statement );
+	ctx_if_true.debug_description = "ctx_if_true";
 	BuildContext ctx_if_false(ctx, BuildContext::Caller::if_statement);
+	ctx_if_false.debug_description = "ctx_if_false";
 	// créate a new gate IF
 	Gate_IF* gate_if = new Gate_IF(&ctx_if_true.circuit(), &ctx_if_false.circuit());
 
@@ -81,15 +80,13 @@ BuildContext::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 		assert(action_1 == BuildContext::NextAction::Return);
 	}
 
-
 	// init false case
-	ctx_if_false.build_all_next_statements = ctx.build_all_next_statements;
 	ctx_if_false.init_variables_if_gate(ctx, gate_if, false);
+//	ctx_if_false.build_all_next_statements = nullptr;
 	assert(bloc_if_false == nullptr);// TODO: else
-//	bloc_if_false->build_circuit(ctx_if_false);
 	// add the end of the bloc 
 	assert(ctx.build_all_next_statements != nullptr);
-	BuildContext::NextAction action_0 = ctx.build_all_next_statements(ctx_if_false, next_action);
+	BuildContext::NextAction action_0 = ctx.build_all_next_statements(ctx_if_false, BuildContext::NextAction::Continue);
 	assert(action_0 == BuildContext::NextAction::Return); //build_all_next_statements muut havec reachted a return statement-
 
 	// add the gate to the circuit

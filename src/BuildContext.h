@@ -17,9 +17,12 @@ using InputsMap = InterfaceInputsMap*;
 // context for building the circuit
 class BuildContext {
 public:
+	// description for debug purpose
+	std::string debug_description;
+
 	// creation or copy coller type
 	enum class Caller { main_body, if_statement, for_statement, build_next_lambda};
-	// action retur, what to do to build all next statements
+	// action return, what to do to build all next statements
 	enum class NextAction { Continue, Break, Return };
 
 protected:
@@ -40,6 +43,8 @@ public:
 	BuildContext(Caller caller);
 	// copy constructor
 	BuildContext(const BuildContext& source, Caller caller);
+	// destructor
+	~BuildContext();
 
 	//  Init variables and If Gate for a "IF"  statmeent
 	void init_variables_if_gate(BuildContext& ctx_source, class Gate_IF* gate, bool bloc_side);

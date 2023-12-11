@@ -9,6 +9,10 @@ BuildContext::BuildContext(Caller caller) : create_caller(caller)
 	// alloc main circuit
 	ctx_circuit = new Circuit();
 }
+// destructor
+BuildContext::~BuildContext() {
+	build_all_next_statements = nullptr;
+}
 
 
 // copy constructor
