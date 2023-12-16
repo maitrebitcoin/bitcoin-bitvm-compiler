@@ -91,10 +91,15 @@ void Function::build_circuit(BuildContext &ctx) {
 	// init scope variables in the contente
 	ctx.variables().init_from_function_parameters(definition, current_input);
 
-	ctx.build_all_next_statements = [](BuildContext& , BuildContext::NextAction ) {
+	ctx.build_all_next_statements = [](BuildContext&) {
 		// error if the generation calls here : 
 		throw Error("Internal error : missing return");
 		return BuildContext::NextAction::Return;
+	};
+	ctx.build_on_break = [](BuildContext&) {
+		// error if the generation calls here : 
+		throw Error("Internal error : unexprected break");
+		return BuildContext::NextAction::Break;
 	};
 
 	// build the body

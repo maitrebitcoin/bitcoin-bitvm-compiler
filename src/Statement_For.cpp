@@ -117,11 +117,11 @@ BuildContext::NextAction  Statement_For::_build_circuit_from(BuildContext& ctx, 
 	Statement_SetVar& statement_set_var = for_init_as_declare_var->affectation;
 
 
-	// loop to create all gates
+	// for(i) interations, starting at start_value_param
 	for (int i = start_value_param; i != end_value; i += incr_value) {
 
 		BuildContext ctx_for_loop_internal(ctx_for_loop_extern, BuildContext::Caller::build_next_lambda);
-		
+
 		// set loop var to current value
 		statement_set_var.build_circuit_set_to_int(ctx_for_loop_internal, i);
 		ctx_for_loop_internal.debug_description = "ctx_for_loop_internal for (" + std::to_string(i) + ")";
@@ -129,32 +129,31 @@ BuildContext::NextAction  Statement_For::_build_circuit_from(BuildContext& ctx, 
 		// action in case of if to bluild the circuit from a new position
 		// build all the other loops iterations
 		BuildContext* pctx_caller = &ctx;
-		ctx_for_loop_internal.build_all_next_statements = [this,i, pctx_caller](BuildContext& param_context, BuildContext::NextAction action) {
-			assert(action != BuildContext::NextAction::Return);
-			bool bBreak	      = action == BuildContext::NextAction::Break;
-			if (bBreak)
-				// break cas handeld : build ocde afet the loop
-				action = BuildContext::NextAction::Continue; 
-			else
-			{
-				// do the othe iterations of thee loop
-				action = _build_circuit_from(param_context, i + incr_value);
-				if (action == BuildContext::NextAction::Return)
-					return action;
-			}
+		ctx_for_loop_internal.build_all_next_statements = [this, i, pctx_caller](BuildContext& param_context) {
+			// do the othet iterations of thee loop
+			auto action = _build_circuit_from(param_context, i + incr_value);
+			if (action == BuildContext::NextAction::Return)
+				return action;
+			if (action == BuildContext::NextAction::Break)
+				return pctx_caller->build_on_break(param_context);
 			// continue to the rest of the circuit
 			if (pctx_caller->build_all_next_statements != nullptr)
 			{
-				auto sub_action = pctx_caller->build_all_next_statements(param_context, action);
-				if (bBreak && sub_action == BuildContext::NextAction::Continue)
-					return  BuildContext::NextAction::Break;
+				auto sub_action = pctx_caller->build_all_next_statements(param_context);
 				return sub_action;
 			}
 			return BuildContext::NextAction::Continue;
 		};
+		ctx_for_loop_internal.build_on_break = [this, i, pctx_caller](BuildContext& param_context) {
+			if (pctx_caller->nested_if>0)
+				return pctx_caller->build_on_break(param_context);
+			// continue to the rest of the circuit
+			auto sub_action = pctx_caller->build_all_next_statements(param_context);
+			return sub_action;
+		};
 		
-		// build circuit for the code bloc
-		BuildContext::NextAction  action =	code->build_circuit(ctx_for_loop_internal);
+		// build circuit for the code bloc insiste the for() loop
+		BuildContext::NextAction  action =	this->code->build_circuit(ctx_for_loop_internal);
 
 		switch (action)
 		{

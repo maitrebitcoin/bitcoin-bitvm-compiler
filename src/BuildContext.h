@@ -24,6 +24,8 @@ public:
 	enum class Caller { main_body, if_statement, for_statement, build_next_lambda};
 	// action return, what to do to build all next statements
 	enum class NextAction { Continue, Break, Return };
+	// number of nested if
+	int nested_if = 0;
 
 protected:
 	Caller create_caller;
@@ -36,7 +38,9 @@ public:
 	Statement_For* for_statement = nullptr; // the current for statement if we are building a loop
 
 	// action to do to build all next statementq
-	std::function < NextAction(BuildContext&, NextAction action ) > build_all_next_statements;
+	std::function < NextAction(BuildContext&) > build_all_next_statements;
+	// action to do in case a "break" is encountered
+	std::function < NextAction(BuildContext&) > build_on_break;
 
 public:
 	// constructor

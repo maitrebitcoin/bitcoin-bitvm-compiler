@@ -75,18 +75,20 @@ BuildContext::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 	// if no return or break statement, add the end of the bloc
 	if (next_action != BuildContext::NextAction::Return ) {
 		// add the end of the bloc
-		assert(ctx.build_all_next_statements != nullptr);
-		BuildContext::NextAction action_1 = ctx.build_all_next_statements(ctx_if_true, next_action);
+		BuildContext::NextAction action_1;
+		if (next_action == BuildContext::NextAction::Break) 
+			action_1 = ctx.build_on_break(ctx_if_true);
+		else
+			action_1 = ctx.build_all_next_statements(ctx_if_true);
 		assert(action_1 == BuildContext::NextAction::Return);
 	}
 
 	// init false case
 	ctx_if_false.init_variables_if_gate(ctx, gate_if, false);
-//	ctx_if_false.build_all_next_statements = nullptr;
 	assert(bloc_if_false == nullptr);// TODO: else
 	// add the end of the bloc 
 	assert(ctx.build_all_next_statements != nullptr);
-	BuildContext::NextAction action_0 = ctx.build_all_next_statements(ctx_if_false, BuildContext::NextAction::Continue);
+	BuildContext::NextAction action_0 = ctx.build_all_next_statements(ctx_if_false);
 	assert(action_0 == BuildContext::NextAction::Return); //build_all_next_statements muut havec reachted a return statement-
 
 	// add the gate to the circuit

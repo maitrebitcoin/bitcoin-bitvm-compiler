@@ -18,6 +18,8 @@ BuildContext::~BuildContext() {
 // copy constructor
 BuildContext::BuildContext(const BuildContext& source, Caller caller) : create_caller(caller)
 {
+	nested_if = source.nested_if ;
+
 	assert(caller != Caller::main_body);
 	switch (caller) 
 	{
@@ -27,12 +29,15 @@ BuildContext::BuildContext(const BuildContext& source, Caller caller) : create_c
 			for_statement = source.for_statement;
 			// action to build after the if statement
 			build_all_next_statements = source.build_all_next_statements;
+			build_on_break			  = source.build_on_break;
+			nested_if++;
 			break;
 		case Caller::for_statement:
 			// share the same circuit in a for statement
 			ctx_circuit = source.ctx_circuit;
 			// action to build after the for statement
 			build_all_next_statements = source.build_all_next_statements;
+			build_on_break			  = source.build_on_break;
 
 			// copy all vaiables
 			ctx_variables = source.variables();
@@ -47,7 +52,6 @@ BuildContext::BuildContext(const BuildContext& source, Caller caller) : create_c
 			assert(false);
 			throw Error("internal error : unknown caller");
 	}
-
 }
 
 

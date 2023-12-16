@@ -141,22 +141,18 @@ BuildContext::NextAction CodeBloc::_build_circuit_from(BuildContext& ctx, int fi
 			BuildContext ctx_internal(ctx, BuildContext::Caller::build_next_lambda);
 			ctx_internal.debug_description = "statement " + std::to_string(i) + " / line " + std::to_string(statement->num_line);
 			BuildContext* pctx_caller = &ctx;
-			ctx_internal.build_all_next_statements = [this, pctx_caller, i](BuildContext& context_param, BuildContext::NextAction action) {
-				assert(action != BuildContext::NextAction::Return);
-				bool bBreak = action == BuildContext::NextAction::Break;
-				if (!bBreak)
-					action  =  _build_circuit_from(context_param, i + 1);
+			ctx_internal.build_all_next_statements = [this, pctx_caller, i](BuildContext& context_param) {
+				auto action  =  _build_circuit_from(context_param, i + 1);
 				if (action == BuildContext::NextAction::Return)
 					return action;
-				if (pctx_caller->build_all_next_statements != nullptr)
-				{
-					auto sub_action = pctx_caller->build_all_next_statements(context_param, action);
-					if (bBreak && sub_action == BuildContext::NextAction::Continue)
-						return  BuildContext::NextAction::Break;
-					return sub_action;
-				}
-				return BuildContext::NextAction::Continue;
+				if (action == BuildContext::NextAction::Break)
+					return pctx_caller->build_on_break(context_param);
+				assert(pctx_caller->build_all_next_statements != nullptr);
+				auto sub_action = pctx_caller->build_all_next_statements(context_param);
+				return sub_action;
 			};
+			ctx_internal.build_on_break = ctx.build_on_break;
+
 
 			BuildContext::NextAction action =statement->build_circuit(ctx_internal);
 
