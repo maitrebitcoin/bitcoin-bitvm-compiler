@@ -64,7 +64,6 @@ Bits are in low endian (x86 format)
 
 # Current todo list :
 
-- loop statement (in development)
 - array support
 - operators : \* / % 
 - procedure calls
