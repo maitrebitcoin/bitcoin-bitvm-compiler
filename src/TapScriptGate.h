@@ -5,10 +5,21 @@
 #include "InterfaceInputsMap.h"
 class Circuit;
 
+// debug info for a gate
+class CDebugInfo {
+public:
+	// source file name line number
+	int source_line = 0;
+	// description for debug purpose
+	std::string description;
+};
+
 // represents a gate that can be implemented in the circuit
 // ie, can bien represented with a tapscript
 class TapScriptGate : public IGate {
 public:
+	// description for debug purpose
+	CDebugInfo debug_info;
 	// is the gates used for computation ?
 	bool is_computed = false;
 	// id of the gate, for export

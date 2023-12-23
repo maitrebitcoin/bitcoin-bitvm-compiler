@@ -19,6 +19,8 @@ class BuildContext {
 public:
 	// description for debug purpose
 	std::string debug_description;
+	// current statement pour debug purpose
+	class Statement* current_statement = nullptr;
 
 	// creation or copy coller type
 	enum class Caller { main_body, if_statement, for_statement, build_next_lambda};

@@ -17,6 +17,9 @@ using NbBit = int;
 
 // represents a virtual circuit
 class Circuit {
+public:
+	// debug info
+	CDebugInfo debug_info;
 private:
 	// circuit id
 	int id = 0;

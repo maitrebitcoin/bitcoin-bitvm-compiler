@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <assert.h>
+#include <string>
 #include "Bits.h"
 class TapScriptGate;
 
@@ -9,6 +10,8 @@ class TapScriptGate;
 // represents a connection in the circuit betwen 2 gates
 class Connection {
 public:
+	// description for debug purpose
+	std::string debug_description;
 	// gates that set the bit value
 	TapScriptGate* gate_out = nullptr;
 	// gates that use the bit value a their input

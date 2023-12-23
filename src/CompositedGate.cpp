@@ -6,7 +6,8 @@
 #include "Circuit.h"
 
 
-// add a NOT gate into the circuir
+// add a NOT gate into the 
+
 std::array<Connection*,1> Gate_NOT::add_to_circuit(Circuit& circuit, std::array<Connection*, 1>& _inputs)  {
 	// implemented with a nand gate
 	Gate_NAND* _nand = new Gate_NAND();

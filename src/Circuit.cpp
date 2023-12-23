@@ -50,6 +50,8 @@ void Circuit::set_output_size_child(NbBit size) {
 // add a gate and its connexions into the circuit
 void Circuit::add_gate(TapScriptGate* gate) {
 	assert(!is_fully_constructed);
+	// set debug info
+	gate->debug_info = debug_info;
 	// add the gate to the circuit
 	gates.push_back(gate);
 	// add ouputs to the circuits
@@ -185,38 +187,22 @@ std::vector<Bit> Circuit::run(const CRunInputs& in_values) const {
 		// if no more gates to run, error
 		if (gate_to_run.size() == 0) 
 			throw Error( "internal error : no more gates" );
-		// run all the gates
-		for (TapScriptGate* gate : gate_to_run) {
-			// special case If gate
-			if (gate->cast_to_IF()) {
-				assert(_get_computable_gate().size() == 1);
-				// run the if gate : a sub progrma depending on the value of the condition
-				Gate_IF* gate_if = gate->cast_to_IF();
-				return gate_if->compute_if();
-			}
-			// ruy the gate
-			gate->compute();
-			assert(gate->is_computed);
-		}
-		// do we have a result ?
-		// =all the needed outpus bits are calculated
-/*
-		// init result from calculated outputs
-		std::vector<Bit> result(nb_bits_output());
-		int bits_calculated = 0;
-		for (Connection* connection_i : connections) {
 
-			if (connection_i->is_output
-				&& connection_i->is_calculated()) {
-				bool value_calculted = connection_i->get_value();
-				result[connection_i->n_ouput_index].set_value(value_calculted);
-				bits_calculated++;
+		// special case If gate
+		if (gate_to_run.size() == 1 && gate_to_run[0]->cast_to_IF() != nullptr) {
+			// run the if gate : a sub progrma depending on the value of the condition
+			Gate_IF* gate_if = gate_to_run[0]->cast_to_IF();
+			return gate_if->compute_if();
+		}
+
+		// run all the gates, but if gate
+		for (TapScriptGate* gate : gate_to_run) {
+			if (!gate->cast_to_IF()) {
+				gate->compute();
+				assert(gate->is_computed);
 			}
 		}
-	
-		// if all bits are calculated, return the result
-		if (bits_calculated == nb_bits_output())
-			return result;*/
+
 		// continue calculation
 		nb_step++;
 		

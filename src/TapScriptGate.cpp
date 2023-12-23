@@ -80,8 +80,10 @@ std::vector<Bit> Gate_IF::compute_if(void) const {
 	CRunInputs in_sub_values = sub_circuit.get_run_inputs();
 	int i = 0;
 	for (Connection* connection : inputs) {
-		bool bit_i = connection->get_value();
-		in_sub_values.set_bit_value(i, bit_i);
+		if (connection->is_calculated()) {
+			bool bit_i = connection->get_value();
+			in_sub_values.set_bit_value(i, bit_i);
+		}
 		i++;
 	}
 

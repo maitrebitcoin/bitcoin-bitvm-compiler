@@ -663,9 +663,8 @@ void test_for(void) {
 	_test_circuit_hex(result.main_circuit(), "0A", "37"); //55
 	_test_circuit_hex(result.main_circuit(), "0B", "37");
 	_test_circuit_hex(result.main_circuit(), "77", "37");
-	
-}
 
+}
 
 
 // run all tests

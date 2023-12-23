@@ -140,8 +140,11 @@ std::vector<Connection*> BinaryOperation::build_circuit(BuildContext& ctx) {
 // build the circuit for the "a+b" expression
 std::vector<Connection*> BinaryOperation::build_circuit_add(BuildContext& ctx,
 	std::vector<Connection*>& in_a,
-	std::vector<Connection*>& in_b) {
+	std::vector<Connection*>& in_b)
+{
 	assert(in_a.size() == in_b.size());
+	ctx.circuit().debug_info.description = "add";
+
 	std::vector<Connection*> result;
 	int size = (int)in_a.size();
 	Gate_ADD  gate_add;  // add 2 birs, return carry + 1 bit 
@@ -152,12 +155,19 @@ std::vector<Connection*> BinaryOperation::build_circuit_add(BuildContext& ctx,
 	result.push_back(low_bits[0]);
 	Connection* carry = low_bits[1];
 	for (int i = 1; i < size; i++) {
+		ctx.circuit().debug_info.description = "add bit " + std::to_string(i);
 		// IN
 		std::array<Connection*, 3> input_3_bit = { in_a[i], in_b[i], carry };
 		std::array<Connection*, 2> bits_ = gate_addc.add_to_circuit(ctx.circuit(), input_3_bit);
 		result.push_back(bits_[0]);
 		carry = bits_[1];
 	}
+	// set debug info fo connexion
+	for (int i = 0; i < size; i++) {
+		result[i]->debug_description = "line " + std::to_string(ctx.current_statement ? ctx.current_statement->num_line:0) + " ADD bit " + std::to_string(i);
+	}
+
+	ctx.circuit().debug_info.description = "";
 	assert(result.size() == size);
 	return result;
 }

@@ -2,7 +2,7 @@
 #include "CodeBloc.h"
 #include "Program.h"
 #include "Error.h"
-
+#include "Circuit.h"
 
 
 // get the return statement of the bloc
@@ -152,7 +152,8 @@ BuildContext::NextAction CodeBloc::_build_circuit_from(BuildContext& ctx, int fi
 				return sub_action;
 			};
 			ctx_internal.build_on_break = ctx.build_on_break;
-
+			ctx_internal.circuit().debug_info.source_line = statement->num_line;
+			ctx_internal.circuit().debug_info.description = "statement";
 
 			BuildContext::NextAction action =statement->build_circuit(ctx_internal);
 

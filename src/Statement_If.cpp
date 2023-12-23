@@ -95,6 +95,7 @@ BuildContext::NextAction Statement_If::build_circuit(BuildContext& ctx) const
 	std::array<Connection*, 1> input_1_bit = { expression_value[0] };
 	std::array<Connection*, 0> void_result =
 	gate_if->add_to_circuit(ctx.circuit(), input_1_bit);
+	input_1_bit[0]->debug_description = "gate_if intput";
 
 	// tell the ciruit outupt sizz, without real connexion.
 	// the real output will be from or circuit_if_true ou ctx_if_false

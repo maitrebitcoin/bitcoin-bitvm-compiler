@@ -19,6 +19,7 @@ BuildContext::~BuildContext() {
 BuildContext::BuildContext(const BuildContext& source, Caller caller) : create_caller(caller)
 {
 	nested_if = source.nested_if ;
+	current_statement = source.current_statement;
 
 	assert(caller != Caller::main_body);
 	switch (caller) 
