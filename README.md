@@ -14,7 +14,7 @@ int8 main(int8 a, int8 b)
 }
 ```
 
-Generate the cirucuit(s) with :
+Generate the circuit(s) with :
 ```
  bitvmcompiler.exe source.bvc export.txt
 ```
