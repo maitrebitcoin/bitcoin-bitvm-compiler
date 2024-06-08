@@ -666,12 +666,24 @@ void test_for(void) {
 
 }
 
+void test_array(void) {
+
+	// return the sum of int 1 & 2
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_array.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.main_circuit(), "030507", "08");
+
+}
+
 
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
 
-	test_for();
+	test_array();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
@@ -703,6 +715,8 @@ void run_all_test(void) {
 	test_if_and_stuct();		std::cout << " if and struct - PASSED\n";
 	test_increment();			std::cout << " increment - PASSED\n";
 	test_decrement();			std::cout << " decrement - PASSED\n";
+	test_for();					std::cout << " for - PASSED\n";
+	test_array();				std::cout << " array - PASSED\n";
 
 	// OK
 	std::cout << "OK\n";

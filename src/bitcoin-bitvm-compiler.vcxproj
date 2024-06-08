@@ -118,6 +118,7 @@
     <ClCompile Include="Expression_Variable.cpp" />
     <ClCompile Include="TestOperation.cpp" />
     <ClCompile Include="Type.cpp" />
+    <ClCompile Include="TypeArray.cpp" />
     <ClCompile Include="TypeStruct.cpp" />
     <ClCompile Include="UnaryOperation.cpp" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="TestOperation.h" />
     <ClInclude Include="TokenId.h" />
     <ClInclude Include="Type.h" />
+    <ClInclude Include="TypeArray.h" />
     <ClInclude Include="TypeStruct.h" />
     <ClInclude Include="UnaryOperation.h" />
     <ClInclude Include="VariableDefinition.h" />
@@ -174,6 +176,7 @@
     <None Include="sample\hello_word.bvc" />
     <None Include="sample\test_add.bvc" />
     <None Include="sample\test_and.bvc" />
+    <None Include="sample\test_array.bvc" />
     <None Include="sample\test_decrement.bvc" />
     <None Include="sample\test_for.bvc" />
     <None Include="sample\test_if.bvc" />

@@ -1,0 +1,10 @@
+// test array usage
+
+int8 main(int8 my_array) 
+{
+	int8[3] local_array;
+//	local_array = my_array
+//	local_array[2] = my_array[3]
+//	return local_array[1] + local_array[2]
+	return my_array;
+}

@@ -52,6 +52,9 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_STRUCT_TYPE,		nullptr, REGEXP_USERTYPE,    [this](char next_char) {return next_char != '.' && !in_declare_struct; } },
 		{ TOKEN_HEXANUMBER,			nullptr, "0x[0-9A-Fa-f]*"},
 		{ TOKEN_NUMBER,				nullptr, "[0-9]*"},
+		{ TOKEN_OPEN_ARRAY,			"["},
+		{ TOKEN_CLOSE_ARRAY,		"]"},
+
 	};
 	int nb_lex_rules = sizeof(token_definition) / sizeof(token_definition[0]);
 	return std::vector<TokenDefinition>(token_definition, token_definition + nb_lex_rules);
@@ -330,13 +333,17 @@ RuleDefinition rules_definition[] =
 	},
 	// true
 	{ RULE_LITTERAL , { TOKEN_TRUE } ,
-			[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_literal(Type::Native::bit, *p[0].string_value);  }
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_literal(Type::Native::bit, *p[0].string_value);  }
 	},
 	// false
 	{ RULE_LITTERAL , { TOKEN_FALSE } ,
-			[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_literal(Type::Native::bit, *p[0].string_value);  }
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_literal(Type::Native::bit, *p[0].string_value);  }
 	},
 
+	// array type. ex : int8[10]
+	{ RULE_TYPE , { RULE_TYPE, TOKEN_OPEN_ARRAY, RULE_EXPRESSION  , TOKEN_CLOSE_ARRAY } ,
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.type_value = new_type_array(p[0].type_value, p[2].expression_value);  }
+	},
 	// types: bool, int8, int16, int32, int64, uint8, uint16, uint32, uint64, ..
 	{ RULE_TYPE , { TOKEN_TYPE_BOOL } ,	  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::bit);    }},
 	{ RULE_TYPE , { TOKEN_TYPE_INT8 } ,	  [this](TokenValue& result, std::vector<TokenValue>) { result.type_value = new_type_basic(Type::Native::int8);   }},
@@ -351,6 +358,7 @@ RuleDefinition rules_definition[] =
 	{ RULE_TYPE , { TOKEN_STRUCT_TYPE } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.type_value = new_type_user_defined(*p[0].string_value);  }
 	},
+
 };
 	int nb_grammar_rules = sizeof(rules_definition) / sizeof(rules_definition[0]);
 	return std::vector<RuleDefinition>(rules_definition, rules_definition + nb_grammar_rules);

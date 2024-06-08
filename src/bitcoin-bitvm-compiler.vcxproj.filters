@@ -31,12 +31,6 @@
     <ClCompile Include="CodeBloc.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
-    <ClCompile Include="TypeStruct.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
-    <ClCompile Include="Type.cpp">
-      <Filter>source\Program</Filter>
-    </ClCompile>
     <ClCompile Include="Scope.cpp">
       <Filter>source\Program</Filter>
     </ClCompile>
@@ -106,12 +100,18 @@
     <ClCompile Include="Statement_Break.cpp">
       <Filter>source\Program\Statements</Filter>
     </ClCompile>
+    <ClCompile Include="Type.cpp">
+      <Filter>source\Program\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeStruct.cpp">
+      <Filter>source\Program\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeArray.cpp">
+      <Filter>source\Program\Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Type.h">
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="Bits.h">
@@ -148,9 +148,6 @@
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="VariableDefinition.h">
-      <Filter>source\Program</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeStruct.h">
       <Filter>source\Program</Filter>
     </ClInclude>
     <ClInclude Include="BuildContext.h">
@@ -233,6 +230,15 @@
     </ClInclude>
     <ClInclude Include="Statement_Break.h">
       <Filter>source\Program\Statements</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeStruct.h">
+      <Filter>source\Program\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>source\Program\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeArray.h">
+      <Filter>source\Program\Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -350,6 +356,9 @@
     <None Include="sample\test_decrement.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_array.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
@@ -372,6 +381,9 @@
     </Filter>
     <Filter Include="source\Program\Statements">
       <UniqueIdentifier>{18e39e80-2138-4cba-ba62-672e70c68679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Program\Types">
+      <UniqueIdentifier>{0b6b9aed-0cc6-4b0b-b7db-851f23337934}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

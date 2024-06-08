@@ -39,6 +39,8 @@ enum E_TokenId {
 	TOKEN_INCREMENT,		   //		 ++
 	TOKEN_DECREMENT,		   // 292	 --
 	TOKEN_KEYWORKD_BREAK,	   // 293	 keyword "break"
+	TOKEN_OPEN_ARRAY,		   // 294    "["
+	TOKEN_CLOSE_ARRAY,		   // 295    "]"
 
 
 };

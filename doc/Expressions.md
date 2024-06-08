@@ -2,7 +2,7 @@
 
 An expression is a sequence of operators and their operands
 
-Expressions can be composed of variables, liteals, operators and parenthesis.
+Expressions can be composed of variables, literals, operators and parenthesis.
 
 ex : 
 ```c

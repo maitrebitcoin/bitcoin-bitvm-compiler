@@ -61,6 +61,21 @@ public:
 		Types.push_back(new_type);
 		return new_type;
 	}
+	// get a new array type
+	Type* new_type_array(Type* type, Expression* size_expression ) {
+		// the expression must be a litteral positive integer
+		Literal* size_literal = size_expression->cast_to_literal();
+		if (size_literal==nullptr)
+			throw Error("Array size must be a litteral integer");
+		std::string size_as_str = size_literal->value_str;
+		int size_as_int = std::stoi(size_as_str);
+		if (size_as_int <= 0)
+			throw Error("Array size must be a positive integer");
+		// OK to create the array type
+		TypeArray* new_type = new TypeArray(type, size_as_int);
+		Types.push_back(new_type);
+		return new_type;
+	}	
 
 	// get a new function parameter
 	Function::Parameter* new_function_parameter(Type* type, std::string name) {

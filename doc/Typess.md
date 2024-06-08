@@ -14,3 +14,11 @@ The following native types are supported :
 | int256	| signed 256 bits integer  |
 | uint256	| unsigned 256 bits integer|
 
+# Arrays
+
+only fixed sized arrays are supported, the following syntax is used :
+```
+type[<size>]
+ex : int8[10] my_array;
+```
+```

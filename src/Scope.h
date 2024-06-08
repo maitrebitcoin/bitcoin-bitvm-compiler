@@ -7,6 +7,7 @@
 #include <vector>
 #include "VariableDefinition.h"
 #include "TypeStruct.h"
+#include "TypeArray.h"
 class Function;
 class Statement_For;
 

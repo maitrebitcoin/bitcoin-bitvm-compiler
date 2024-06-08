@@ -4,6 +4,7 @@
 #include <string>
 class TypeStruct;
 class TypeBasic;
+class TypeArray;
 
 // type of a variable or returned by a function. 
 //ex : "bool" ou "struct MyStruct"
@@ -44,6 +45,8 @@ public:
 	virtual const TypeBasic* cast_to_TypeBasic(void) const { return nullptr; }
 	// cast to "TypeStruct"
 	virtual const TypeStruct* cast_to_TypeStruct(void) const { return nullptr; }
+	// cast to "TypeArray"
+	virtual const TypeArray* cast_to_TypeArray(void) const { return nullptr; }
 
 };
  

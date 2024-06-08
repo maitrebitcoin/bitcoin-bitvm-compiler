@@ -7,7 +7,7 @@
 #include "VariableDefinition.h"
 class BuildContext;
 
-// incomplet type at compilz time, we only have the name
+// incomplet type at compile time, we only have the name
 class IncompleteType : public Type {
 protected:
 	// name of the type
