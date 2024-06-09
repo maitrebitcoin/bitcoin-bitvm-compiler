@@ -64,7 +64,7 @@ Bits are in low endian (x86 format)
 
 # Current todo list :
 
-- array support
+- array operator [] wth expresssion, ex : a{b+1]
 - operators : \* / % 
 - procedure calls
 - basic function stdlib (sha256, shnor,... )
@@ -73,3 +73,4 @@ Bits are in low endian (x86 format)
 - wasm support and browser demo site
 - check for unused inputs instead of a "no more gates" error
 - optimize the generated circuit (use less gates)
+- better syntax error messages

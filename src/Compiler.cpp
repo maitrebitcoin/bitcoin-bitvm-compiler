@@ -496,7 +496,7 @@ Compiler::ResultforLine Compiler::_compile_line(void) {
 		if (token.type == INVALID_TOKEN)
 			return ResultforLine::syntaxError;
 		// notify a new token 
-		language_context.on_new_token(token);
+		language_context.on_new_token(token, lexer);
 		// add to stack	
 		token_stack.push_back(token);
 		// check if we have a matching rule

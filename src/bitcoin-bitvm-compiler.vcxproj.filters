@@ -109,6 +109,9 @@
     <ClCompile Include="TypeArray.cpp">
       <Filter>source\Program\Types</Filter>
     </ClCompile>
+    <ClCompile Include="Expression_ArrayElement.cpp">
+      <Filter>source\Program\Expression</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -239,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="TypeArray.h">
       <Filter>source\Program\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression_ArrayElement.h">
+      <Filter>source\Program\Expression</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

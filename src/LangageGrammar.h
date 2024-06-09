@@ -7,6 +7,7 @@
 #include "ParsingContext.h"
 #include "LangageAttributes.h"
 #include "Error.h"
+#include "Expression_ArrayElement.h"
 
 struct TokenDefinition;
 struct RuleDefinition;
@@ -206,14 +207,18 @@ public:
 		statements.push_back(new_break_statement);
 		return new_break_statement;
 	}
-
 	// gst an new struct memeber
 	Expression* new_struct_member(std::string struct_name, std::string membre_name ) {
 		Expression* new_struct_memb = new Expression_StructMember(struct_name, membre_name);
 		expressions.push_back(new_struct_memb);
 		return new_struct_memb;
 	}
-
+	// get a new array ekelebt
+	Expression* new_array_element(std::string array_name, Expression* index) {
+		Expression* new_array_memb = new Expression_ArrayElement(array_name, index);
+		expressions.push_back(new_array_memb);
+		return new_array_memb;
+	}
 
 	// get a new program
 	Program* new_program(void) {

@@ -4,6 +4,7 @@
 #include "ParsingContext.h"
 #include "Compiler.h"
 #include "TokenId.h"
+#include "Compiler.h"
 
 // called when '{' is found
 void ParsingContext::open_bracket(void) {
@@ -22,7 +23,7 @@ void ParsingContext::on_new_line(void) {
 }
 
 // caled for each new token 
-void ParsingContext::on_new_token(const CToken& token)
+void ParsingContext::on_new_token(const CToken& token, const CLexer& lexer)
 {
 	// bracket counting
 	if (token.type == '{')
@@ -86,4 +87,13 @@ void ParsingContext::on_new_token(const CToken& token)
 
 
 	}
+
+	// to avoid confustion between a and a[2]
+	next_token_type = 0;
+	if (token.type == TOKEN_IDENTIFIER)	{
+		CToken next_token = lexer.get_next_token_const();
+		next_token_type = next_token.type;
+	}
+	
+			
 }

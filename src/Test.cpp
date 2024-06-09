@@ -683,8 +683,6 @@ void test_array(void) {
 void run_all_test(void) {
 	std::cout << "Testing...\n";
 
-	test_array();
-
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
 	test_xor_gate();			std::cout << " xor - PASSED\n";

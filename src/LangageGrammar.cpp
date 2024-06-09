@@ -52,8 +52,6 @@ std::vector<TokenDefinition> LangageGrammar::get_token_definition(void) {
 		{ TOKEN_STRUCT_TYPE,		nullptr, REGEXP_USERTYPE,    [this](char next_char) {return next_char != '.' && !in_declare_struct; } },
 		{ TOKEN_HEXANUMBER,			nullptr, "0x[0-9A-Fa-f]*"},
 		{ TOKEN_NUMBER,				nullptr, "[0-9]*"},
-		{ TOKEN_OPEN_ARRAY,			"["},
-		{ TOKEN_CLOSE_ARRAY,		"]"},
 
 	};
 	int nb_lex_rules = sizeof(token_definition) / sizeof(token_definition[0]);
@@ -92,7 +90,7 @@ RuleDefinition rules_definition[] =
 	},
 	// ex: bool a, byte b
 	{ RULE_N_PARAMETERS_DECL , { RULE_N_PARAMETERS_DECL, ',', RULE_1_PARAMETER_DECL } ,
-	[this](TokenValue& result, std::vector<TokenValue> p) {  result.function_all_paramters_value = p[0].function_all_paramters_value;  
+		[this](TokenValue& result, std::vector<TokenValue> p) {  result.function_all_paramters_value = p[0].function_all_paramters_value;  
 																p[0].function_all_paramters_value->add(*p[2].function_paramter_value);  }
 	},
 	// ex : bool a
@@ -118,7 +116,7 @@ RuleDefinition rules_definition[] =
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.code_block_value = new_code_bloc(p[0].statement_value);
 		},
-		[this](void) { return !in_for_statement; } // pre-condition to prevent rgouring statements in for loop
+		[this](void) { return !in_for_statement; } // pre-condition to prevent regroupin statements in for loop
 	},
 	// statements -------------------
 	// return
@@ -313,15 +311,20 @@ RuleDefinition rules_definition[] =
 		}
 	},
 			
-			
 	// ex: a
 	{ RULE_VARIABLE , { TOKEN_IDENTIFIER } ,
-		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_variable_expression(*p[0].string_value);  }
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_variable_expression(*p[0].string_value);  },
+		[this](void) { return next_token_type != '['; } // pre-condition to prevent a[3] to be interpreted as a variable
 	},
 	// ex: struct_header.a
 	{ RULE_VARIABLE , { TOKEN_USE_STRUCT ,'.', TOKEN_USE_STRUCT_MEMBER} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_struct_member(*p[0].string_value, *p[2].string_value);  }
 	},
+	// ex: a[4]
+	{ RULE_VARIABLE , { TOKEN_IDENTIFIER, '[', RULE_EXPRESSION, ']'} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.expression_value = new_array_element(*p[0].string_value, p[2].expression_value);  }
+	},
+
 	// - literals
 	// ex: 123
 	{ RULE_LITTERAL , { TOKEN_NUMBER } ,
@@ -341,7 +344,7 @@ RuleDefinition rules_definition[] =
 	},
 
 	// array type. ex : int8[10]
-	{ RULE_TYPE , { RULE_TYPE, TOKEN_OPEN_ARRAY, RULE_EXPRESSION  , TOKEN_CLOSE_ARRAY } ,
+	{ RULE_TYPE , { RULE_TYPE, '[', RULE_EXPRESSION  , ']'} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.type_value = new_type_array(p[0].type_value, p[2].expression_value);  }
 	},
 	// types: bool, int8, int16, int32, int64, uint8, uint16, uint32, uint64, ..

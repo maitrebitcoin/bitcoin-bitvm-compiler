@@ -1,6 +1,7 @@
 #pragma once
 
 class CToken;
+class CLexer;
 
 //  parsing context
 class ParsingContext {
@@ -14,10 +15,11 @@ protected:
 	bool in_decl_localvar = false;
 	bool in_set_var_possible = false;
 	bool in_for_statement = false; // in the for (a,b,c) statement
+	int next_token_type = 0;
 	int num_line = 0;
 public:
 	// caled for each new token 
-	void on_new_token(const CToken& token);
+	void on_new_token(const CToken& token, const CLexer& lexer);
 	// caled for a new line 
 	void on_new_line(void);
 	// get current line number

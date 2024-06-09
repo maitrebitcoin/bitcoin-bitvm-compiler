@@ -22,10 +22,12 @@ void Expression::change_all_litterals_type(const Type& new_type) {
 			// change the litteral type
 			litteral.change_type(new_type);
 		}
-		// epxressison part is a varible. ex : a
-		virtual void onVariable(Expression_Variable&) {};
-		// epxressison part is a varible in a struct. ex : a.b
-		virtual void onVariableInStruct(Expression_StructMember&) {};
+		// expressison part is a varible. ex : a
+		virtual void onVariable(Expression_Variable&) override {};
+		// expressison part is a varible in a struct. ex : a.b
+		virtual void onVariableInStruct(Expression_StructMember&) override {};
+		// expressison part is a varible in a struct. ex : a.b
+		virtual void onArrayElement(Expression_ArrayElement&) override  {};
 
 	};
 	Visitor visitor(new_type);

@@ -133,6 +133,7 @@ public:
 		keep
 	};
 	CToken get_next_token(ReadOption option);
+	CToken get_next_token_const(void) const { return  const_cast<CLexer*>(this)->get_next_token(CLexer::ReadOption::keep); }
 	// get le this of code (for error messages)
 	std::string get_source_code_current_line(void) const { return source_code_current_line; }
 

@@ -11,17 +11,20 @@ class Connection;
 class Scope;
 class Expression_Variable;
 class Expression_StructMember;
+class Expression_ArrayElement;
 class TestOperation;
 class Type;
 
 class IVisitExpression {
 public:
-	// epxression part is a literal.ex : 123
+	// expression part is a literal.ex : 123
 	virtual void onLiteral(Literal&) = 0;
-	// epxressison part is a varible. ex : a
+	// expressison part is a varible. ex : a
 	virtual void onVariable(Expression_Variable&) = 0;
-	// epxressison part is a varible in a struct. ex : a.b
+	// expressison part is a varible in a struct. ex : a.b
 	virtual void onVariableInStruct(Expression_StructMember&) = 0;
+	// expressison part is a array element . ex : a[2]
+	virtual void onArrayElement(Expression_ArrayElement&) = 0;
 
 };
 

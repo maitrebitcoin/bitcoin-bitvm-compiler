@@ -89,6 +89,7 @@
     <ClCompile Include="BuildContext.cpp" />
     <ClCompile Include="CodeBloc.cpp" />
     <ClCompile Include="Expression.cpp" />
+    <ClCompile Include="Expression_ArrayElement.cpp" />
     <ClCompile Include="Expression_StructMember.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="LangageAttributes.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="CompositedGate.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="Expression.h" />
+    <ClInclude Include="Expression_ArrayElement.h" />
     <ClInclude Include="Expression_StructMember.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="IGate.h" />

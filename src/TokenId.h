@@ -16,8 +16,8 @@ enum E_TokenId {
 	TOKEN_IDENTIFIER,	       // 268	 - in function body statement only,
 	TOKEN_IDENTIFIER_DECL	 , // 269	 - in function body statement only, after a type: local var déclaration
 	TOKEN_IDENTIFIER_SETVAR,   // 270	 - in function body statement only, var name for affectation only.
-	TOKEN_NUMBER,			   // 		
-	TOKEN_RETURN,			   //		
+	TOKEN_NUMBER,			   // 271		
+	TOKEN_RETURN,			   // 272		
 	TOKEN_TRUE,				   //		 true
 	TOKEN_FALSE,			   //		 false
 	TOKEN_LEFT_SHIFT,		   // 275	 <<
@@ -39,9 +39,6 @@ enum E_TokenId {
 	TOKEN_INCREMENT,		   //		 ++
 	TOKEN_DECREMENT,		   // 292	 --
 	TOKEN_KEYWORKD_BREAK,	   // 293	 keyword "break"
-	TOKEN_OPEN_ARRAY,		   // 294    "["
-	TOKEN_CLOSE_ARRAY,		   // 295    "]"
-
 
 };
 #define is_token_type(t) (t>=TOKEN_TYPE_BOOL && t<=TOKEN_TYPE_UINT256)
