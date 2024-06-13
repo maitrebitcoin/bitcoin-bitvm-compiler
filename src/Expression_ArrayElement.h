@@ -27,4 +27,8 @@ public:
 
 	// build the circuit for the expression
 	virtual std::vector<Connection*> build_circuit(BuildContext& ctx) override;
+
+protected:
+	// build the circuit for the expression for a int index value
+	std::vector<Connection*> build_circuit_for_int_index(const ScopeVariable& var_array, int index);
 };

@@ -12,7 +12,30 @@ void ScopeVariable::set_value(const std::vector<Connection*>& value) {
 bool ScopeVariable::is_set(void) const {
 	return bits.size() > 0;
 }
+// get the value of the variable as integer, if set
+ScopeVariable::STValInt ScopeVariable::get_int_value(void) const
+{
+	if (!is_set())
+		return { false, 0 };
 
+	// 32 bits max
+	if (bits.size() > 32)
+		return { false, 0 };
+
+	// get value of the bits
+	int value = 0;
+	for (int i = (int)bits.size()-1; i>=0; i--)
+	{
+		// left shift
+		value <<= 1;
+		// get bit value
+		Connection* conn_i = bits[i];
+		bool bit = conn_i->get_value();
+		if (bit)
+			value += 1; // bit;
+	}
+	return { true, value };
+}
 
 // find a variable by name
 ScopeVariable* ScopeVariables::find_by_name(std::string name) {

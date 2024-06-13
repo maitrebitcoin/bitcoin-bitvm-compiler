@@ -74,3 +74,5 @@ Bits are in low endian (x86 format)
 - check for unused inputs instead of a "no more gates" error
 - optimize the generated circuit (use less gates)
 - better syntax error messages
+- better for() syntax
+- +=  operator

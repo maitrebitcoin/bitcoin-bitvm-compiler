@@ -666,7 +666,7 @@ void test_for(void) {
 
 }
 
-void test_array(void) {
+void test_array_1(void) {
 
 	// return the sum of int 1 & 2
 	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_array.bvc");
@@ -676,6 +676,23 @@ void test_array(void) {
 	// test the circuit
 	_test_circuit_hex(result.main_circuit(), "030507", "08");
 
+}
+void test_array_2(void) {
+
+	// return the sum of int 1 & 2
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_array_2.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.main_circuit(), "030507", "0F");
+	_test_circuit_hex(result.main_circuit(), "112234", "67");
+
+}
+void test_array(void) {
+
+	test_array_1();
+	test_array_2();
 }
 
 

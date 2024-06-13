@@ -179,6 +179,7 @@
     <None Include="sample\test_add.bvc" />
     <None Include="sample\test_and.bvc" />
     <None Include="sample\test_array.bvc" />
+    <None Include="sample\test_array_2.bvc" />
     <None Include="sample\test_decrement.bvc" />
     <None Include="sample\test_for.bvc" />
     <None Include="sample\test_if.bvc" />

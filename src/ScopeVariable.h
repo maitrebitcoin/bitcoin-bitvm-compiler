@@ -20,6 +20,13 @@ public:
 	void set_value(const std::vector<Connection*>& value);
 	// is the variable assigned ?
 	bool is_set(void) const;
+
+	// get the value of the variable as integer, if set
+	struct STValInt {
+		bool is_set;
+		int value;
+	};
+	STValInt get_int_value(void) const;
 };
 // all the variables in a scope
 class ScopeVariables : private std::vector<ScopeVariable*> {

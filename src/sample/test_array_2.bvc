@@ -1,0 +1,9 @@
+// test array usage, 2nd case
+int8 main(int8[3] my_array) 
+{
+	int8 sum = 0;
+	for (int8 i=0; i<3;i++;) {
+		sum = sum + my_array[i];
+	}
+	return sum;
+}

@@ -365,6 +365,9 @@
     <None Include="sample\test_array.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_array_2.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
