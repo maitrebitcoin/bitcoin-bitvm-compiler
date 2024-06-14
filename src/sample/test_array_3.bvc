@@ -1,0 +1,6 @@
+// test array usage, 3rd case
+int8 main(int8[5] my_array, int8 index) 
+{
+	int8 result = my_array[index+1];
+	return result;
+}

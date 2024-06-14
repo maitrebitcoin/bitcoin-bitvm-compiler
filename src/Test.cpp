@@ -687,6 +687,20 @@ void test_array_2(void) {
 	// test the circuit
 	_test_circuit_hex(result.main_circuit(), "030507", "0F");
 	_test_circuit_hex(result.main_circuit(), "112234", "67");
+}
+void test_array_3(void) {
+
+	// return itme at pos n+1 in the array
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_array_3.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.main_circuit(), "030507F80A4E00", "05");
+	_test_circuit_hex(result.main_circuit(), "030507F80A4E01", "07");
+	_test_circuit_hex(result.main_circuit(), "030507F80A4E02", "F8");
+	_test_circuit_hex(result.main_circuit(), "030507F80A4E03", "0A");
+	_test_circuit_hex(result.main_circuit(), "030507F80A4E04", "AE");
 
 }
 void test_array(void) {
