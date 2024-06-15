@@ -30,6 +30,10 @@ ScopeVariable::STValInt ScopeVariable::get_int_value(void) const
 		value <<= 1;
 		// get bit value
 		Connection* conn_i = bits[i];
+		// if bit not calculataed, failuree :
+		if (!conn_i->is_calculated())
+			return { false, 0 };
+
 		bool bit = conn_i->get_value();
 		if (bit)
 			value += 1; // bit;
