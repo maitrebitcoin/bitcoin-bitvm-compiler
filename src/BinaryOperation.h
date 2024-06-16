@@ -1,5 +1,5 @@
 #pragma once
-
+class LangageAttributes;
 
 // Math expression. ex :"a+2"
 class BinaryOperation : public Expression {

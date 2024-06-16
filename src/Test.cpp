@@ -64,18 +64,18 @@ void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  he
 	CRunInputs test_input = circuit.get_run_inputs();
 	int i = 0;
 	// convert hex string to bits
-	int nb_bytes_in = (int)( hex_inputs.size() * 4);
-	if (nb_bytes_in == 8) { // 8 bitd
+	int nb_bit_in = (int)( hex_inputs.size() * 4);
+	if (nb_bit_in == 8) { // 8 bitd
 		auto _8bits_in = Literal::hex_string_to_bits(hex_inputs);
 		test_input.set_int8_value(0, _8bits_in);
 	}
-	else if (nb_bytes_in == 16) { // 2*8 bitd
+	else if (nb_bit_in == 16) { // 2*8 bitd
 		auto _8bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0, 2));
 		auto _8bits_b = Literal::hex_string_to_bits(hex_inputs.substr(2, 2));
 		test_input.set_int8_value(0, _8bits_a);
 		test_input.set_int8_value(1, _8bits_b);
 	}
-	else if (nb_bytes_in == 24) { // 3*8 bitd
+	else if (nb_bit_in == 24) { // 3*8 bitd
 		auto _8bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0, 2));
 		auto _8bits_b = Literal::hex_string_to_bits(hex_inputs.substr(2, 2));
 		auto _8bits_c = Literal::hex_string_to_bits(hex_inputs.substr(4, 2));
@@ -83,27 +83,33 @@ void _test_circuit_hex(Circuit& circuit, std::string hex_inputs, std::string  he
 		test_input.set_int8_value(1, _8bits_b);
 		test_input.set_int8_value(2, _8bits_c);
 	}
-	else if (nb_bytes_in == 64) { // 2*32 bitd
+	else if (nb_bit_in == 64) { // 2*32 bitd
 		auto _32bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0, 8));
 		auto _32bits_b = Literal::hex_string_to_bits(hex_inputs.substr(8, 8));
 		test_input.set_int32_value(0, _32bits_a);
 		test_input.set_int32_value(1, _32bits_b);
 	}
-	else if (nb_bytes_in == 128) { // 2*64 bitd
+	else if (nb_bit_in == 128) { // 2*64 bitd
 		auto _64bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0, 16));
 		auto _64bits_b = Literal::hex_string_to_bits(hex_inputs.substr(16,16));
 		test_input.set_int64_value(0, _64bits_a);
 		test_input.set_int64_value(1, _64bits_b);
 	}
-	else if (nb_bytes_in == 512) { // 2*256 bitd
+	else if (nb_bit_in == 512) { // 2*256 bitd
 		auto _256bits_a = Literal::hex_string_to_bits(hex_inputs.substr(0, 64));
 		auto _256bits_b = Literal::hex_string_to_bits(hex_inputs.substr(64,64));
 		test_input.set_int256_value(0, _256bits_a);
 		test_input.set_int256_value(1, _256bits_b);
 	}
-
 	else {
-		assert(false);
+		// generic inpur
+		assert(nb_bit_in % 8 == 0);
+		int nb_byte = nb_bit_in / 8;
+		for (int i = 0; i < nb_byte; i++) {
+			auto _8bits_in = Literal::hex_string_to_bits(hex_inputs.substr(i*2, 2));
+			test_input.set_int8_value(i, _8bits_in);
+
+		}
 	}
 
 	// run the circuit
@@ -690,23 +696,31 @@ void test_array_2(void) {
 }
 void test_array_3(void) {
 
-	// return itme at pos n+1 in the array
+	// return itme at pos index+1 in the array
 	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_array_3.bvc");
 	if (!result.ok) {
 		test_failed(result.error.message);
 	}
-	// test the circuit
+	// test the circuit, last byte is usead a (index+1)
+	_test_circuit_hex(result.main_circuit(), "00000000000000", "00");
+	_test_circuit_hex(result.main_circuit(), "FFFFFFFFFFFF00", "FF");
+	_test_circuit_hex(result.main_circuit(), "0000FFFFFFFF00", "00");
+	_test_circuit_hex(result.main_circuit(), "00FF0000000000", "FF");
+	_test_circuit_hex(result.main_circuit(), "FFFF77FFFFFF01", "77");
+	_test_circuit_hex(result.main_circuit(), "01FF0200000000", "FF");
 	_test_circuit_hex(result.main_circuit(), "030507F80A4E00", "05");
 	_test_circuit_hex(result.main_circuit(), "030507F80A4E01", "07");
 	_test_circuit_hex(result.main_circuit(), "030507F80A4E02", "F8");
 	_test_circuit_hex(result.main_circuit(), "030507F80A4E03", "0A");
-	_test_circuit_hex(result.main_circuit(), "030507F80A4E04", "AE");
+	_test_circuit_hex(result.main_circuit(), "030507F80A4E04", "4E");
+	_test_circuit_hex(result.main_circuit(), "030507F80A4E05", "00"); // out of range test
 
 }
 void test_array(void) {
 
 	test_array_1();
 	test_array_2();
+	test_array_3();
 }
 
 

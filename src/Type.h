@@ -86,5 +86,8 @@ public:
 	Native get_native_type(void) const { return native_type; }
 	// change native type. ex int8 to int256
 	void set_native_type(Native tn) { native_type = tn; }
+
+	// get a TypeBasic for a requested nb of bits
+	static TypeBasic get_TypeBasic_for_bitsize(int nb_bits);
 };
 

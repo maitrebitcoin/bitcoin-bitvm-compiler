@@ -1,6 +1,7 @@
 // type of a variable or function. 
 
 #include "Type.h"
+#include "Error.h"
 
 
 // return the size in bits of a type
@@ -51,6 +52,23 @@ bool TypeBasic::is_integer(void) const
 	}
 
 }
+
+// get a TypeBasic for a requested nb of bits
+TypeBasic TypeBasic::get_TypeBasic_for_bitsize(int nb_bits)
+{
+	switch (nb_bits)
+	{
+	case 1:  return TypeBasic(Type::Native::bit);
+	case 8:  return TypeBasic(Type::Native::int8);
+	case 32: return TypeBasic(Type::Native::int32);
+	case 64: return TypeBasic(Type::Native::int64);
+	case 256:return TypeBasic(Type::Native::int256);
+	default:
+		assert(false);
+		throw Error("No type avalaide for nb of bit : ", std::to_string(nb_bits)  );
+		//return TypeBasic(Type::Native::undefined);
+	}
+};
 
 
 

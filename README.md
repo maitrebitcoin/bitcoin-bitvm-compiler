@@ -64,7 +64,7 @@ Bits are in low endian (x86 format)
 
 # Current todo list :
 
-- array operator [] wth expresssion, ex : a{b+1]
+- better for() syntax
 - operators : \* / % 
 - procedure calls
 - basic function stdlib (sha256, shnor,... )
@@ -74,5 +74,5 @@ Bits are in low endian (x86 format)
 - check for unused inputs instead of a "no more gates" error
 - optimize the generated circuit (use less gates)
 - better syntax error messages
-- better for() syntax
 - +=  operator
+- save the build circuit in a file, and load it for execution / generation 
