@@ -67,7 +67,7 @@ Bits are in low endian (x86 format)
 - better for() syntax
 - operators : \* / % 
 - procedure calls
-- basic function stdlib (sha256, shnor,... )
+- basic function stdlib (sha256, shnor, min, max,... )
 - write a better language documentation
 - linux : create a makefile
 - wasm support and browser demo site
