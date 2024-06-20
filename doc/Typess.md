@@ -24,6 +24,7 @@ struct Header {
 };
 Header my_header;
 my_header.a = 1;
+my_header.b = 0;
 ```
 
 # Arrays
@@ -31,7 +32,7 @@ my_header.a = 1;
 Fixed sized arrays are supported, the following syntax is used :
 ```
 type[<size>]
-type can be any of the supported types
+type can be any of the native types
 ```
 
 example :
