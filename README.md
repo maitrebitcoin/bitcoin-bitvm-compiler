@@ -64,7 +64,6 @@ Bits are in low endian (x86 format)
 
 # Current todo list :
 
-- better for() syntax
 - operators : \* / % 
 - procedure calls
 - basic function stdlib (sha256, shnor, min, max,... )

@@ -101,55 +101,66 @@ RuleDefinition rules_definition[] =
 	{ RULE_1_PARAMETER_DECL , { RULE_TYPE, TOKEN_IDENTIFIER_FNPARAM } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.function_paramter_value = new_function_parameter(p[0].type_value, *p[1].string_value);  }
 	},
-		// ex { a++; return a; }
+	// ex { a++; return a; }
 	{ RULE_CODEBLOC , { '{', RULE_N_STATEMENTS, '}'} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) { result.code_block_value = p[1].code_block_value; }
 	},
 	// ex a++; return a;
-	{ RULE_N_STATEMENTS , {RULE_N_STATEMENTS,  RULE_1_STATEMENT,  } ,
+	{ RULE_N_STATEMENTS , {RULE_N_STATEMENTS,  RULE_STATEMENT_WITH_END  } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.code_block_value = p[0].code_block_value;
 			result.code_block_value->add_statement((p[1].statement_value));
 		}
 	},
-	{ RULE_N_STATEMENTS , {RULE_1_STATEMENT } ,
+	{ RULE_N_STATEMENTS , {RULE_STATEMENT_WITH_END } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.code_block_value = new_code_bloc(p[0].statement_value);
 		},
 		[this](void) { return !in_for_statement; } // pre-condition to prevent regroupin statements in for loop
 	},
 	// statements -------------------
+	//ex : a++; or  return a;
+	{ RULE_STATEMENT_WITH_END , {RULE_1_STATEMENT,  ';'} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) { result.statement_value = p[0].statement_value; }
+	},
 	// return
-	// ex: return a;
-	{ RULE_1_STATEMENT , {TOKEN_RETURN, RULE_EXPRESSION, ';'} ,
+	// 
+	// ex: return a
+	{ RULE_1_STATEMENT , {TOKEN_RETURN, RULE_EXPRESSION} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_retun_statement(p[1].expression_value);
-		}
+		},
+		[this](void) { return next_token_type == ';'; } // pre-condition needed until the parse can backtrack. ex : "return a+b" is confused with "return a" 
 	},
 	// variable declaration
 	// ex: int c;
-	{ RULE_1_STATEMENT , {RULE_TYPE, TOKEN_IDENTIFIER_DECL, ';'} ,
+	{ RULE_1_STATEMENT , {RULE_TYPE, TOKEN_IDENTIFIER_DECL} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_declare_var_statement(p[0].type_value, *p[1].string_value);
-		}
+		},
+		[this](void) { return next_token_type == ';'; } // pre-condition needed until the parse can backtrack
 	},
 	// variable affectation
 	// ex: a = b+c;
-	{ RULE_1_STATEMENT , {TOKEN_IDENTIFIER_SETVAR, '=', RULE_EXPRESSION, ';'} ,
+	{ RULE_1_STATEMENT , {TOKEN_IDENTIFIER_SETVAR, '=', RULE_EXPRESSION} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_set_var_statement(*p[0].string_value, p[2].expression_value);
-		}
+		},
+		[this](void) { return next_token_type == ';'; } // pre-condition needed until the parse can backtrack
 	},
 	// variable declaration ands affectation
 	// ex: bool a = b+c;
-	{ RULE_1_STATEMENT , {RULE_TYPE, TOKEN_IDENTIFIER_DECL, '=', RULE_EXPRESSION, ';'} ,
+	{ RULE_1_STATEMENT , {RULE_TYPE, TOKEN_IDENTIFIER_DECL, '=', RULE_EXPRESSION} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_declare_and_set_var_statement(p[0].type_value, *p[1].string_value,  p[3].expression_value);
-		}
+		},
+		[this](void) { return next_token_type == ';'; } // pre-condition needed until the parse can backtrack
 	},
 	// var++ / var--
-	{ RULE_1_STATEMENT , {RULE_STATEMENT_INCREMENT, ';'} ,
-		[this](TokenValue& result, std::vector<TokenValue> p) {	result.expression_value = p[0].expression_value; }
+	{ RULE_1_STATEMENT , {RULE_STATEMENT_INCREMENT} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.expression_value = p[0].expression_value; 
+		}
 	},
 	// var++
 	{ RULE_STATEMENT_INCREMENT , {RULE_EXPRESSION, TOKEN_INCREMENT} ,
@@ -165,20 +176,20 @@ RuleDefinition rules_definition[] =
 	},
 	// strucutre declaration
 	// ex: struct Header { byte zize; bool is_ok; }
-	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_STRUCT, TOKEN_DECLARE_STRUCT_NAME, RULE_CODEBLOC, ';'} ,
+	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_STRUCT, TOKEN_DECLARE_STRUCT_NAME, RULE_CODEBLOC} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_declare_struct_statement(*p[1].string_value, p[2].code_block_value);
 		}
 	},
 	// if (a) {code}
 	// ex: struct Header { byte zize; bool is_ok; }
-	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_IF, RULE_EXPRESSION, RULE_CODEBLOC} ,
+	{ RULE_STATEMENT_WITH_END , {TOKEN_KEYWORKD_IF, RULE_EXPRESSION, RULE_CODEBLOC} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_if_statement(p[1].expression_value, p[2].code_block_value);
 		}
 	},
 	// for (int8 i=0; i<10; i++) {code}
-	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_FOR, '(', RULE_1_STATEMENT, RULE_EXPRESSION, ';', RULE_1_STATEMENT, ')', RULE_CODEBLOC  } ,
+	{ RULE_STATEMENT_WITH_END , {TOKEN_KEYWORKD_FOR, '(', RULE_STATEMENT_WITH_END, RULE_EXPRESSION, ';', RULE_1_STATEMENT, ')', RULE_CODEBLOC  } ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_for_statement(p[2].statement_value,	// int8 i=0;
 													   p[3].expression_value,	// i<10;
@@ -187,7 +198,7 @@ RuleDefinition rules_definition[] =
 		}
 	},
 	// break	
-	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_BREAK, ';'} ,
+	{ RULE_1_STATEMENT , {TOKEN_KEYWORKD_BREAK} ,
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.statement_value = new_break_statement();
 		}

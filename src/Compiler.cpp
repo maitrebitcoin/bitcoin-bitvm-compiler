@@ -349,6 +349,7 @@ std::string CLexer::_get_next_non_empty_line(void) {
 		// if the line is not empty
 		if (!_is_line_empty(next_line))
 			return next_line;
+		next_line_number++;
 	}
 	// no more lines
 	return "";
@@ -399,7 +400,9 @@ CToken CLexer::get_next_token(ReadOption option) {
 		// if the remaining line is empty, read a new line
 		if (_is_line_empty(remaining_ligne))
 		{
+			auto save = current_line_number;
 			local_copy = _get_next_non_empty_line();
+			current_line_number = save;
 		}
 		return _get_next_token_from_line(local_copy, ReadOption::remove);
 		

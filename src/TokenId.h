@@ -53,7 +53,7 @@ enum E_RuleId {
 	RULE_CODEBLOC,				// 1005 ex : { return a+b; }
 	RULE_N_STATEMENTS,			// 1006 ex : a++;b++;return a+b;	
 	RULE_1_STATEMENT,			// 1007 ex : a++
-	RULE_STATEMENT,				// 1008 ex : a++
+	RULE_STATEMENT_WITH_END,	// 1008 ex : a++;
 	RULE_OPERATION,				// 1009 ex : a&b
 	RULE_INSTRUCITON_RETURN,	// 1010 ex : return a+b
 	RULE_EXPRESSION,			// 1011 ex : 123 our a or a+b
