@@ -14,6 +14,9 @@ void ParsingContext::open_bracket(void) {
 }
 void ParsingContext::close_bracket(void) {
 	opened_bracket--;
+	if (opened_bracket<0)
+		throw Error( "unexpected '}' ");
+
 	in_body = (opened_bracket > 0);
 }
 
@@ -36,7 +39,9 @@ void ParsingContext::on_new_token(const CToken& token, const CLexer& lexer)
 	if (token.type == '(')
 		opened_parenthesis++;
 	if (token.type == ')')
+	{
 		opened_parenthesis--;
+	}
 
 
 	if (token.type == TOKEN_KEYWORKD_STRUCT)

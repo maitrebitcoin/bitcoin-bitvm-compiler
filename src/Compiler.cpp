@@ -49,24 +49,33 @@ bool Compiler::_compile_build_tree(std::istream& source_code_stream, Error& erro
 	while (lexer.read_next_line()) {
 		// compile 1 line
 		ResultforLine result =	_compile_line();
-		switch (result)
+		switch (result.code)
 		{	
-		case ResultforLine::nextLine:
+		case ResultforLine::Code::nextLine:
 			// continue compilation
 			break;
-		case ResultforLine::syntaxError:
+		case ResultforLine::Code::syntaxError:
 			// compilation failed
-			error_out.message     = "syntax error : " + lexer.get_source_code_current_line();  
+			error_out.message     = "syntax error : " + result.error;
+			error_out.message += "\n" + lexer.get_source_code_current_line();
 			error_out.line_number = lexer.get_current_line_number();
 			return false;
-		case ResultforLine::endOfCode:
+		case ResultforLine::Code::endOfCode:
 			// compilation success
 			return true;
 		}
 		// next line
 	}
+
 	// compilation failed
 	error_out.message = "syntax error : unexpected end of code";
+	// check for possible syntax error causes
+	// missing bracket
+	if (language_context.opened_bracket > 0)
+		error_out.message = "syntax error : missing bracket }";
+	else if (language_context.opened_parenthesis > 0)
+		error_out.message = "syntax error : missing parenthesis )";
+
 	error_out.line_number = lexer.get_current_line_number();
 	return false;
 }
@@ -488,18 +497,23 @@ Compiler::ResultforLine Compiler::_compile_line(void) {
 	language_context.on_new_line();
 	// ignore empty lines
 	if (lexer.is_current_line_empty()) 
-		return ResultforLine::nextLine;;
+		return { ResultforLine::Code::nextLine };
 
 	// read all the tokens
 	while (1) {
 		// get a token for the line
 		CToken token = lexer.get_next_token( CLexer::ReadOption::remove);
 		if (token.type == 0)
-			return ResultforLine::nextLine; // End of line, read next line
+			return { ResultforLine::Code::nextLine }; // End of line, read next line
 		if (token.type == INVALID_TOKEN)
-			return ResultforLine::syntaxError;
+			return { ResultforLine::Code::syntaxError };
 		// notify a new token 
-		language_context.on_new_token(token, lexer);
+		try {
+			language_context.on_new_token(token, lexer);
+		}
+		catch (Error& e) {
+			return { ResultforLine::Code::syntaxError, e.message };
+		}
 		// add to stack	
 		token_stack.push_back(token);
 		// check if we have a matching rule
@@ -517,9 +531,9 @@ Compiler::ResultforLine Compiler::_compile_line(void) {
 		{
 			// check if the stack is empty
 			if (token_stack.size()>1)
-				return ResultforLine::syntaxError;
+				return { ResultforLine::Code::syntaxError, "missing end statement" };
 			// sucess
-			return ResultforLine::endOfCode;
+			return { ResultforLine::Code::endOfCode };
 		}
 	}
 

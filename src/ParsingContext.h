@@ -5,7 +5,7 @@ class CLexer;
 
 //  parsing context
 class ParsingContext {
-protected:
+public:
 	int  opened_bracket = 0; // number of opened bracket
 	int  opened_parenthesis = 0; // number of opened parenthesis
 	bool in_body = false;

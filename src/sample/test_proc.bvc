@@ -1,0 +1,13 @@
+// test procedure usage
+int8 proc_plus1( int8 a ) 
+{
+	return a+1;
+};
+// return a+2
+int8 main(int a) 
+{
+	int8 b;
+	b = proc_plus1(a);
+	b = proc_plus1(b);
+	return b; 
+}

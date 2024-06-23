@@ -231,11 +231,17 @@ protected:
 	// 1s phase : compile a memory stream
 	bool _compile_build_tree(std::istream& source_code_stream, Error& error_out);
 	// compile 1 line of code
-	enum class ResultforLine {
-		nextLine,
-		syntaxError,
-		endOfCode,
+	struct ResultforLine
+	{
+		enum class Code {
+			nextLine,
+			syntaxError,
+			endOfCode,
+		};
+		Code code;
+		std::string error;
 	};
+
 	ResultforLine _compile_line(void);
 	// test if a rule is matching the current stack
 	bool is_rule_matching_stack(GrammarRule& rule) ;

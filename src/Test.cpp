@@ -722,11 +722,25 @@ void test_array(void) {
 	test_array_2();
 	test_array_3();
 }
+void test_proc(void) {
 
+	// return the a+2
+	Compiler::Result result = Compiler::compile_circuit_from_file("./sample/test_proc.bvc");
+	if (!result.ok) {
+		test_failed(result.error.message);
+	}
+	// test the circuit
+	_test_circuit_hex(result.main_circuit(), "00", "02");
+	_test_circuit_hex(result.main_circuit(), "03", "05");
+	_test_circuit_hex(result.main_circuit(), "F9", "FB");
+
+}
 
 // run all tests
 void run_all_test(void) {
 	std::cout << "Testing...\n";
+
+	test_proc();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
