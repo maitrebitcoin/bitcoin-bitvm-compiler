@@ -532,6 +532,11 @@ Compiler::ResultforLine Compiler::_compile_line(void) {
 			// check if the stack is empty
 			if (token_stack.size()>1)
 				return { ResultforLine::Code::syntaxError, "missing end statement" };
+			// more tokens are a syntax error
+			CToken token = lexer.get_next_token(CLexer::ReadOption::remove);
+			if (token.type != 0)
+				return { ResultforLine::Code::syntaxError, "invalid token " + token.str_value };
+
 			// sucess
 			return { ResultforLine::Code::endOfCode };
 		}
