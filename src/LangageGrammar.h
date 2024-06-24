@@ -37,7 +37,7 @@ protected:
 	// program
 	Program* program = nullptr;
 	// fuctions
-	std::vector<Function*> functions;
+	std::vector<Function*>* functions_array=nullptr;
 
 public:
 	// destuctor
@@ -139,7 +139,7 @@ public:
 	// get a new function
 	Function* new_function(Function::Definition* def, CodeBloc* body) {
 		Function* new_function = new Function(def, body);
-		functions.push_back(new_function);
+		//functions.push_back(new_function);
 		return new_function;
 	}
 	// get a new code block
@@ -227,6 +227,13 @@ public:
 		program = new_program;
 		return new_program;
 	}
+	// get a new list of functions
+	std::vector<Function*>* new_functions_array(void) {
+		std::vector<Function*>* new_functions_list = new(std::vector<Function*>);
+		functions_array = new_functions_list;
+		return new_functions_list;
+	}
+
 
 	// free all 
 	void free_all(void) {
@@ -248,9 +255,11 @@ public:
 		for (auto* ptr : expressions) {
 			delete ptr;
 		}
-		for (Function* f : functions) {
+		for (Function* f : *functions_array) {
 			delete f;
 		}
+		delete functions_array;
+		functions_array = nullptr;
 		for (CodeBloc* c : code_blocs) {
 			delete c;
 		}

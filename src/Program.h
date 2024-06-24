@@ -48,8 +48,8 @@ public:
 
 	// add structures to the program as bloc before the main function
 	void add_struct_definition(CodeBloc* bloc);
-	// add a function to the program
-	void add_function(Function* f) ;
+	// add a N function to the program
+	void add_array_function(std::vector<Function*>* tabf);
 	// get a function by name
 	Function* find_function_by_name( std::string name ) const;
 	// get main function
@@ -60,5 +60,10 @@ public:
 
 	// build a circuit that represents the program
 	void build_circuit(class BuildContext &build_context);
+
+private:
+	// add a function to the program
+	void add_function(Function* f);
+
 };
 

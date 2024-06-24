@@ -20,6 +20,13 @@ void Program::add_struct_definition(CodeBloc* bloc ) {
 	struct_definitions = bloc;
 }
 
+// add a N function to the program
+void Program::add_array_function(std::vector<Function*>* tabf) {
+	// add the functions vector
+	for (Function* f : *tabf)
+		add_function(f);
+}
+
 // add a function to the program
 void Program::add_function(Function* f) {
 	// si the function name is not already used

@@ -26,6 +26,7 @@ union TokenValue {
 	Function::Parameter*    function_paramter_value;
 	Function::AllParameter* function_all_paramters_value;
 	Function::Definition*   function_definition_value;
+	std::vector<Function*>* function_array_value;
 	Function*			    function_value;
 	Expression*				expression_value;
 	Program*				program_value;

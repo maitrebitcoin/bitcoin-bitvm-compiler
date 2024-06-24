@@ -63,18 +63,33 @@ std::vector<RuleDefinition> LangageGrammar::get_grammar_definition(void) {
 RuleDefinition rules_definition[] =
 {
 	// struct + 1 function
-	{ RULE_PROGRAM, { RULE_N_STATEMENTS, RULE_FUNCTION },
+	{ RULE_PROGRAM, { RULE_N_STATEMENTS, RULE_N_FUNCTION },
 		[this](TokenValue& result, std::vector<TokenValue> p) {
 			result.program_value = new_program();
 			result.program_value->add_struct_definition(p[0].code_block_value);
-			result.program_value->add_function(p[1].function_value);
+			result.program_value->add_array_function(p[1].function_array_value);
 		}
 	},
 	// just 1 function
-	{ RULE_PROGRAM, { RULE_FUNCTION }, 
+	{ RULE_PROGRAM, { RULE_N_FUNCTION }, 
 		[this](TokenValue& result, std::vector<TokenValue> p) { 
-			result.program_value = new_program(); 
-			result.program_value->add_function(p[0].function_value);
+			result.program_value = new_program();
+			result.program_value->add_array_function(p[0].function_array_value);
+		}
+	},
+	// N Functions
+	{ RULE_N_FUNCTION, { RULE_N_FUNCTION, RULE_FUNCTION },
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.function_array_value = p[0].function_array_value;
+			result.function_array_value->push_back(p[1].function_value);
+		}
+	},
+	// N Functions
+	{ RULE_N_FUNCTION, { RULE_FUNCTION },
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.function_array_value = new_functions_array();
+			result.function_array_value->push_back(p[0].function_value);
+
 		}
 	},
 
