@@ -68,14 +68,18 @@ RuleDefinition rules_definition[] =
 			result.program_value = new_program();
 			result.program_value->add_struct_definition(p[0].code_block_value);
 			result.program_value->add_array_function(p[1].function_array_value);
-		}
+		},
+		[this](void) { return next_token_type == 0; } // end of fils
+
 	},
 	// just 1 function
 	{ RULE_PROGRAM, { RULE_N_FUNCTION }, 
 		[this](TokenValue& result, std::vector<TokenValue> p) { 
 			result.program_value = new_program();
 			result.program_value->add_array_function(p[0].function_array_value);
-		}
+		},
+		[this](void) { return next_token_type == 0; } // end of fils
+
 	},
 	// N Functions
 	{ RULE_N_FUNCTION, { RULE_N_FUNCTION, RULE_FUNCTION },

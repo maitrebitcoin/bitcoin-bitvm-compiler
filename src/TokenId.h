@@ -68,7 +68,7 @@ enum E_RuleId {
 	RULE_OPERATOR_COMPLEMENT,   // 1020 ex : ~a 
 	RULE_OPERATOR_SHIFT,		// 1021 ex : << >>
 	RULE_OPERATOR_CMP,			// 1022 ex : <= > ===
-	RULE_STATEMENT_INCREMENT,	// 1033 i++ or i--
-	RULE_N_FUNCTION,			// 1034 List of functions
+	RULE_STATEMENT_INCREMENT,	// 1023 i++ or i--
+	RULE_N_FUNCTION,			// 1024 List of functions
 	RULE_PROGRAM = 1999, //  the whole program
 };

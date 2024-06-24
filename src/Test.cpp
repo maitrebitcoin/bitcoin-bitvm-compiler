@@ -740,7 +740,7 @@ void test_proc(void) {
 void run_all_test(void) {
 	std::cout << "Testing...\n";
 
-	//test_proc();
+//	test_proc();
 
 	//test basic gates
 	test_not_gate();			std::cout << " not - PASSED\n";
