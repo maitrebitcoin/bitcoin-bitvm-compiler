@@ -75,6 +75,15 @@ void ScopeVariables::declare_local_var(Type* var_type, std::string var_name) {
 	ScopeVariable* new_var = new ScopeVariable( var_type, var_name );
 	push_back(new_var);
 }
+// declare a new parameter variable (function call)
+void ScopeVariables::declare_param_var(const VariableDefinition& param_definition, std::vector<Connection*>& value)
+{
+	ScopeVariable* new_var = new ScopeVariable(param_definition.type, param_definition.name);
+	new_var->set_value(value);
+	push_back(new_var);
+}
+
+
 
 // visit all variables
 void ScopeVariables::visit_all_variables(std::function<void(const ScopeVariable&)> visitor) const {

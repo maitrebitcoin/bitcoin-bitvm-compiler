@@ -21,9 +21,13 @@ Function::~Function() {
 // init a function
 void Function::init(Scope& parent_scope) {
 
+	// declare function name to the global scope
+	parent_scope.declare_function(this);
+
 	// create a new scope for the function
 	function_scope = parent_scope.create_child_scope();
 	function_scope->parent_function = this;
+
 
 	// init parameters typer
 	for (Parameter& param : definition.parameters) {
@@ -36,7 +40,7 @@ void Function::init(Scope& parent_scope) {
 		}
 	}
 	
-	// init bodu
+	// init body
 	body->init(*function_scope);
 }
 
@@ -80,7 +84,7 @@ const VariableDefinition* Function::find_parameter_by_name(std::string name) con
 
 
 // build a circuit that represents the fuidl
-void Function::build_circuit(BuildContext &ctx) {
+void Function::build_circuit(BuildContext &ctx) const {
 	// declare inputs
 	int nb_bits_in = size_in_bit_input();
 	InterfaceInputsMap* input_map = getInterfaceInputsMap();

@@ -156,6 +156,14 @@ public:
 		assert(new_return_statement->is_return());
 		return new_return_statement;
 	}
+	// get a new function call statement
+	Statement* new_function_call_statement(std::string func_name ) {
+		Statement_Function_Call* new_function_call_statement = new Statement_Function_Call(get_current_line_number(), func_name);
+		statements.push_back(new_function_call_statement);
+		return new_function_call_statement;
+	}
+	
+
 	// get a new decalre var statement
 	Statement* new_declare_var_statement(Type *type, std::string name) {
 		Statement_DeclareVar* new_declare_var_statement = new Statement_DeclareVar(get_current_line_number(), type, name);

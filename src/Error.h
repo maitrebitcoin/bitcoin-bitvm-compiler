@@ -15,6 +15,7 @@ public:
 	Error(void) {}
 	Error(const char* mess) : message(mess) {}
 	Error(const char* mess, std::string more_info) : message(mess) { message += ' ' + more_info; }
+	Error(std::string mess, std::string more_info) : message(mess) { message += ' ' + more_info; }
 
 	// format the error message
 	std::string toString(void) const {

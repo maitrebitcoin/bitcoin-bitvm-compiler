@@ -58,14 +58,16 @@ public:
 	std::string get_name(void) const { return definition.name; }
 	// get the return type of the function
 	const Type& get_return_type(void) const { return *definition.return_type; }
+	// definiton of the function
+	const Definition& get_definition(void) const { return definition; }
 	// return the number of bits needed for the input parameters
 	int size_in_bit_input(void) const;
 	// return the number of bits needed to store the return value
 	int size_in_bit_output(void) const;
 	// find a parameter by name
 	const VariableDefinition* find_parameter_by_name(std::string name) const;
-	// build a circuit that represents the fuidl
-	void build_circuit(BuildContext& ctx);
+	// build a circuit that represents the function
+	void build_circuit(BuildContext& ctx) const;
 
 	// get a interface n InterfaceInputsMap 
 	InterfaceInputsMap* getInterfaceInputsMap(void) const;

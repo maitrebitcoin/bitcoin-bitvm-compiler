@@ -110,6 +110,7 @@
     <ClCompile Include="Statement_DeclareStruct.cpp" />
     <ClCompile Include="Statement_DeclareVar.cpp" />
     <ClCompile Include="Statement_For.cpp" />
+    <ClCompile Include="Statement_Function_Call.cpp" />
     <ClCompile Include="Statement_If.cpp" />
     <ClCompile Include="Statement_Increment.cpp" />
     <ClCompile Include="Statement_Return.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="Statement_DeclareStruct.h" />
     <ClInclude Include="Statement_DeclareVar.h" />
     <ClInclude Include="Statement_For.h" />
+    <ClInclude Include="Statement_Function_Call.h" />
     <ClInclude Include="Statement_If.h" />
     <ClInclude Include="Statement_Increment.h" />
     <ClInclude Include="Statement_Return.h" />

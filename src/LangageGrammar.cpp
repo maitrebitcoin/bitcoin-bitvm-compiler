@@ -151,6 +151,13 @@ RuleDefinition rules_definition[] =
 		},
 		[this](void) { return next_token_type == ';'; } // pre-condition needed until the parse can backtrack. ex : "return a+b" is confused with "return a" 
 	},
+	// function call. ex func(a)
+	{ RULE_1_STATEMENT , {TOKEN_IDENTIFIER_FNNAME, '(', ')'} ,
+		[this](TokenValue& result, std::vector<TokenValue> p) {
+			result.statement_value = new_function_call_statement(*p[0].string_value);
+		},
+		[this](void) { return next_token_type == ';'; } // pre-condition needed until the parse can backtrack. ex : "return a+b" is confused with "return a" 
+	},
 	// variable declaration
 	// ex: int c;
 	{ RULE_1_STATEMENT , {RULE_TYPE, TOKEN_IDENTIFIER_DECL} ,

@@ -16,6 +16,7 @@ void Scope::init_CodeBloc(Scope& parent_scp)
 Scope* Scope::create_child_scope(void) {
 	// create a new empty scope
 	Scope* child_scope = new Scope();
+
 	// init new scope
 	child_scope->init_CodeBloc(*this);
 	return child_scope;
@@ -65,5 +66,23 @@ const TypeStruct* Scope::find_struct_by_name(std::string name) const {
 		return parent_scope->find_struct_by_name(name);
 	
 	// not found
+	return nullptr;
+}
+
+// find a function by name
+const Function* Scope::find_function_by_name(std::string name) const
+{
+	// look in the known functions
+	for (const Function* func_i : known_functions)
+	{
+		if (func_i->get_name() == name)
+			return func_i;
+	}
+	// ask the parent scope
+	if (parent_scope != nullptr)
+		return parent_scope->find_function_by_name(name);
+
+
+	// unknown function
 	return nullptr;
 }

@@ -17,6 +17,9 @@ public:
 	std::vector<VariableDefinition> local_variables;
 	// declared struct
 	std::vector<TypeStruct> know_types;
+	// declared function
+	std::vector<const Function*> known_functions;
+
 
 	// parent scrope. null for global scope
 	Scope* parent_scope = nullptr;
@@ -41,6 +44,10 @@ public:
 	void declare_struct(const TypeStruct& struct_type) { know_types.push_back(struct_type); }
 	// is the scope in a for loop ?
 	bool is_in_for_loop(void) const { return parent_for_loop != nullptr; }
+	// declare a function
+	void declare_function(const Function* func) { known_functions.push_back(func); }
+	// find a function by name
+	const Function* find_function_by_name(std::string name) const;
 
 	// get the parent function
 	// return nullptr if global scope

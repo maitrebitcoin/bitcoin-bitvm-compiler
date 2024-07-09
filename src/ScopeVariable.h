@@ -35,6 +35,9 @@ public:
 	ScopeVariable* find_by_name(std::string name);
 	// declare a new local variable
 	void declare_local_var(Type* var_type, std::string var_name);
+	// declare a new parameter variable (function call)
+	void declare_param_var(const VariableDefinition& param_definition, std::vector<Connection*>& value);
+
 	// copy a variable for a sub-scope
 	ScopeVariable* copy_var(const ScopeVariable& var_source);
 	// visit all variables

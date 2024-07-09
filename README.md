@@ -64,8 +64,9 @@ Bits are in low endian (x86 format)
 
 # Current todo list :
 
-- operators : \* / % 
 - procedure calls
+- set a limit to the number of gates
+- operators : \* / % 
 - basic function stdlib (sha256, shnor, min, max,... )
 - write a better language documentation
 - linux : create a makefile

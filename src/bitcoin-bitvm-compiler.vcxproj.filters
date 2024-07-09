@@ -112,6 +112,9 @@
     <ClCompile Include="Expression_ArrayElement.cpp">
       <Filter>source\Program\Expression</Filter>
     </ClCompile>
+    <ClCompile Include="Statement_Function_Call.cpp">
+      <Filter>source\Program\Statements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -245,6 +248,9 @@
     </ClInclude>
     <ClInclude Include="Expression_ArrayElement.h">
       <Filter>source\Program\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_Function_Call.h">
+      <Filter>source\Program\Statements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

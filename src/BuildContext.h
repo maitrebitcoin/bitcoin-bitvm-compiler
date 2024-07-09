@@ -23,7 +23,7 @@ public:
 	class Statement* current_statement = nullptr;
 
 	// creation or copy type
-	enum class Caller { main_body, if_statement, for_statement, build_next_lambda};
+	enum class Caller { main_body, if_statement, for_statement, function_call, build_next_lambda};
 	// action return, what to do to build all next statements
 	enum class NextAction { Continue, Break, Return };
 	// number of nested if
