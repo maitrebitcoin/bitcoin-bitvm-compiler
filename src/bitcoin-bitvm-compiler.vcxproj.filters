@@ -380,6 +380,12 @@
     <None Include="sample\test_proc.bvc">
       <Filter>sample</Filter>
     </None>
+    <None Include="sample\test_include.bvh">
+      <Filter>sample</Filter>
+    </None>
+    <None Include="sample\test_include.bvc">
+      <Filter>sample</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">

@@ -1,0 +1,6 @@
+// test the #include preprocessor directive
+#include "test_include.bvh"
+bool main(bool a,bool b) 
+{
+	return xor(a,b); 
+}

@@ -257,6 +257,8 @@ protected:
 		}
 	}
 
+	// replace the #include by the content of the file
+	static std::istringstream _replace_include_by_content( std::ifstream& source_file);
 };
 
 

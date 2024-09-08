@@ -581,21 +581,22 @@ Compiler::Result::Stats Compiler::Result::get_stats(void) const {
 	return stats;
 }
 
-
-
 // compile and buil the circuit
 Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 {
 	// open source file
-	std::ifstream source_file(file_name);
-	if (!source_file) {
+	std::ifstream source_file_raw(file_name);
+	if (!source_file_raw) {
 		return std::move(Result( Error("Cannot open file ", file_name) ));
 	}
+	// replace the #include by the content of the file
+	std::istringstream  source_file_with_include  = _replace_include_by_content(source_file_raw);
+
 	// compile the source file for the  BitVM_C_Grammar
 	LangageDefinitionAndContext BitVM_C_Grammar;
 	Compiler compiler(BitVM_C_Grammar);
 	Error compile_error;
-	if (!compiler.compile(source_file, compile_error)) {
+	if (!compiler.compile(source_file_with_include, compile_error)) {
 		compile_error.file_name = file_name;
 		return std::move(Result( compile_error ));
 	}
@@ -624,3 +625,37 @@ Compiler::Result Compiler::compile_circuit_from_file(std::string file_name)
 	return std::move(result_ok);
 
 }
+
+// replace the #include by the content of the file
+std::istringstream Compiler::_replace_include_by_content( std::ifstream& source_file)
+{
+	// read all the the file in source_code
+	std::string source_code((std::istreambuf_iterator<char>(source_file)), std::istreambuf_iterator<char>());
+
+	source_file.close();
+	// find the include
+	std::string include_str = "#include";
+	size_t pos = source_code.find(include_str);
+	while (pos != std::string::npos) {
+		// find the end of the line
+		size_t end_line = source_code.find('\n', pos);
+		if (end_line == std::string::npos)
+			end_line = source_code.size();
+		// get the file name
+		std::string file_name = source_code.substr(pos + include_str.size(), end_line - pos - include_str.size());
+		// open the file
+		std::ifstream include_file(file_name);
+		if (!include_file) {
+			throw Error("Cannot open file ", file_name);
+		}
+		// replace the include by the content of the file
+		std::string include_content((std::istreambuf_iterator<char>(include_file)), std::istreambuf_iterator<char>());
+		source_code.replace(pos, end_line - pos, include_content);
+		// find the next include
+		pos = source_code.find(include_str);
+	}
+	// replace the source code
+	std::istringstream final_source_file_content = std::istringstream(source_code);
+	return final_source_file_content;
+}
+

@@ -1,0 +1,5 @@
+// include file for test_include.bvc
+bool xor(bool a,bool b) 
+{
+	return a^b; 
+}

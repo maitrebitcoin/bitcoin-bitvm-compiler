@@ -187,6 +187,8 @@
     <None Include="sample\test_for.bvc" />
     <None Include="sample\test_if.bvc" />
     <None Include="sample\test_if_and_stuct.bvc" />
+    <None Include="sample\test_include.bvc" />
+    <None Include="sample\test_include.bvh" />
     <None Include="sample\test_increment.bvc" />
     <None Include="sample\test_int256.bvc" />
     <None Include="sample\test_int32.bvc" />
